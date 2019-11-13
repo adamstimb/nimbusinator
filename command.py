@@ -1,7 +1,7 @@
 from tools import message, fatal
 import numpy as np
 import cv2
-from colour_table import colour_table
+
 
 class Command:
 
@@ -10,18 +10,13 @@ class Command:
         if nimbus.debug:
             message('Initializing Nimbus commands')
         self.nimbus = nimbus
-        self.screen_size = (640, 250)
-        self.border_colour = 15
-        self.paper_colour = 0
-        self.brush_colour = 15
-        self.colour_table = colour_table
 
     def cls(self):
         # cls
         if self.nimbus.debug:
             message('cls')
-        self.nimbus.update(np.zeros(shape=[self.screen_size[1], self.screen_size[0], 3], dtype=np.uint8))
-        cv2.rectangle(self.nimbus.vs.screen_data, (0,0), self.screen_size, self.paper_colour,-1)
+        self.nimbus.update(np.zeros((self.nimbus.screen_size[1], self.nimbus.screen_size[0], 3), dtype=np.uint8))
+        cv2.rectangle(self.nimbus.vs.screen_data, (0,0), (self.nimbus.screen_size[0], self.nimbus.screen_size[1]), self.nimbus.paper_colour,-1)
 
     def set_mode(self, columns):
         # set mode
@@ -29,16 +24,22 @@ class Command:
             message('set mode {}'.format(columns))
         # change screen size according to columns parameter
         if columns == 80:
-            self.screen_size = (640, 250)
+            self.nimbus.screen_size = (640, 250)
             self.cls()
         if columns == 40:
-            self.screen_size = (320,250)
+            self.nimbus.screen_size = (320,250)
             self.set_paper(0)
             self.cls()
 
     def set_paper(self, colour):
         # set_paper
         if self.nimbus.debug:
-            message('set_paper {}'.format(colour))
-        self.paper_colour = self.colour_table[colour]
+            message('set paper {}'.format(colour))
+        self.nimbus.paper_colour = self.nimbus.colour_table[colour]
+    
+    def set_border(self, colour):
+        # set_border
+        if self.nimbus.debug:
+            message('set border {}'.format(colour))
+        self.nimbus.border_colour = colour
         

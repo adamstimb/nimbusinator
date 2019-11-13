@@ -21,6 +21,7 @@ class Nimbus:
         self.title = title
         self.screen_size = (640, 250)
         self.border_colour = 1
+        self.paper_colour = 0
         self.colour_table = colour_table
         self.vs = VideoStream(self.screen_size, queue_size=16).start()
 
@@ -32,16 +33,15 @@ class Nimbus:
 
     def render_display(self, screen_data):
         # generate actual size display data including border
-        border_size = 20
-        vertical_display_length = 640+(border_size*2)
-        horizontal_display_length = 500+(border_size*2)
-        display_data = np.zeros(shape=[vertical_display_length, horizontal_display_length, 3], dtype=np.uint8)
+        border_size = 80
+        horizontal_display_length = 640+(border_size*2)
+        vertical_display_length = 500+(border_size*2)
+        display_data = np.zeros((vertical_display_length, horizontal_display_length, 3), dtype=np.uint8)
         # add the background
-        cv2.rectangle(display_data, (0,0), (vertical_display_length, horizontal_display_length), self.colour_table[self.border_colour], -1)
+        cv2.rectangle(display_data, (0,0), (horizontal_display_length, vertical_display_length), self.colour_table[self.border_colour], -1)
         # resize the screen_data and add it to display
-        resized = cv2.resize(screen_data, (500, 640))
-        x_offset=y_offset=20
-        display_data[y_offset:y_offset+resized.shape[0], x_offset:x_offset+resized.shape[1]] = resized
+        resized = cv2.resize(screen_data, (640, 500))
+        display_data[border_size:border_size+resized.shape[0], border_size:border_size+resized.shape[1]] = resized
         return display_data
 
     def runner(self):
@@ -65,7 +65,6 @@ class Nimbus:
             # don't bother with loading screen
             return
         else:
-            message('Loading screen started')
             message('Please insert an operating system')
             time.sleep(1.5)
             message('Loading operating system')
