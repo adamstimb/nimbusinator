@@ -2,9 +2,9 @@
 
 RM Nimbus SUB-BIOS Emulator for Python
 
-Didn't you dream of writing your own applications for the RM Nimbus back in the day?  Maybe you've got a Nimbus but it's so hopelessly obsolete you can't connect it to the internet or do anything more interesting than run Trains?  Did you get fed up with RM Basic and yet the mythical C compiler is nowhere to be found?  No chance of finding RM Pascal with its super-sexy blue IDE is there?  Well, stuff the Nimbus.  And stuff Pascal, stuff C and stuff Basic.  This is the 21st century for crying out loud.  All you need is Nimbusinator.
+Did you ever dream of writing your own applications for the RM Nimbus?  Maybe you're lucky enough to own a working Nimbus but it's so hopelessly obsolete you can't connect it to the internet or do anything more interesting than run Trains?  Been there and done that with RM Basic?  Wanted to try the mythical C compiler but it's nowhere to be found?  Given up looking for RM Pascal with its super-sexy blue IDE?  Yeah, so stuff all that.  All you need is Nimbusinator and some basic Python skillz.
 
-Nimbusinator is a graphical user interface package for Python, emulating the graphics and console drivers found in the fabled RM Nimbus PC186 SUB-BIOS and providing Pythonic controls that mimick the vocabulary of RM Basic.  It is _not_ an emulation of the RM Nimbus machine itself, nor does it contain any proprietary software or firmware naughtiness.  This means you can use all the computing power at your disposal beneath a user interface that predates the world-wide-web, acid house and even _Back to the Future Part 1_.  
+Nimbusinator is a graphical user interface for Python, emulating the graphics and console drivers found in the fabled RM Nimbus PC186 SUB-BIOS and providing Pythonic controls that mimick the vocabulary of RM Basic.  It is _not_ an emulation of the RM Nimbus machine itself.  This means you can use all the 21st century computing power at your disposal, and conceal it beneath a 16-bit user interface style that predates Milli Vanilli, let alone the word-wide-web.
 
 ## Installation
 
@@ -34,3 +34,9 @@ if __name__ == '__main__':
     time.sleep(3)
     nim.shutdown()      # Shut down the Nimbus 
 ```
+
+## Useful links
+
+- [Center for Computing History](http://www.computinghistory.org.uk/) - original RM Nimbus manuals and technical data
+- [The Nimbus Museum](https://thenimbus.co.uk/) - online museum that looks like the Welcome Disk!
+- [mame](https://www.mamedev.org/) - comprehensive retro computer emulation project
