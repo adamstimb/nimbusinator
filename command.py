@@ -8,7 +8,15 @@ class Command:
 
 
     def __init__(self, nimbus):
-        # Initialize commands and global parameters
+        """Create a new Command object
+
+        In creating an object of this class it must be bound to
+        a pre-existing Nimbus object.
+
+        Args:
+            nimbus (Nimbus): The Nimbus object to bind to
+        
+        """
         if nimbus.debug:
             message('Initializing Nimbus commands')
         self.nimbus = nimbus
@@ -20,9 +28,9 @@ class Command:
         """
         if self.nimbus.debug:
             message('cls')
-        # Wipe screen data in the Nimbus directly with new paper colours
-        # Define a new PIL image to make sure it matches the current screen mode, e.g.
-        # if set_mode was just called
+        # Wipe screen data in the Nimbus and fill screen with paper colour. First
+        # define a new PIL image to make sure it matches the current screen mode, 
+        # e.g. if set_mode was just called
         screen_data = np.zeros((self.nimbus.screen_size[1], self.nimbus.screen_size[0], 3), dtype=np.uint8)
         cv2.rectangle(screen_data, (0,0), (self.nimbus.screen_size[0], self.nimbus.screen_size[1]), colour_to_bgr(self.nimbus, self.nimbus.paper_colour),-1)
         self.nimbus.update_screen(screen_data)
@@ -32,7 +40,7 @@ class Command:
 
         In RM Basic the screen resolution was set by the number of columns: 
         40 for low-resolution and 80 for high-resolution.  Any other values
-        has no effect.  Nimbusinator is more strict and will yield and error
+        has no effect.  Nimbusinator is more strict and will yield an error
         if any other values are entered.  Check the original RM Basic manual
         for a description of how screen resolutions worked on the Nimbus.
         High-resolution mode is particularly odd.
@@ -99,7 +107,7 @@ class Command:
         self.nimbus.brush_colour = is_valid_colour(self.nimbus, colour)
 
 
-    def line(self, coord_list, brush=-1):
+    def line(self, coord_list, brush=None):
         """Draw one or more connected straight lines
 
         Args:
@@ -110,7 +118,7 @@ class Command:
         if self.nimbus.debug:
             message('line {} brush={}'.format(coord_list, brush))
         # if default brush value then get current brush colour
-        if brush == -1:
+        if brush is None:
             brush = self.nimbus.brush_colour
             if self.nimbus.debug:
                 message('using current brush colour {}'.format(brush))
