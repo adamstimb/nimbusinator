@@ -142,6 +142,7 @@ class Command:
             message('set pen {}'.format(colour))
         self.nimbus.pen_colour = is_valid_colour(self.nimbus, colour)
 
+
     def set_curpos(self, cursor_position):
         """Set the cursor position
 
@@ -163,6 +164,20 @@ class Command:
             fatal(self.nimbus)
         # Now update the cursor position
         self.nimbus.update_cursor_position(cursor_position)
+
+
+    def ask_curpos(self):
+        """Gets the current cursor position
+
+        Returns:
+            cursor_position (tuple): The current cursor position (column, row)
+
+        """
+
+        if self.nimbus.debug:
+            message('ask curpos')
+        # Return cursor position
+        return self.nimbus.get_cursor_position()
 
 
     def put(self, ascii_data):

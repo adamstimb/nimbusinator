@@ -31,11 +31,12 @@ def test_line(nim, cmd):
     for mode in [40, 80]:
         cmd.set_mode(mode)
         for brush in range(1, 4):
-            cmd.line([
-                (0+(brush*5), 0), 
-                (50+(brush*5), 50), 
-                (200+(brush*5), 0)
-                ], brush=brush)
+            for offset in [0, 28, 56]:
+                cmd.line([
+                    (0+(brush*10)+offset, 0), 
+                    (50+(brush*10)+offset, 50), 
+                    (200+(brush*10)+offset, 0)
+                    ], brush=brush)
         time.sleep(1)
 
 def test_set_curpos_and_put(nim, cmd):

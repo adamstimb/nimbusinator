@@ -70,6 +70,7 @@ class Nimbus:
             message('Update cursor position to {}'.format(new_cursor_position))
         self.cursor_position = new_cursor_position
 
+
     def update_screen(self, new_screen_data):
         """Update screen data
 
@@ -84,6 +85,7 @@ class Nimbus:
             message('Updating screen data')
         self.vs.update_screen(new_screen_data)
 
+
     def get_screen(self):
         """Get screen data
 
@@ -97,7 +99,8 @@ class Nimbus:
         if self.debug:
             message('Getting screen data')
         return self.vs.get_screen()
-        
+
+
     def __render_display(self, screen_data):
         """Generate final display data including border
 
@@ -127,6 +130,7 @@ class Nimbus:
         display_data[border_size:border_size+resized.shape[0], border_size:border_size+resized.shape[1]] = resized
         return display_data
 
+
     def __runner(self):
         """Display the Nimbus in a window
 
@@ -148,7 +152,8 @@ class Nimbus:
             key_pressed = cv2.waitKey(5)
         if self.debug:
             message('Display loop stopped')
-    
+
+
     def boot(self, skip_loading_screen=False):
         """Boot the Nimbus
 
@@ -174,6 +179,7 @@ class Nimbus:
             message('Loading operating system')
             time.sleep(3)
             message('End of loading screen')
+
     
     def shutdown(self):
         """Shutdown the Nimbus
