@@ -16,7 +16,7 @@ class VideoStream:
         # initialize the queue used to store frames 
         self.Q = Queue(maxsize=queue_size)
         # intialize thread
-        self.thread = Thread(target=self.update, args=())
+        self.thread = Thread(target=self.__update, args=())
         self.thread.daemon = True
         self.border_size = 20
         self.screen_size = screen_size
@@ -35,7 +35,7 @@ class VideoStream:
         self.thread.start()
         return self
 
-    def update(self):
+    def __update(self):
         # keep looping infinitely
         while True:
             # if the thread indicator variable is set, stop the
@@ -50,17 +50,13 @@ class VideoStream:
             else:
                 time.sleep(0.1)  # Rest for 10ms, we have a full queue
 
-    def read(self):
-        # return next frame in the queue
-        return self.Q.get()
-
     # Insufficient to have consumer use while(more()) which does
     # not take into account if the producer has reached end of
     # file stream.
-    def running(self):
-        return self.more() or not self.stopped
+    def __running(self):
+        return self.__more() or not self.stopped
 
-    def more(self):
+    def __more(self):
         # return True if there are still frames in the queue. If stream is not stopped, try to wait a moment
         tries = 0
         while self.Q.qsize() == 0 and not self.stopped and tries < 5:

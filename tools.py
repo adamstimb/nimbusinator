@@ -124,3 +124,19 @@ def fix_coord(screen_size, coord):
     """
     
     return (coord[0], screen_size[1] - coord[1])
+
+def colrows_to_xy(screen_size, cursor_position):
+    """Convert cursor position to x, y pixel position
+
+    Args:
+        screen_size (tuple): The screen size (width, height)
+        cursor_position (tuple): The cursor position (row, col)
+
+    Returns:
+        (tuple): The screen position in pixels (x, y)
+    
+    """
+
+    x = (cursor_position[0] - 1) * 8
+    y = screen_size[1] - (cursor_position[1] * 10)
+    return (x, y)

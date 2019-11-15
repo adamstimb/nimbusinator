@@ -31,7 +31,7 @@ class Nimbus:
 
         print(logo)
         if debug:
-            message('Creating a new Nimbus')
+            message('Running in debug mode.  Performance will be severely impeded, but still faster than a real Nimbus :D')
         self.zoom = zoom                                    # Display zoom
         self.full_screen = full_screen                      # Full screen flag
         self.debug = debug                                  # Debug flag
@@ -40,10 +40,37 @@ class Nimbus:
         self.screen_size = (640, 250)                       # Screen size (initializes in high-res mode)
         self.border_colour = 0                              # High-res initial border colour is blue
         self.paper_colour = 0                               # High-res initial paper colour is blue
-        self.brush_colour = 1                               # High-res initial brush colour is white
+        self.brush_colour = 3                               # High-res initial brush colour is white
+        self.pen_colour = 3                                 # High-res initial pen colour is white
+        self.cursor_position = (1, 1)                       # Initial cursor position is top-left
         self.colour_table = colour_table                    # Dict to to convert Nimbus colour numbers to BGR
         self.high_res_colour_table = high_res_colour_table  # Dict to map high-res colour numbers to all Nimbus colours
         self.vs = VideoStream(self.screen_size, queue_size=16).start()  # VideoStream object to display the Nimbus
+        
+
+    def get_cursor_position(self):
+        """Get current cursor position
+
+        Returns:
+            (tuple): The current cursor position (col, row)
+
+        """
+
+        if self.debug:
+            message('Get cursor position')
+        return self.cursor_position
+
+    def update_cursor_position(self, new_cursor_position):
+        """Update cursor position
+
+        Args:
+            new_cursor_position (tuple): The new cursor position (col, row)
+
+        """
+
+        if self.debug:
+            message('Update cursor position to {}'.format(new_cursor_position))
+        self.cursor_position = new_cursor_position
 
     def update_screen(self, new_screen_data):
         """Update screen data
@@ -73,7 +100,7 @@ class Nimbus:
             message('Getting screen data')
         return self.vs.get_screen()
         
-    def render_display(self, screen_data):
+    def __render_display(self, screen_data):
         """Generate final display data including border
 
         In low-resolution mode the screen size is doubled and maintanes the same
@@ -102,7 +129,7 @@ class Nimbus:
         display_data[border_size:border_size+resized.shape[0], border_size:border_size+resized.shape[1]] = resized
         return display_data
 
-    def runner(self):
+    def __runner(self):
         """Display the Nimbus in a window
 
         This function contains a loop which can be broken by setting
@@ -112,7 +139,7 @@ class Nimbus:
         if self.debug:
             message('Running display loop')
         while self.running:
-            frame = self.render_display(self.vs.read())
+            frame = self.__render_display(self.vs.get_screen())
             cv2.imshow(self.title, frame)
             key_pressed = cv2.waitKey(5)
         if self.debug:
@@ -132,7 +159,7 @@ class Nimbus:
         if self.debug:
             message('Dropping runner into a thread')
         # Fire up runner in a thread
-        t = threading.Thread(target=self.runner, args=())
+        t = threading.Thread(target=self.__runner, args=())
         t.start()
         if skip_loading_screen:
             # don't bother with loading screen
