@@ -217,7 +217,6 @@ class Command:
                 # cursor to bottom of screen
                 if colrows_to_xy(self.nimbus.screen_size, (1, new_row))[1] < 0:
                     new_row = self.nimbus.get_cursor_position()[1]
-                    message('Shove screen up')
                     # Shove screen up.  First crop the top line:
                     old_screen_data = self.nimbus.get_screen()[10:, :]
                     # Make a blank screen and apply paper colour (same as Nimbus did it)

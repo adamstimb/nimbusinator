@@ -20,7 +20,7 @@ class VideoStream:
         self.thread.daemon = True
         self.border_size = 20
         self.screen_size = screen_size
-        self.screen_data = np.zeros((screen_size[1], screen_size[0], 3), dtype=np.uint8)
+        self.screen_data = np.zeros((screen_size[1]+1, screen_size[0]+1, 3), dtype=np.uint8)
 
     def update_screen(self, new_screen_data):
         # change the data displayed on the screen

@@ -15,15 +15,14 @@ class Nimbus:
 
     """
 
-    def __init__(self, zoom=1, full_screen=False, debug=False, title='Nimbusinator'):
+    def __init__(self, full_screen=False, debug=False, title='Nimbusinator'):
         """Create a new Nimbus object
 
         When created, the new Nimbus object is in a default state but will
         not be visible until the boot() method has been called.
 
         Args:
-            zoom (int), optional: Increase the display size
-            full_screen (bool), optional: Full screen mode (overrides zoom)
+            full_screen (bool), optional: Full screen mode
             debug (bool), optional: Log debugging messages in the console if set to True
             title (str), optional: The title of the display window
 
@@ -32,7 +31,6 @@ class Nimbus:
         print(logo)
         if debug:
             message('Running in debug mode.  Performance will be severely impeded, but still faster than a real Nimbus :D')
-        self.zoom = zoom                                    # Display zoom
         self.full_screen = full_screen                      # Full screen flag
         self.debug = debug                                  # Debug flag
         self.running = True                                 # Flag to run or stop the Nimbus
@@ -46,7 +44,7 @@ class Nimbus:
         self.colour_table = colour_table                    # Dict to to convert Nimbus colour numbers to BGR
         self.high_res_colour_table = high_res_colour_table  # Dict to map high-res colour numbers to all Nimbus colours
         self.vs = VideoStream(self.screen_size, queue_size=16).start()  # VideoStream object to display the Nimbus
-        
+
 
     def get_cursor_position(self):
         """Get current cursor position
@@ -125,7 +123,7 @@ class Nimbus:
         display_data = np.zeros((vertical_display_length, horizontal_display_length, 3), dtype=np.uint8)
         cv2.rectangle(display_data, (0,0), (horizontal_display_length, vertical_display_length), colour_to_bgr(self, self.border_colour), -1)
         # resize the screen_data and add it to display
-        resized = cv2.resize(screen_data, (640, 500))
+        resized = cv2.resize(screen_data, (640, 500), interpolation=cv2.INTER_LINEAR_EXACT)
         display_data[border_size:border_size+resized.shape[0], border_size:border_size+resized.shape[1]] = resized
         return display_data
 
@@ -138,6 +136,12 @@ class Nimbus:
         """
         if self.debug:
             message('Running display loop')
+        # Set full screen mode in OpenCV
+        if self.full_screen:
+            if self.debug:
+                message('Full screen mode')
+            cv2.namedWindow(self.title, cv2.WND_PROP_FULLSCREEN)
+            cv2.setWindowProperty(self.title, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
         while self.running:
             frame = self.__render_display(self.vs.get_screen())
             cv2.imshow(self.title, frame)

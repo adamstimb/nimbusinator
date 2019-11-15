@@ -41,8 +41,8 @@ def test_line(nim, cmd):
 def test_set_curpos_and_put(nim, cmd):
     for mode in [40, 80]:
         cmd.set_mode(mode)
-        cmd.set_border(0)
-        cmd.set_paper(1)
+        cmd.set_border(1)
+        cmd.set_paper(2)
         cmd.set_pen(3)
         cmd.set_curpos((1, 1))
         cmd.put('Hello')
@@ -56,8 +56,9 @@ def test_set_curpos_and_put(nim, cmd):
         cmd.put(big_test)
         time.sleep(1)
 
+
 if __name__ == '__main__': 
-    nim = Nimbus(zoom=3, full_screen=True, debug=True)
+    nim = Nimbus(full_screen=True, debug=True)
     cmd = Command(nim)
     nim.boot(skip_loading_screen=True)
     test_set_curpos_and_put(nim, cmd)
