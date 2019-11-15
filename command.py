@@ -2,7 +2,6 @@ from tools import message, fatal, is_valid_colour, colour_to_bgr, fix_coord, col
 import numpy as np
 import cv2
 
-import time
 
 class Command:
     """Nimbus commands
@@ -54,7 +53,7 @@ class Command:
         # Wipe screen data in the Nimbus and fill screen with paper colour. First
         # define a new PIL image to make sure it matches the current screen mode, 
         # e.g. if set_mode was just called
-        screen_data = np.zeros((self.nimbus.screen_size[1], self.nimbus.screen_size[0], 3), dtype=np.uint8)
+        screen_data = np.zeros((self.nimbus.screen_size[1]+1, self.nimbus.screen_size[0]+1, 3), dtype=np.uint8)
         cv2.rectangle(screen_data, (0,0), (self.nimbus.screen_size[0], self.nimbus.screen_size[1]), colour_to_bgr(self.nimbus, self.nimbus.paper_colour),-1)
         self.nimbus.update_screen(screen_data)
 
@@ -125,10 +124,23 @@ class Command:
             colour (int): Colour value (High-resolution: 0-3, low-resolution: 0-15)
             
         """
+
         if self.nimbus.debug:
             message('set brush {}'.format(colour))
         self.nimbus.brush_colour = is_valid_colour(self.nimbus, colour)
 
+
+    def set_pen(self, colour):
+        """Set the pen colour
+
+        Args:
+            colour (int): Colour value (High-resolution: 0-3, low-resolution: 0-15)
+            
+        """
+
+        if self.nimbus.debug:
+            message('set pen {}'.format(colour))
+        self.nimbus.pen_colour = is_valid_colour(self.nimbus, colour)
 
     def set_curpos(self, cursor_position):
         """Set the cursor position
@@ -142,11 +154,11 @@ class Command:
             message('set curpos {}'.format(cursor_position))
         # Validate that cursor will still be on screen
         # Column
-        if cursor_position[0] < 1 or cursor_position[0] * 8 >= self.nimbus.screen_size[0]:
+        if colrows_to_xy(self.nimbus.screen_size, (cursor_position[0], 1))[0] >= self.nimbus.screen_size[0]:
             message('Column {} is not on the screen'.format(cursor_position[0]))
             fatal(self.nimbus)
         # Row
-        if cursor_position[1] < 1 or cursor_position[1] * 10 >= self.nimbus.screen_size[1]:
+        if colrows_to_xy(self.nimbus.screen_size, (1, cursor_position[1]))[1] < 0:
             message('Column {} is not on the screen'.format(cursor_position[1]))
             fatal(self.nimbus)
         # Now update the cursor position
@@ -175,20 +187,27 @@ class Command:
             curpos_xy = colrows_to_xy(self.nimbus.screen_size, self.nimbus.get_cursor_position())
             if self.nimbus.debug:
                 message('curpos {} resolved to screen position {}'.format(self.nimbus.get_cursor_position(), curpos_xy))
-            # Plot char
+            # Plot char and apply paper colour underneath char
             screen_data = self.nimbus.get_screen()
+            # Paper colour
+            cv2.rectangle(
+                screen_data, 
+                fix_coord(self.nimbus.screen_size, (curpos_xy[0], curpos_xy[1])), 
+                fix_coord(self.nimbus.screen_size, (curpos_xy[0] + 8, curpos_xy[1] + 10)), 
+                colour_to_bgr(self.nimbus, self.nimbus.paper_colour), 
+                -1
+            )
             if ascii != ' ':
                 cv2.rectangle(
                     screen_data, 
-                    fix_coord(self.nimbus.screen_size, (curpos_xy[0], curpos_xy[1])), 
-                    fix_coord(self.nimbus.screen_size, (curpos_xy[0] + 8, curpos_xy[1] + 10)), 
+                    fix_coord(self.nimbus.screen_size, (curpos_xy[0]+1, curpos_xy[1]+1)), 
+                    fix_coord(self.nimbus.screen_size, (curpos_xy[0] + 7, curpos_xy[1] + 9)), 
                     colour_to_bgr(self.nimbus, self.nimbus.pen_colour), 
                     1
                 )
             # calculate new curpos, if over the right-hand side do carriage return
             new_column = self.nimbus.get_cursor_position()[0] + 1
             if colrows_to_xy(self.nimbus.screen_size, (new_column, 1))[0] >= self.nimbus.screen_size[0]:
-                #if ((new_column * 8) ) >= self.nimbus.screen_size[0]:
                 if self.nimbus.debug:
                     message('carriage return')
                 # do carriage return
@@ -196,20 +215,18 @@ class Command:
                 new_row = self.nimbus.get_cursor_position()[1] + 1  # move down
                 # if we're below, then screen, move screen data up 10 pixels and set
                 # cursor to bottom of screen
-                if colrows_to_xy(self.nimbus.screen_size, (1, new_row))[1] <= 0:
-                    #if new_row * 10 >= self.nimbus.screen_size[1]:
+                if colrows_to_xy(self.nimbus.screen_size, (1, new_row))[1] < 0:
                     new_row = self.nimbus.get_cursor_position()[1]
                     message('Shove screen up')
                     # Shove screen up.  First crop the top line:
                     old_screen_data = self.nimbus.get_screen()[10:, :]
-                    message('{}'.format(old_screen_data.shape))
-                    # Make a blank screen
-                    screen_data = np.zeros((self.nimbus.screen_size[1], self.nimbus.screen_size[0], 3), dtype=np.uint8)
+                    # Make a blank screen and apply paper colour (same as Nimbus did it)
+                    screen_data = np.zeros((self.nimbus.screen_size[1]+1, self.nimbus.screen_size[0]+1, 3), dtype=np.uint8)
+                    cv2.rectangle(screen_data, (0,0), (self.nimbus.screen_size[0], self.nimbus.screen_size[1]), colour_to_bgr(self.nimbus, self.nimbus.paper_colour),-1)
                     # And overlay the old_screen_data
                     screen_data[:-10, :] = old_screen_data
                     # Update screen
                     self.nimbus.update_screen(screen_data)
-                    time.sleep(5)
             else:
                 # don't move cursor down
                 new_row = self.nimbus.get_cursor_position()[1]

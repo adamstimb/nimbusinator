@@ -39,18 +39,22 @@ def test_line(nim, cmd):
         time.sleep(1)
 
 def test_set_curpos_and_put(nim, cmd):
-    cmd.set_mode(80)
-    cmd.set_border(1)
-    cmd.set_curpos((1, 1))
-    cmd.put('Hello')
-    cmd.set_curpos((40, 12))
-    cmd.put('Owner of a loney heart much better than a owner of a broken heart')
-    big_test = ''
-    for i in range(0, 20):
-        big_test += 'Owner of a loney heart much better than a owner of a broken heart'
-    cmd.set_curpos((1, 16))
-    cmd.put(big_test)
-    time.sleep(5)
+    for mode in [40, 80]:
+        cmd.set_mode(mode)
+        cmd.set_border(0)
+        cmd.set_paper(1)
+        cmd.set_pen(3)
+        cmd.set_curpos((1, 1))
+        cmd.put('Hello')
+        for i in range(1, 26):
+            cmd.set_curpos((1, i))
+            cmd.put('Owner of a loney heart')
+        big_test = ''
+        for i in range(0, 20):
+            big_test += 'Owner of a loney heart much better than a owner of a broken heart'
+        cmd.set_curpos((1, 16))
+        cmd.put(big_test)
+        time.sleep(1)
 
 if __name__ == '__main__': 
     nim = Nimbus(zoom=3, full_screen=True, debug=True)
