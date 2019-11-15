@@ -177,16 +177,18 @@ class Command:
                 message('curpos {} resolved to screen position {}'.format(self.nimbus.get_cursor_position(), curpos_xy))
             # Plot char
             screen_data = self.nimbus.get_screen()
-            cv2.rectangle(
-                screen_data, 
-                fix_coord(self.nimbus.screen_size, (curpos_xy[0], curpos_xy[1])), 
-                fix_coord(self.nimbus.screen_size, (curpos_xy[0] + 8, curpos_xy[1] + 10)), 
-                colour_to_bgr(self.nimbus, self.nimbus.pen_colour), 
-                1
-            )
+            if ascii != ' ':
+                cv2.rectangle(
+                    screen_data, 
+                    fix_coord(self.nimbus.screen_size, (curpos_xy[0], curpos_xy[1])), 
+                    fix_coord(self.nimbus.screen_size, (curpos_xy[0] + 8, curpos_xy[1] + 10)), 
+                    colour_to_bgr(self.nimbus, self.nimbus.pen_colour), 
+                    1
+                )
             # calculate new curpos, if over the right-hand side do carriage return
             new_column = self.nimbus.get_cursor_position()[0] + 1
-            if new_column * 8 >= self.nimbus.screen_size[0]:
+            if colrows_to_xy(self.nimbus.screen_size, (new_column, 1))[0] >= self.nimbus.screen_size[0]:
+                #if ((new_column * 8) ) >= self.nimbus.screen_size[0]:
                 if self.nimbus.debug:
                     message('carriage return')
                 # do carriage return
@@ -194,16 +196,17 @@ class Command:
                 new_row = self.nimbus.get_cursor_position()[1] + 1  # move down
                 # if we're below, then screen, move screen data up 10 pixels and set
                 # cursor to bottom of screen
-                if new_row * 10 >= self.nimbus.screen_size[1]:
-                    new_row -= 1
+                if colrows_to_xy(self.nimbus.screen_size, (1, new_row))[1] <= 0:
+                    #if new_row * 10 >= self.nimbus.screen_size[1]:
+                    new_row = self.nimbus.get_cursor_position()[1]
                     message('Shove screen up')
                     # Shove screen up.  First crop the top line:
-                    old_screen_data = self.nimbus.get_screen()[:, :-10]
+                    old_screen_data = self.nimbus.get_screen()[10:, :]
                     message('{}'.format(old_screen_data.shape))
                     # Make a blank screen
                     screen_data = np.zeros((self.nimbus.screen_size[1], self.nimbus.screen_size[0], 3), dtype=np.uint8)
                     # And overlay the old_screen_data
-                    screen_data[:, :-10] = old_screen_data
+                    screen_data[:-10, :] = old_screen_data
                     # Update screen
                     self.nimbus.update_screen(screen_data)
                     time.sleep(5)

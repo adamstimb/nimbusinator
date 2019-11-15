@@ -40,8 +40,8 @@ def test_line(nim, cmd):
 
 def test_set_curpos_and_put(nim, cmd):
     cmd.set_mode(80)
+    cmd.set_border(1)
     cmd.set_curpos((1, 1))
-    cmd.put(5)
     cmd.put('Hello')
     cmd.set_curpos((40, 12))
     cmd.put('Owner of a loney heart much better than a owner of a broken heart')
