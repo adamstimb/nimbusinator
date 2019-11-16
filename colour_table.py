@@ -9,20 +9,20 @@
 colour_table = {
     #     B    G    R
     0:  [  0,   0,   0],    # black
-    1:  [102,   0,   0],    # dark blue
-    2:  [  0,   0, 102],    # dark red
-    3:  [ 76,   0, 153],    # purple
-    4:  [  0,  51,   0],    # dark green
-    5:  [102, 102,   0],    # dark cyan
-    6:  [  0,  25,  51],    # brown
-    7:  [128, 128, 128],    # light grey
-    8:  [ 64,  64,  64],    # dark grey
-    9:  [255, 128,   0],    # light blue
-    10: [  0,   0, 255],    # light red
-    11: [255,  51, 255],    # light purple
-    12: [  0, 255,   0],    # light green
-    13: [255, 255,  51],    # light cyan
-    14: [  0, 255, 255],    # yellow
+    1:  [170,   0,   0],    # dark blue
+    2:  [  0,   0, 170],    # dark red
+    3:  [170,   0, 170],    # purple
+    4:  [  0, 170,   0],    # dark green
+    5:  [170, 170,   0],    # dark cyan
+    6:  [  0,  84, 170],    # brown -- MAME rendered yellow so I guessed this
+    7:  [170, 170, 170],    # light grey
+    8:  [ 84,  84,  84],    # dark grey
+    9:  [255,  84,  84],    # light blue
+    10: [ 84,  84, 255],    # light red
+    11: [255,  84, 255],    # light purple
+    12: [ 84, 255,  84],    # light green
+    13: [255, 255,  84],    # light cyan
+    14: [255,  84, 255],    # yellow
     15: [255, 255, 255]     # white
 }
 
