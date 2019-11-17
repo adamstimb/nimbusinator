@@ -36,6 +36,7 @@ class Nimbus:
         self.running = True                                 # Flag to run or stop the Nimbus
         self.title = title                                  # Display window title
         self.font0_images = self.__load_font()
+        self.logo = cv2.imread('data/rm-nimbus-logo.png')
         self.screen_size = (640, 250)                       # Screen size (initializes in high-res mode)
         self.border_colour = 0                              # High-res initial border colour is blue
         self.paper_colour = 0                               # High-res initial paper colour is blue

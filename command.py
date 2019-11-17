@@ -91,7 +91,15 @@ class Command:
         # Invalid choice (RM Basic wasn't fussy about this but I am)
         message('{} is not a valid choice for columns since set_mode only accepts 40 or 80'.format(columns))
         fatal(self.nimbus)
-        
+
+    def plonk_logo(self, coord):
+        x_offset = coord[0]
+        y_offset = self.nimbus.screen_size[1] - coord[1]
+        screen_data = self.nimbus.get_screen()
+        print(screen_data.shape)
+        print(self.nimbus.logo.shape)
+        screen_data[y_offset:y_offset+self.nimbus.logo.shape[0], x_offset:x_offset+self.nimbus.logo.shape[1]] = self.nimbus.logo
+        self.nimbus.update_screen(screen_data)
 
     def set_paper(self, colour):
         """Set the paper colour
