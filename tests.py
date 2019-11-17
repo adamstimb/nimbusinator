@@ -53,7 +53,7 @@ def test_set_curpos_and_put(nim, cmd):
         big_test = ''
         for i in range(0, 20):
             big_test += 'Iggle Piggle Iggle Onk ABCDEF abcdeg  12345 _ - 67890 %^$&#&$'
-        cmd.set_curpos((1, 16))
+        cmd.set_curpos((7, 16))
         cmd.put(big_test)
         time.sleep(2)
 
