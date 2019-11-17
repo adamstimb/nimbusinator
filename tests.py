@@ -49,13 +49,13 @@ def test_set_curpos_and_put(nim, cmd):
         cmd.put('Hello')
         for i in range(1, 26):
             cmd.set_curpos((1, i))
-            cmd.put("1234567890 Ramalama-ding-dong *&^%$#@_- =+ []:;\\{ farts ")
+            cmd.put("abcdefABCDEF 1234567890")
         big_test = ''
         for i in range(0, 20):
-            big_test += 'Owner of a loney heart much better than a owner of a broken heart blah blah 1234567890 %^$&#&$'
+            big_test += 'Iggle Piggle Iggle Onk ABCDEF abcdeg  12345 _ - 67890 %^$&#&$'
         cmd.set_curpos((1, 16))
         cmd.put(big_test)
-        time.sleep(1)
+        time.sleep(2)
 
 
 if __name__ == '__main__': 

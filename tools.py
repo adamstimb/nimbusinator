@@ -141,6 +141,9 @@ def colrows_to_xy(screen_size, cursor_position):
     return (x, y)
 
 
+def ceildiv(a, b):
+    return -(-a // b)
+
 def font_image_selecta(font_img, ascii_code):
     """Get the image of a character from a PNG
 
@@ -155,6 +158,52 @@ def font_image_selecta(font_img, ascii_code):
     
     """
 
+    x_pos_table = {
+        #col, #x
+        1: 0,
+        2: 10,
+        3: 21,
+        4: 32,
+        5: 43,
+        6: 54,
+        7: 65,
+        8: 76,
+        9: 86,
+        10: 97,
+        11: 108,
+        12: 120,
+        13: 131,
+        14: 142,
+        15: 152,
+        16: 163,
+        17: 174,
+        18: 186,
+        19: 196,
+        20: 207,
+        21: 218,
+        22: 229,
+        23: 240,
+        24: 251,
+        25: 261,
+        26: 272,
+        27: 283,
+        28: 294,
+        29: 305,
+        30: 316
+    }
+
+    y_pos_table = {
+        #row, y
+        1: 0,
+        2: 11,
+        3: 21,
+        4: 32,
+        5: 42,
+        6: 52,
+        7: 62,
+        8: 74
+    }
+
     # On our Nimbus char map PNGs delete (127) is just a blank space, so if we
     # receive any < 33 control chars, set the ascii value to 127 so a space is
     # also returned in those cases.
@@ -162,17 +211,17 @@ def font_image_selecta(font_img, ascii_code):
         ascii_code = 127
     # Calculate the row and column position of the char on the character map PNG
     map_number = ascii_code - 32    # codes < 33 are not on the map (unprintable)
-    row = (map_number // 31) + 1
+    row = ceildiv(map_number, 30)
     column = map_number - (30 * (row - 1))
-    print('map_number={} column={}, row{}'.format(map_number, column, row))
+    print('ascii_code={} map_number={} column={}, row{}'.format(ascii_code, map_number, column, row))
     # Calculate corners of box around the char
-    x1 = (column - 1) * 10
-    y1 = (row - 1) * 10
-    x2 = x1 + 10
-    y2 = y1 + 10
+    x1 = x_pos_table[column] + 1
+    y1 = y_pos_table[row]
+    x2 = x1 + 9
+    y2 = y1 + 9
     # Chop out the char and return as PIL
-    char_img = font_img[x1:x2, y1:y2]
-    print('x1, y1 = {}, {}; x2, y2 = {}, {}'.format(x1, y1, x2, y2))
+    char_img = font_img[y1:y2, x1:x2]
+    #print('x1, y1 = {}, {}; x2, y2 = {}, {}'.format(x1, y1, x2, y2))
     return char_img
 
 

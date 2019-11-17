@@ -1,7 +1,7 @@
 from tools import message, fatal, is_valid_colour, colour_to_bgr, fix_coord, colrows_to_xy
 import numpy as np
 import cv2
-
+import time
 
 class Command:
     """Nimbus commands
@@ -216,9 +216,12 @@ class Command:
                 -1
             )
             # Char
-            print(char_img.shape)
-            if ascii != ' ':
-                screen_data[curpos_xy[1]:curpos_xy[1]+char_img.shape[0], curpos_xy[0]:curpos_xy[0]+char_img.shape[1]] = char_img
+            #print(char_img.shape)
+            #if ascii != ' ':
+            x_offset, y_offset = fix_coord(self.nimbus.screen_size, (curpos_xy[0], curpos_xy[1]))
+            y_offset = y_offset - 9
+            screen_data[y_offset:y_offset+char_img.shape[0], x_offset:x_offset+char_img.shape[1]] = char_img
+                #screen_data[curpos_xy[1]:curpos_xy[1]+char_img.shape[0], curpos_xy[0]:curpos_xy[0]+char_img.shape[1]] = char_img
                 #cv2.rectangle(
                 #    screen_data, 
                 #    fix_coord(self.nimbus.screen_size, (curpos_xy[0]+1, curpos_xy[1]+1)), 
@@ -252,6 +255,7 @@ class Command:
                 new_row = self.nimbus.get_cursor_position()[1]
             # move cursor
             self.set_curpos((new_column, new_row))
+            #time.sleep(1)
 
 
     def line(self, coord_list, brush=None):
