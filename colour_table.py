@@ -14,7 +14,7 @@ colour_table = {
     3:  [170,   0, 170],    # purple
     4:  [  0, 170,   0],    # dark green
     5:  [170, 170,   0],    # dark cyan
-    6:  [  0,  84, 170],    # brown -- MAME rendered yellow so I guessed this
+    6:  [  0,  84, 170],    # brown
     7:  [170, 170, 170],    # light grey
     8:  [ 84,  84,  84],    # dark grey
     9:  [255,  84,  84],    # light blue
