@@ -27,8 +27,8 @@ colour_table = {
 }
 
 # High-res mode has it's own colour table.  This is the default
-# palette for high-res mode but, just like on the Nimbus, any
-# 16 colours can be assigned to the 4 slots at runtime.
+# palette for high-res mode in RM Basic but, just like on the Nimbus, 
+# any 16 colours can be assigned to the 4 slots at runtime.
 high_res_colour_table = {
     0: 1,                   # dark blue
     1: 4,                   # dark green

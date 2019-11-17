@@ -109,21 +109,20 @@ def colour_to_bgr(nimbus, colour):
 def fix_coord(screen_size, coord):
     """Fix coordinates for use in OpenCV's drawing functions
 
-    Let's face it, OpenCV2 is a clusterfuck for getting things the
-    wrong way round, and the drawing functions are no exception.  Pass
-    you're coordinates into this function to "fix" them for use in any
-    drawing functions.
+    PIL images have upside-down co-ordinates and it shafts me
+    every goddamn time, so this function "deals with it"
 
     Args:
         screen_size (tuple): The screen size (width, height)
         coord (tuple): The x, y coordinate to fix (x, y)
 
     Returns:
-        (tuple): I can't even put this in words...
+        (tuple): The coordinates flipped upside-down
 
     """
     
     return (coord[0], screen_size[1] - coord[1])
+
 
 def colrows_to_xy(screen_size, cursor_position):
     """Convert cursor position to x, y pixel position
@@ -137,8 +136,47 @@ def colrows_to_xy(screen_size, cursor_position):
     
     """
 
-    #x = (8 * (cursor_position[0] - 1)) + (cursor_position[0] - 1)
-    #y = (screen_size[1] - 0) - (cursor_position[1] * 10)
     x = (8 * (cursor_position[0] - 1))
     y = screen_size[1] - (cursor_position[1] * 10)
     return (x, y)
+
+
+def font_image_selecta(ascii_code):
+    """Get the image of a character from a PNG
+
+    Enter an ASCII code and a transparent PNG image of the char is returned.
+    Codes < 33 and delete char (127) just return a space.
+
+    Args:
+        ascii_code (int): The ASCII code (extended) of the character
+
+    Returns:
+        (PIL image): The transparent image of the character
+    
+    """
+
+    # On our Nimbus char map PNGs delete (127) is just a blank space, so if we
+    # receive any < 33 control chars, set the ascii value to 127 so a space is
+    # also returned in those cases.
+    if ascii_code < 33:
+        ascii_code = 127
+    # Calculate the row and column position of the char on the character map PNG
+    map_number = ascii_code - 32    # codes < 33 are not on the map (unprintable)
+    row = (map_number // 31) + 1
+    column = map_number - (30 * (row - 1))
+    print('map_number={} column={}, row{}'.format(map_number, column, row))
+    # Calculate corners of box around the char
+    x1 = (column - 1) * 10
+    y1 = (row - 1) * 10
+    x2 = x1 + 10
+    y2 = y1 + 10
+    # Chop out the char and return as PIL
+    print('x1, y1 = {}, {}; x2, y2 = {}, {}'.format(x1, y1, x2, y2))
+    return None
+
+
+
+
+
+if __name__ == '__main__':
+    font_image_selecta(34)
