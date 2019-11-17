@@ -141,7 +141,7 @@ def colrows_to_xy(screen_size, cursor_position):
     return (x, y)
 
 
-def font_image_selecta(ascii_code):
+def font_image_selecta(font_img, ascii_code):
     """Get the image of a character from a PNG
 
     Enter an ASCII code and a transparent PNG image of the char is returned.
@@ -171,8 +171,9 @@ def font_image_selecta(ascii_code):
     x2 = x1 + 10
     y2 = y1 + 10
     # Chop out the char and return as PIL
+    char_img = font_img[x1:x2, y1:y2]
     print('x1, y1 = {}, {}; x2, y2 = {}, {}'.format(x1, y1, x2, y2))
-    return None
+    return char_img
 
 
 

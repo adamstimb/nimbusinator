@@ -1,4 +1,4 @@
-from tools import logo, message, fatal, colour_to_bgr
+from tools import logo, message, fatal, colour_to_bgr, font_image_selecta
 import cv2
 import numpy as np
 import time
@@ -35,6 +35,7 @@ class Nimbus:
         self.debug = debug                                  # Debug flag
         self.running = True                                 # Flag to run or stop the Nimbus
         self.title = title                                  # Display window title
+        self.font0_images = self.__load_font()
         self.screen_size = (640, 250)                       # Screen size (initializes in high-res mode)
         self.border_colour = 0                              # High-res initial border colour is blue
         self.paper_colour = 0                               # High-res initial paper colour is blue
@@ -45,6 +46,15 @@ class Nimbus:
         self.high_res_colour_table = high_res_colour_table  # Dict to map high-res colour numbers to all Nimbus colours
         self.vs = VideoStream(self.screen_size, queue_size=16).start()  # VideoStream object to display the Nimbus
 
+
+    def __load_font(self):
+        if self.debug:
+            message('Loading font')
+        font_img = cv2.imread('data/font0.png')
+        font = []
+        for ascii_code in range(0, 256):
+            font.append(font_image_selecta(font_img, ascii_code))
+        return font
 
     def get_cursor_position(self):
         """Get current cursor position

@@ -49,23 +49,23 @@ def test_set_curpos_and_put(nim, cmd):
         cmd.put('Hello')
         for i in range(1, 26):
             cmd.set_curpos((1, i))
-            cmd.put('Owner of a loney heart')
+            cmd.put("1234567890 Ramalama-ding-dong *&^%$#@_- =+ []:;\\{ farts ")
         big_test = ''
         for i in range(0, 20):
-            big_test += 'Owner of a loney heart much better than a owner of a broken heart'
+            big_test += 'Owner of a loney heart much better than a owner of a broken heart blah blah 1234567890 %^$&#&$'
         cmd.set_curpos((1, 16))
         cmd.put(big_test)
         time.sleep(1)
 
 
 if __name__ == '__main__': 
-    nim = Nimbus(full_screen=True, debug=True)
+    nim = Nimbus(full_screen=False, debug=True)
     cmd = Command(nim)
     nim.boot(skip_loading_screen=True)
     test_set_curpos_and_put(nim, cmd)
-    test_set_border_low_res(nim, cmd)
-    test_set_paper_low_res(nim, cmd)
-    test_set_border_high_res(nim, cmd)
-    test_set_paper_high_res(nim, cmd)
-    test_line(nim, cmd)
+    #test_set_border_low_res(nim, cmd)
+    #test_set_paper_low_res(nim, cmd)
+    #test_set_border_high_res(nim, cmd)
+    #test_set_paper_high_res(nim, cmd)
+    #test_line(nim, cmd)
     nim.shutdown()
