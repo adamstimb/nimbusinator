@@ -1,6 +1,16 @@
+```
+     _  ___       __            _           __          
+    / |/ (_)_ _  / /  __ _____ (_)__  ___ _/ /____  ____
+   /    / /  ' \/ _ \/ // (_-</ / _ \/ _ `/ __/ _ \/ __/
+  /_/|_/_/_/_/_/_.__/\_,_/___/_/_//_/\_,_/\__/\___/_/   
+
+```
+
 # Nimbusinator
 
 RM Nimbus SUB-BIOS Emulator for Python
+
+=================================================================================
 
 Did you ever dream of writing your own applications for the RM Nimbus?  Maybe you're lucky enough to own a working Nimbus but it's so hopelessly obsolete you can't connect it to the internet or do anything more interesting than run Trains?  Been there and done that with RM Basic?  Wanted to try the mythical C compiler but it's nowhere to be found?  Do not despair.  All you need is Nimbusinator and some basic Python skillz.
 
@@ -16,19 +26,21 @@ None as yet
 import time
 from nimbusinator import Nimbus, Command
 
-if __name__ == '__main__':
-    nim = Nimbus()      # Create a Nimbus object
-    cmd = Command(nim)  # Create Command object and bind it
+if __name__ == '__main__': 
+    nim = Nimbus()
+    cmd = Command(nim)
     nim.boot()          # Boot the Nimbus
     cmd.set_mode(40)    # Low resolution mode
-    cmd.set_paper(1)    # Dark blue background
+    cmd.set_border(1)   # Dark blue border
+    cmd.set_paper(9)    # Light blue paper
     cmd.cls()           # Clear screen
-    cmd.plonk_logo((80, 80))    # Show Nimbus logo
+    cmd.plonk_logo((10, 120))    # Show Nimbus logo
     # Display a message in cyan with shadowing
-    cmd.plot('Greetings from the', (25, 45), size=2, brush=0)
-    cmd.plot('Greetings from the', (26, 46), size=2, brush=13)
-    # Wait 3 secs then shutdown
-    time.sleep(3)
+    cmd.plot('Greetings from', (30, 155), size=2, brush=0)
+    cmd.plot('Greetings from', (31, 156), size=2, brush=13)
+    cmd.plot('(not really)', (110, 80), brush=14)
+    # Wait 5 seconds then shutdown
+    time.sleep(5)
     nim.shutdown()
 ```
 

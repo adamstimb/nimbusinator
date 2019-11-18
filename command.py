@@ -313,6 +313,7 @@ class Command:
             brush (int), optional: Colour value (High-resolution: 0-3, low-resolution: 0-15)
 
         """
+
         if self.nimbus.debug:
             message('line {} brush={}'.format(coord_list, brush))
         # if default brush value then get current brush colour
@@ -326,4 +327,33 @@ class Command:
         screen_data = self.nimbus.get_screen()
         for i in range(0, len(coord_list) - 1):
             cv2.line(screen_data, fix_coord(self.nimbus.screen_size, coord_list[i]), fix_coord(self.nimbus.screen_size, coord_list[i+1]), colour_to_bgr(self.nimbus, brush), 1)
+        self.nimbus.update_screen(screen_data)
+    
+
+    def area(self, coord_list, brush=None):
+        """Draw a filled polygon
+
+        Args:
+            coord_list (list): A list of (x, y) tuples
+            brush (int), optional: Colour value (High-resolution: 0-3, low-resolution: 0-15)
+
+        """
+
+        if self.nimbus.debug:
+            message('area {} brush={}'.format(coord_list, brush))
+        # if default brush value then get current brush colour
+        if brush is None:
+            brush = self.nimbus.brush_colour
+            if self.nimbus.debug:
+                message('using current brush colour {}'.format(brush))
+        # validate brush
+        brush = is_valid_colour(self.nimbus, brush)
+        # convert coord_list into array
+        poly_list = []
+        for coord in coord_list:
+            coord = fix_coord(self.nimbus.screen_size, coord)
+            poly_list.append([coord[0], coord[1]])
+        # draw filled polygon on screen
+        screen_data = self.nimbus.get_screen()
+        cv2.fillPoly(screen_data, np.array([poly_list]), colour_to_bgr(self.nimbus, brush))
         self.nimbus.update_screen(screen_data)

@@ -165,14 +165,14 @@ class Nimbus:
             message('Display loop stopped')
 
 
-    def boot(self, skip_loading_screen=False):
+    def boot(self, skip_welcome_screen=False):
         """Boot the Nimbus
 
         Reveal the Nimbus in all its glory, with or without a cheeky
-        simulation of the famous Nimbus loading screen.
+        simulation of the famous Nimbus welcome screen.
 
         Args:
-            skip_loading_screen (bool), optional: Go straight to the application
+            skip_welcome_screen (bool), optional: Go straight to the application
 
         """
 
@@ -181,7 +181,7 @@ class Nimbus:
         # Fire up runner in a thread
         t = threading.Thread(target=self.__runner, args=())
         t.start()
-        if skip_loading_screen:
+        if skip_welcome_screen:
             # don't bother with loading screen
             return
         else:

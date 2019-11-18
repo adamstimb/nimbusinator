@@ -22,7 +22,7 @@ colour_table = {
     11: [255,  84, 255],    # light purple
     12: [ 84, 255,  84],    # light green
     13: [255, 255,  84],    # light cyan
-    14: [255,  84, 255],    # yellow
+    14: [ 84, 255, 255],    # yellow
     15: [255, 255, 255]     # white
 }
 
