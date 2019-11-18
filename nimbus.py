@@ -15,7 +15,7 @@ class Nimbus:
 
     """
 
-    def __init__(self, full_screen=False, debug=False, title='Nimbusinator'):
+    def __init__(self, full_screen=False, debug=False, title='Nimbusinator', border_size=40):
         """Create a new Nimbus object
 
         When created, the new Nimbus object is in a default state but will
@@ -36,7 +36,9 @@ class Nimbus:
         self.running = True                                 # Flag to run or stop the Nimbus
         self.title = title                                  # Display window title
         self.font0_images = self.__load_font()
+        self.logo = cv2.imread('data/rm-nimbus-logo.png')
         self.screen_size = (640, 250)                       # Screen size (initializes in high-res mode)
+        self.border_size = border_size
         self.border_colour = 0                              # High-res initial border colour is blue
         self.paper_colour = 0                               # High-res initial paper colour is blue
         self.brush_colour = 3                               # High-res initial brush colour is white
@@ -128,16 +130,15 @@ class Nimbus:
             display_data (PIL image): The finished display data
         """
 
-        border_size = 80        # Border size (really a constant)
         # Calculate the actual display dimensions with border:
-        horizontal_display_length = 640+(border_size*2)
-        vertical_display_length = 500+(border_size*2)
+        horizontal_display_length = 640+(self.border_size*2)
+        vertical_display_length = 500+(self.border_size*2)
         # Make the display image as an empty array then add the border colour
         display_data = np.zeros((vertical_display_length, horizontal_display_length, 3), dtype=np.uint8)
         cv2.rectangle(display_data, (0,0), (horizontal_display_length, vertical_display_length), colour_to_bgr(self, self.border_colour), -1)
         # resize the screen_data and add it to display
         resized = cv2.resize(screen_data, (640, 500), interpolation=cv2.INTER_LINEAR_EXACT)
-        display_data[border_size:border_size+resized.shape[0], border_size:border_size+resized.shape[1]] = resized
+        display_data[self.border_size:self.border_size+resized.shape[0], self.border_size:self.border_size+resized.shape[1]] = resized
         return display_data
 
 

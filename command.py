@@ -1,4 +1,5 @@
 from tools import message, fatal, is_valid_colour, colour_to_bgr, fix_coord, colrows_to_xy
+from tools import plonk_image, plonk_transparent_image, colour_char
 import numpy as np
 import cv2
 import time
@@ -79,6 +80,7 @@ class Command:
             self.set_paper(0)
             self.set_border(0)
             self.set_brush(3)
+            self.set_pen(3)
             self.cls()
             return
         if columns == 40:
@@ -86,12 +88,28 @@ class Command:
             self.set_paper(0)
             self.set_border(0)
             self.set_brush(15)
+            self.set_pen(15)
             self.cls()
             return
         # Invalid choice (RM Basic wasn't fussy about this but I am)
         message('{} is not a valid choice for columns since set_mode only accepts 40 or 80'.format(columns))
         fatal(self.nimbus)
-        
+
+
+    def plonk_logo(self, coord):
+        """Plonk the RM Nimbus logo on screen
+
+        Args:
+            coord (tuple): The (x, y) position to plonk the logo
+
+        """
+
+        if self.nimbus.debug:
+            message('plonk logo {}'.format(coord))
+        screen_data = self.nimbus.get_screen()
+        screen_data = plonk_image(self.nimbus, screen_data, self.nimbus.logo, coord)
+        self.nimbus.update_screen(screen_data)
+
 
     def set_paper(self, colour):
         """Set the paper colour
@@ -179,6 +197,46 @@ class Command:
         # Return cursor position
         return self.nimbus.get_cursor_position()
 
+    def plot(self, text, coords, size=1, brush=None, direction=0):
+        """Plot text on the screen
+
+        Args:
+            text (str): The text to be plotted
+            coords (tuple): The (x, y) position of the text
+            size (int): Font size. To elongate pass a tuple (x_size, y_size)
+            brush (int): Brush colour
+            direction (int): 0=normal, 1=-90deg, 2=180deg, 3=-270deg
+
+        """
+
+        # Handle brush colour
+        if brush is None:
+            brush = self.nimbus.brush_colour
+
+        # Create a temporary image of the plotted text
+        plot_img_width = len(text) * 9
+        plot_img = np.zeros((20, plot_img_width, 3), dtype=np.uint8)
+        x = 0
+        for char in text:
+            char_img = colour_char(self.nimbus, brush, cv2.bitwise_not(self.nimbus.font0_images[ord(char)]))
+            plot_img = plonk_image(self.nimbus, plot_img, char_img, (x, 0), custom_size=(plot_img_width, 10))
+            x += 9
+        # resize
+        if isinstance(size, tuple):
+            # tuple: extract x_size, y_size
+            x_size, y_size = size
+        else:
+            x_size = size
+            y_size = size
+        resized = cv2.resize(plot_img, (plot_img.shape[1]*x_size, plot_img.shape[0]*y_size), interpolation=0)
+        # rotate
+        for i in range(0, direction):
+            resized = cv2.rotate(resized, cv2.ROTATE_90_COUNTERCLOCKWISE)
+        # rebuild screen
+        screen_data = self.nimbus.get_screen()
+        screen_data = plonk_transparent_image(self.nimbus, screen_data, resized, coords)
+        self.nimbus.update_screen(screen_data)
+
 
     def put(self, ascii_data):
         """Put a single character or string at the current cursor position
@@ -198,7 +256,6 @@ class Command:
         if isinstance(ascii_data, str):
             ascii_list = ascii_data
         for ascii in ascii_list:
-            #print(ord(ascii))
             # Get char img
             char_img = self.nimbus.font0_images[ord(ascii)]
             # Get screen position in pixels from cursor position
@@ -215,21 +272,11 @@ class Command:
                 colour_to_bgr(self.nimbus, self.nimbus.paper_colour), 
                 -1
             )
-            # Char
-            #print(char_img.shape)
-            #if ascii != ' ':
-            x_offset, y_offset = fix_coord(self.nimbus.screen_size, (curpos_xy[0], curpos_xy[1]))
-            y_offset = y_offset - 9
-            screen_data[y_offset:y_offset+char_img.shape[0], x_offset:x_offset+char_img.shape[1]] = char_img
-                #screen_data[curpos_xy[1]:curpos_xy[1]+char_img.shape[0], curpos_xy[0]:curpos_xy[0]+char_img.shape[1]] = char_img
-                #cv2.rectangle(
-                #    screen_data, 
-                #    fix_coord(self.nimbus.screen_size, (curpos_xy[0]+1, curpos_xy[1]+1)), 
-                #    fix_coord(self.nimbus.screen_size, (curpos_xy[0] + 7, curpos_xy[1] + 9)), 
-                #    colour_to_bgr(self.nimbus, self.nimbus.pen_colour), 
-                #    1
-                #)
+            # Overlay char, colourise and preserve paper colour
+            char_img = colour_char(self.nimbus, self.nimbus.pen_colour, cv2.bitwise_not(char_img))
+            screen_data = plonk_transparent_image(self.nimbus, screen_data, char_img, (curpos_xy[0], curpos_xy[1]))
             # calculate new curpos, if over the right-hand side do carriage return
+            self.nimbus.update_screen(screen_data)
             new_column = self.nimbus.get_cursor_position()[0] + 1
             if colrows_to_xy(self.nimbus.screen_size, (new_column, 1))[0] >= self.nimbus.screen_size[0]:
                 if self.nimbus.debug:
@@ -255,7 +302,7 @@ class Command:
                 new_row = self.nimbus.get_cursor_position()[1]
             # move cursor
             self.set_curpos((new_column, new_row))
-            #time.sleep(1)
+            
 
 
     def line(self, coord_list, brush=None):
