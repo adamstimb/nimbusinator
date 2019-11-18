@@ -4,7 +4,7 @@ from nimbusinator import Nimbus, Command
 if __name__ == '__main__': 
     nim = Nimbus()
     cmd = Command(nim)
-    nim.boot()          # Boot the Nimbus
+    nim.boot(skip_welcome_screen=True)          # Boot the Nimbus
     cmd.set_mode(40)    # Low resolution mode
     cmd.set_border(1)   # Dark blue border
     cmd.set_paper(9)    # Light blue paper

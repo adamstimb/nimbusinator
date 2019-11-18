@@ -209,6 +209,12 @@ class Command:
 
         """
 
+        # Handle is_black workaround
+        if colour_to_bgr(self.nimbus, brush) == [0, 0, 0]:
+            is_black = True
+        else:
+            is_black = False
+
         # Handle brush colour
         if brush is None:
             brush = self.nimbus.brush_colour
@@ -218,7 +224,10 @@ class Command:
         plot_img = np.zeros((20, plot_img_width, 3), dtype=np.uint8)
         x = 0
         for char in text:
-            char_img = colour_char(self.nimbus, brush, cv2.bitwise_not(self.nimbus.font0_images[ord(char)]))
+            if is_black:
+                char_img = cv2.bitwise_not(self.nimbus.font0_images[ord(char)])
+            else:
+                char_img = colour_char(self.nimbus, brush, cv2.bitwise_not(self.nimbus.font0_images[ord(char)]))
             plot_img = plonk_image(self.nimbus, plot_img, char_img, (x, 0), custom_size=(plot_img_width, 10))
             x += 9
         # resize
@@ -234,7 +243,7 @@ class Command:
             resized = cv2.rotate(resized, cv2.ROTATE_90_COUNTERCLOCKWISE)
         # rebuild screen
         screen_data = self.nimbus.get_screen()
-        screen_data = plonk_transparent_image(self.nimbus, screen_data, resized, coords)
+        screen_data = plonk_transparent_image(self.nimbus, screen_data, resized, coords, is_black=is_black)
         self.nimbus.update_screen(screen_data)
 
 
@@ -250,6 +259,13 @@ class Command:
         """
         if self.nimbus.debug:
             message('put {}'.format(ascii_data))
+
+        # Handle is_black workaround
+        if colour_to_bgr(self.nimbus, self.nimbus.pen_colour) == [0, 0, 0]:
+            is_black = True
+        else:
+            is_black = False
+
         # Handle integer
         if isinstance(ascii_data, int):
             ascii_list = [ascii_data]
@@ -273,8 +289,11 @@ class Command:
                 -1
             )
             # Overlay char, colourise and preserve paper colour
-            char_img = colour_char(self.nimbus, self.nimbus.pen_colour, cv2.bitwise_not(char_img))
-            screen_data = plonk_transparent_image(self.nimbus, screen_data, char_img, (curpos_xy[0], curpos_xy[1]))
+            if is_black:
+                char_img = cv2.bitwise_not(char_img)
+            else:
+                char_img = colour_char(self.nimbus, self.nimbus.pen_colour, cv2.bitwise_not(char_img))
+            screen_data = plonk_transparent_image(self.nimbus, screen_data, char_img, (curpos_xy[0], curpos_xy[1]), is_black=is_black)
             # calculate new curpos, if over the right-hand side do carriage return
             self.nimbus.update_screen(screen_data)
             new_column = self.nimbus.get_cursor_position()[0] + 1

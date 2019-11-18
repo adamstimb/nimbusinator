@@ -33,6 +33,7 @@ def test_set_curpos_and_put(nim, cmd):
         cmd.set_mode(mode)
         cmd.set_border(1)
         cmd.set_paper(2)
+        cmd.set_pen(0)
         cmd.set_curpos((1, 1))
         cmd.put('Hello')
         for i in range(3, 26):

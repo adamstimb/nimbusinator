@@ -304,13 +304,14 @@ def colour_char(nimbus, colour, char_img):
     char_img_colourised[mask>0] = (b, g, r)
     return char_img_colourised
 
-def plonk_transparent_image(nimbus, background, smaller, coords):
+def plonk_transparent_image(nimbus, background, smaller, coords, is_black=False):
     """Overlay a smaller image on a background with black as transparent
 
     Args:
         background (PIL image): The background image
         smaller (PIL image): The smaller image to overlay on the background (black=transparent)
         coord (tuple): The (x, y) position of the bottom left corner of the smaller image
+        is_black (bool): Temporary workaround
     
     Returns:
         (PIL image): The modified background
@@ -335,4 +336,8 @@ def plonk_transparent_image(nimbus, background, smaller, coords):
     # Set negatives to zero and recast back to uint8
     subtracted = np.clip(subtracted, 0, 255).astype(np.uint8)
 
-    return np.add(subtracted, overlay)
+    if is_black:
+        message('return subtracted')
+        return subtracted
+    else:
+        return np.add(subtracted, overlay)
