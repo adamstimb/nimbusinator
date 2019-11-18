@@ -10,7 +10,7 @@
 
 RM Nimbus SUB-BIOS Emulator for Python
 
-=================================================================================
+## Usage
 
 Did you ever dream of writing your own applications for the RM Nimbus?  Maybe you're lucky enough to own a working Nimbus but it's so hopelessly obsolete you can't connect it to the internet or do anything more interesting than run Trains?  Been there and done that with RM Basic?  Wanted to try the mythical C compiler but it's nowhere to be found?  Do not despair.  All you need is Nimbusinator and some basic Python skillz.
 
