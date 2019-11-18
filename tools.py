@@ -1,5 +1,7 @@
 import inspect
 import sys
+import numpy as np
+import cv2
 
 
 # Let there be ASCII art
@@ -225,8 +227,112 @@ def font_image_selecta(font_img, ascii_code):
     return char_img
 
 
+def plonk_image(nimbus, background, smaller, coord, custom_size=None):
+    """Overlay a smaller image on a background image
+
+    This function also handles cases where the smaller image will overhang
+    the screen margins.
+
+    Args:
+        background (PIL image): The background image
+        smaller (PIL image): The smaller image to overlay on the background
+        coord (tuple): The (x, y) position of the bottom left corner of the smaller image
+        custom_size (tuple): Override actual screen size
+
+    Returns:
+        (PIL image): The modified background image
+
+    """
+
+    # Handle screen width or max width:
+    if custom_size is None:
+        screen_size = nimbus.screen_size
+    else:
+        screen_size = custom_size
+
+    # Convert coordinates to PIL offsets
+    x_offset = coord[0]
+    y_offset = screen_size[1] - coord[1]
+    bkg_img = background.copy()
+    # Will part of the image be off screen?  Crop it and update offsets if so.
+    x = coord[0]
+    y = coord[1]
+    if x < 0:
+        # Image overhangs left-hand side so crop left-hand side of image and set x_offset to 0
+        smaller = smaller[:, (-1 * x):, :]
+        x_offset = 0
+    if y < 0:
+        # Image overhangs bottom so crop bottom of image
+        # (because PIL has y upside down)
+        smaller = smaller[:-((-1*y)), :, :]
+        y_offset = screen_size[1]
+    if x + smaller.shape[1] > screen_size[0]:
+        # right-hand side of image overhangs left-hand side of screen so
+        # crop right-hand side of image
+        overhanging_length = (x + smaller.shape[1]) - screen_size[0]
+        smaller = smaller[:, :-overhanging_length, :]
+    if y + smaller.shape[0] > screen_size[1]:
+        # top of image overhangs top of screen so crop top of image
+        overhanging_length = (y + smaller.shape[0]) - screen_size[1]
+        smaller = smaller[overhanging_length:, :, :]
+    if x > screen_size[0] or y > screen_size[1]:
+        # Image is beyond right-hand side or top so is invisble --> plot nothing
+        return bkg_img
+    # Overlay the smaller image and return
+    bkg_img[y_offset-smaller.shape[0]:y_offset, x_offset:x_offset+smaller.shape[1]] = smaller
+    return bkg_img
 
 
+def colour_char(nimbus, colour, char_img):
+    """Colourise a char image (black background, white char)
 
-if __name__ == '__main__':
-    font_image_selecta(34)
+    Args:
+        colour (int): Nimbus colour code
+
+    Returns:
+        (PIL image): Colourised char image
+
+    """
+
+    char_img_colourised = char_img.copy()
+    white = np.array([255, 255, 255])
+    mask = cv2.inRange(char_img, white, white)
+    colour_bgr = colour_to_bgr(nimbus, colour)
+    b = colour_bgr[0]
+    g = colour_bgr[1]
+    r = colour_bgr[2]
+    char_img_colourised[mask>0] = (b, g, r)
+    return char_img_colourised
+
+def plonk_transparent_image(nimbus, background, smaller, coords):
+    """Overlay a smaller image on a background with black as transparent
+
+    Args:
+        background (PIL image): The background image
+        smaller (PIL image): The smaller image to overlay on the background (black=transparent)
+        coord (tuple): The (x, y) position of the bottom left corner of the smaller image
+    
+    Returns:
+        (PIL image): The modified background
+    
+    """
+
+    # Make an overlay    
+    overlay = np.zeros((nimbus.screen_size[1]+1, nimbus.screen_size[0]+1, 3), dtype=np.uint8)
+    overlay = plonk_image(nimbus, overlay, smaller, coords)
+    
+    # Create mask
+    gray = cv2.cvtColor(overlay, cv2.COLOR_BGR2GRAY).astype(np.int32)
+    gray = np.multiply(gray, 255).clip(max=255).astype(np.uint8)
+    mask = cv2.cvtColor(gray, cv2.COLOR_GRAY2BGR)
+
+    # Cast images to signed int32 so we can go negative
+    background = background.astype(np.int32)
+
+    # Subtract the mask  from background
+    subtracted = np.subtract(background, mask)
+
+    # Set negatives to zero and recast back to uint8
+    subtracted = np.clip(subtracted, 0, 255).astype(np.uint8)
+
+    return np.add(subtracted, overlay)
