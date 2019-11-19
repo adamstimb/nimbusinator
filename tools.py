@@ -5,14 +5,14 @@ import cv2
 
 
 # Let there be ASCII art
-logo = """
-
-     _  ___       __            _           __          
-    / |/ (_)_ _  / /  __ _____ (_)__  ___ _/ /____  ____
-   /    / /  ' \/ _ \/ // (_-</ / _ \/ _ `/ __/ _ \/ __/
-  /_/|_/_/_/_/_/_.__/\_,_/___/_/_//_/\_,_/\__/\___/_/   
-                                                      
-  RM Nimbus SUB-BIOS Emulator for Python
+logo = """                                        
+ _____ _       _           _         _           
+|   | |_|_____| |_ _ _ ___|_|___ ___| |_ ___ ___ 
+| | | | |     | . | | |_ -| |   | .'|  _| . |  _|
+|_|___|_|_|_|_|___|___|___|_|_|_|__,|_| |___|_|  
+                                                  
+                                               
+RM Nimbus SUB-BIOS Emulator for Python
                                             
 """
 
@@ -101,11 +101,13 @@ def colour_to_bgr(nimbus, colour):
 
     # low-res colour
     if nimbus.screen_size == (320, 250):
-        return nimbus.colour_table[colour]
+        return nimbus.colour_table[nimbus.low_res_colours[colour]]
+        #return nimbus.colour_table[colour]
     
     # high-res colour
     if nimbus.screen_size == (640, 250):
-        return nimbus.colour_table[nimbus.high_res_colour_table[colour]]
+        return nimbus.colour_table[nimbus.high_res_colours[colour]]
+        #return nimbus.colour_table[nimbus.high_res_colour_table[colour]]
 
 
 def fix_coord(screen_size, coord):
@@ -146,7 +148,7 @@ def colrows_to_xy(screen_size, cursor_position):
 def ceildiv(a, b):
     return -(-a // b)
 
-def font_image_selecta(font_img, ascii_code):
+def font_image_selecta(font_img, ascii_code, font):
     """Get the image of a character from a PNG
 
     Enter an ASCII code and a transparent PNG image of the char is returned.
@@ -154,56 +156,113 @@ def font_image_selecta(font_img, ascii_code):
 
     Args:
         ascii_code (int): The ASCII code (extended) of the character
+        font (int): The font or charset
 
     Returns:
         (PIL image): The transparent image of the character
     
     """
 
+
+    # Because the export from MAME is quite heavily processed we can't
+    # rely on the original coordinates to locate the fonts so these dicts
+    # are required to resolve columns and rows in x and y posiitions:
     x_pos_table = {
-        #col, #x
-        1: 0,
-        2: 10,
-        3: 21,
-        4: 32,
-        5: 43,
-        6: 54,
-        7: 65,
-        8: 76,
-        9: 86,
-        10: 97,
-        11: 108,
-        12: 120,
-        13: 131,
-        14: 142,
-        15: 152,
-        16: 163,
-        17: 174,
-        18: 186,
-        19: 196,
-        20: 207,
-        21: 218,
-        22: 229,
-        23: 240,
-        24: 251,
-        25: 261,
-        26: 272,
-        27: 283,
-        28: 294,
-        29: 305,
-        30: 316
+        # font 0
+        0: {
+            #col, #x
+            1: 0,
+            2: 10,
+            3: 20,
+            4: 30,
+            5: 40,
+            6: 50,
+            7: 60,
+            8: 70,
+            9: 80,
+            10: 90,
+            11: 100,
+            12: 110,
+            13: 120,
+            14: 130,
+            15: 140,
+            16: 150,
+            17: 160,
+            18: 170,
+            19: 180,
+            20: 190,
+            21: 200,
+            22: 210,
+            23: 220,
+            24: 230,
+            25: 240,
+            26: 250,
+            27: 260,
+            28: 270,
+            29: 280,
+            30: 290
+            },
+        # font 1
+        1: {
+           #col, #x
+            1: 0,
+            2: 10,
+            3: 20,
+            4: 30,
+            5: 40,
+            6: 50,
+            7: 60,
+            8: 70,
+            9: 80,
+            10: 90,
+            11: 100,
+            12: 110,
+            13: 120,
+            14: 130,
+            15: 140,
+            16: 150,
+            17: 160,
+            18: 170,
+            19: 180,
+            20: 190,
+            21: 200,
+            22: 210,
+            23: 220,
+            24: 230,
+            25: 240,
+            26: 250,
+            27: 260,
+            28: 270,
+            29: 280,
+            30: 290
+        }
     }
 
     y_pos_table = {
-        #row, y
-        1: 0,
-        2: 11,
-        3: 21,
-        4: 32,
-        5: 42,
-        6: 52,
-        7: 62,
-        8: 74
+        # font 0
+        0: {
+            #row, y
+            1: 0,
+            2: 9,
+            3: 19,
+            4: 29,
+            5: 38,
+            6: 47,
+            7: 57,
+            8: 66
+        },
+        # font 1
+        1: {
+            #row, y
+            1: 0,
+            2: 9,
+            3: 19,
+            4: 29,
+            5: 38,
+            6: 47,
+            7: 57,
+            8: 66
+        }
     }
 
     # On our Nimbus char map PNGs delete (127) is just a blank space, so if we
@@ -215,15 +274,21 @@ def font_image_selecta(font_img, ascii_code):
     map_number = ascii_code - 32    # codes < 33 are not on the map (unprintable)
     row = ceildiv(map_number, 30)
     column = map_number - (30 * (row - 1))
-    print('ascii_code={} map_number={} column={}, row{}'.format(ascii_code, map_number, column, row))
     # Calculate corners of box around the char
-    x1 = x_pos_table[column] + 1
-    y1 = y_pos_table[row]
+    x1 = x_pos_table[font][column]
+    y1 = y_pos_table[font][row]
     x2 = x1 + 9
+    y2 = y1 + 8
+
+    # Fixed calc
+    x1 = (column - 1) * 10
+    x2 = x1 + 9
+    y1 = (row - 1) * 10
     y2 = y1 + 9
+
+
     # Chop out the char and return as PIL
     char_img = font_img[y1:y2, x1:x2]
-    #print('x1, y1 = {}, {}; x2, y2 = {}, {}'.format(x1, y1, x2, y2))
     return char_img
 
 
@@ -337,7 +402,6 @@ def plonk_transparent_image(nimbus, background, smaller, coords, is_black=False)
     subtracted = np.clip(subtracted, 0, 255).astype(np.uint8)
 
     if is_black:
-        message('return subtracted')
         return subtracted
     else:
         return np.add(subtracted, overlay)

@@ -26,6 +26,36 @@ colour_table = {
     15: [255, 255, 255]     # white
 }
 
+# Low-res default colours
+low_res_default_colours = {
+    0:  0,    # black
+    1:  1,    # dark blue
+    2:  2,    # dark red
+    3:  3,    # purple
+    4:  4,    # dark green
+    5:  5,    # dark cyan
+    6:  6,    # brown
+    7:  7,    # light grey
+    8:  8,    # dark grey
+    9:  9,    # light blue
+    10: 10,    # light red
+    11: 11,    # light purple
+    12: 12,    # light green
+    13: 13,    # light cyan
+    14: 14,    # yellow
+    15: 15    # white
+}
+
+# High-res default colours
+high_res_default_colours = {
+    0: 1,                   # dark blue
+    1: 4,                   # dark green
+    2: 10,                  # light red
+    3: 15                   # white
+}
+
+
+
 # High-res mode has it's own colour table.  This is the default
 # palette for high-res mode in RM Basic but, just like on the Nimbus, 
 # any 16 colours can be assigned to the 4 slots at runtime.

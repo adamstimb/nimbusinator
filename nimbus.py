@@ -4,7 +4,9 @@ import numpy as np
 import time
 import threading
 from videostream import VideoStream
-from colour_table import colour_table, high_res_colour_table
+from colour_table import colour_table, high_res_colour_table, low_res_default_colours, high_res_default_colours
+from command import Command
+from welcome import welcome
 
 
 class Nimbus:
@@ -35,7 +37,7 @@ class Nimbus:
         self.debug = debug                                  # Debug flag
         self.running = True                                 # Flag to run or stop the Nimbus
         self.title = title                                  # Display window title
-        self.font0_images = self.__load_font()
+        self.font_images = self.__load_fonts()
         self.logo = cv2.imread('data/rm-nimbus-logo.png')
         self.screen_size = (640, 250)                       # Screen size (initializes in high-res mode)
         self.border_size = border_size
@@ -44,19 +46,27 @@ class Nimbus:
         self.brush_colour = 3                               # High-res initial brush colour is white
         self.pen_colour = 3                                 # High-res initial pen colour is white
         self.cursor_position = (1, 1)                       # Initial cursor position is top-left
+        self.plot_font = 0                                  # Initial plot font (charset for plot)
+        self.charset = 0                                    # Initial charset (font for text)
         self.colour_table = colour_table                    # Dict to to convert Nimbus colour numbers to BGR
         self.high_res_colour_table = high_res_colour_table  # Dict to map high-res colour numbers to all Nimbus colours
+        self.low_res_default_colours = low_res_default_colours.copy()
+        self.high_res_default_colours = high_res_default_colours.copy()
+        self.low_res_colours = low_res_default_colours.copy()
+        self.high_res_colours = high_res_default_colours.copy()
         self.vs = VideoStream(self.screen_size, queue_size=16).start()  # VideoStream object to display the Nimbus
 
 
-    def __load_font(self):
+    def __load_fonts(self):
         if self.debug:
-            message('Loading font')
-        font_img = cv2.imread('data/font0.png')
-        font = []
-        for ascii_code in range(0, 256):
-            font.append(font_image_selecta(font_img, ascii_code))
-        return font
+            message('Loading fonts')
+        fonts = {}
+        for font in range(0, 2):
+            font_img = cv2.imread('data/font{}.png'.format(font))
+            fonts[font] = []
+            for ascii_code in range(0, 256):
+                fonts[font].append(font_image_selecta(font_img, ascii_code, font))
+        return fonts
 
     def get_cursor_position(self):
         """Get current cursor position
@@ -176,6 +186,7 @@ class Nimbus:
 
         """
 
+        message('Booting up')
         if self.debug:
             message('Dropping runner into a thread')
         # Fire up runner in a thread
@@ -183,13 +194,16 @@ class Nimbus:
         t.start()
         if skip_welcome_screen:
             # don't bother with loading screen
+            message('Running')
             return
         else:
-            message('Please insert an operating system')
-            time.sleep(1.5)
-            message('Loading operating system')
-            time.sleep(3)
-            message('End of loading screen')
+            if self.debug:
+                message('Running Welcome Screen')
+            welcome(Command(self))
+            if self.debug:
+                message('Welcome Screen finished')
+            message('Running')
+
 
     
     def shutdown(self):
@@ -200,6 +214,7 @@ class Nimbus:
 
         """
 
+        message('Shutting down')
         if self.debug:
             message('Stopping display loop and destroying cv2 windows')
         self.running = False

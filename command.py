@@ -77,6 +77,7 @@ class Command:
         # change screen size and set default colours accordingly
         if columns == 80:
             self.nimbus.screen_size = (640, 250)
+            self.nimbus.high_res_colours = self.nimbus.high_res_default_colours.copy()
             self.set_paper(0)
             self.set_border(0)
             self.set_brush(3)
@@ -85,6 +86,7 @@ class Command:
             return
         if columns == 40:
             self.nimbus.screen_size = (320, 250)
+            self.nimbus.low_res_colours = self.nimbus.low_res_default_colours.copy()
             self.set_paper(0)
             self.set_border(0)
             self.set_brush(15)
@@ -118,11 +120,29 @@ class Command:
             colour (int): Colour value (High-resolution: 0-3, low-resolution: 0-15)
 
         """
+
         if self.nimbus.debug:
             message('set paper {}'.format(colour))
         self.nimbus.paper_colour = is_valid_colour(self.nimbus, colour)
         
     
+    def set_colour(self, colour1, colour2):
+        """Set a colour to a new colour
+
+        Args:
+            colour1 (int): The colour code to be changed
+            colour2 (int): The new colour to be assigned to colour1
+        
+        """
+
+        if self.nimbus.debug:
+            message('set colour {} to {}'.format(colour1, colour2))
+        if self.nimbus.screen_size == (320, 250):
+            self.nimbus.low_res_colours[is_valid_colour(self.nimbus, colour1)] = colour2
+        if self.nimbus.screen_size == (640, 250):
+            self.nimbus.high_res_colours[is_valid_colour(self.nimbus, colour1)] = colour2
+
+
     def set_border(self, colour):
         """Set the border colour
         
@@ -161,6 +181,30 @@ class Command:
         self.nimbus.pen_colour = is_valid_colour(self.nimbus, colour)
 
 
+    def set_charset(self, charset):
+        """Set the charset for text
+
+        Args:
+            charset (int): 0 is the standard font, 1 is the other font!
+
+        """
+
+        if self.nimbus.debug:
+            message('set charset {}'.format(charset))
+        self.nimbus.charset = charset
+
+
+    def ask_charset(self):
+        """Return the current charset for text
+
+        Returns:
+            charset (int): 0 is the standard font, 1 is the other font
+
+        """
+
+        return self.nimbus.charset
+
+
     def set_curpos(self, cursor_position):
         """Set the cursor position
 
@@ -197,7 +241,8 @@ class Command:
         # Return cursor position
         return self.nimbus.get_cursor_position()
 
-    def plot(self, text, coords, size=1, brush=None, direction=0):
+
+    def plot(self, text, coords, size=1, brush=None, direction=0, font=None):
         """Plot text on the screen
 
         Args:
@@ -206,6 +251,7 @@ class Command:
             size (int): Font size. To elongate pass a tuple (x_size, y_size)
             brush (int): Brush colour
             direction (int): 0=normal, 1=-90deg, 2=180deg, 3=-270deg
+            font (int): 0 is the standard font, 1 is the other font
 
         """
 
@@ -219,17 +265,22 @@ class Command:
         if brush is None:
             brush = self.nimbus.brush_colour
 
+        # Handle font
+        if font is None:
+            font = self.nimbus.plot_font
+
         # Create a temporary image of the plotted text
         plot_img_width = len(text) * 9
-        plot_img = np.zeros((20, plot_img_width, 3), dtype=np.uint8)
+        plot_img = np.zeros((10, plot_img_width, 3), dtype=np.uint8)
         x = 0
         for char in text:
             if is_black:
-                char_img = cv2.bitwise_not(self.nimbus.font0_images[ord(char)])
+                char_img = cv2.bitwise_not(self.nimbus.font_images[font][ord(char)])
             else:
-                char_img = colour_char(self.nimbus, brush, cv2.bitwise_not(self.nimbus.font0_images[ord(char)]))
+                char_img = colour_char(self.nimbus, brush, cv2.bitwise_not(self.nimbus.font_images[font][ord(char)]))
             plot_img = plonk_image(self.nimbus, plot_img, char_img, (x, 0), custom_size=(plot_img_width, 10))
-            x += 9
+            x += 8
+        
         # resize
         if isinstance(size, tuple):
             # tuple: extract x_size, y_size
@@ -238,10 +289,12 @@ class Command:
             x_size = size
             y_size = size
         resized = cv2.resize(plot_img, (plot_img.shape[1]*x_size, plot_img.shape[0]*y_size), interpolation=0)
+        
         # rotate
         for i in range(0, direction):
             resized = cv2.rotate(resized, cv2.ROTATE_90_COUNTERCLOCKWISE)
-        # rebuild screen
+        
+        # rebuild screen and done
         screen_data = self.nimbus.get_screen()
         screen_data = plonk_transparent_image(self.nimbus, screen_data, resized, coords, is_black=is_black)
         self.nimbus.update_screen(screen_data)
@@ -273,7 +326,7 @@ class Command:
             ascii_list = ascii_data
         for ascii in ascii_list:
             # Get char img
-            char_img = self.nimbus.font0_images[ord(ascii)]
+            char_img = self.nimbus.font_images[self.nimbus.charset][ord(ascii)]
             # Get screen position in pixels from cursor position
             curpos_xy = colrows_to_xy(self.nimbus.screen_size, self.nimbus.get_cursor_position())
             if self.nimbus.debug:
@@ -322,6 +375,21 @@ class Command:
             # move cursor
             self.set_curpos((new_column, new_row))
             
+    def print(self, text):
+        """Print a string with carriage return at end
+
+        Args:
+            text (str): The text to be printed
+
+        """
+
+        self.put(text)
+        # Carriage return?
+        col, row = self.ask_curpos()
+        if col > 1:
+            # Yep - smash the cursor off the screen and use put to force CR
+            self.nimbus.cursor_position = (255, row)
+            self.put('X')
 
 
     def line(self, coord_list, brush=None):

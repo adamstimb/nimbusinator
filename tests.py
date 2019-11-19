@@ -39,10 +39,12 @@ def test_set_curpos_and_put(nim, cmd):
         for i in range(3, 26):
             cmd.set_curpos((1, i))
             cmd.put("The Ace of Spades 1234567890 !@#$%^&*()_+")
+            cmd.set_charset(random.randint(0, 1))
         big_test = ''
         cmd.set_pen(1)
         for i in range(0, 20):
             big_test += 'Double up or quits, double stakes or splits, the Ace of Spades, the Ace of Spades. '
+            cmd.set_charset(random.randint(0, 1))
         cmd.set_curpos((7, 16))
         cmd.put(big_test)
         time.sleep(2)
@@ -68,7 +70,8 @@ def test_plot(nim, cmd):
         x_size = random.randint(1, 5)
         y_size = random.randint(1, 5)
         brush = random.randint(0, 3)
-        cmd.plot("Farts!", (x, y), size=(x_size, y_size), brush=brush, direction=direction)
+        font = random.randint(0, 1)
+        cmd.plot("Farts!", (x, y), size=(x_size, y_size), brush=brush, direction=direction, font=font)
     time.sleep(1)
     cmd.set_mode(40)
     for i in range(0, 2000):
@@ -78,7 +81,8 @@ def test_plot(nim, cmd):
         x_size = random.randint(1, 3)
         y_size = random.randint(1, 3)
         brush = random.randint(0, 15)
-        cmd.plot("PANTS!!!", (x, y), size=(x_size, y_size), brush=brush, direction=direction)
+        font = random.randint(0, 1)
+        cmd.plot("PANTS!!!", (x, y), size=(x_size, y_size), brush=brush, direction=direction, font=font)
     time.sleep(1)
 
 def test_area(nim, cmd):
@@ -131,9 +135,9 @@ def test_line(nim, cmd):
 
 
 if __name__ == '__main__': 
-    nim = Nimbus(full_screen=True, debug=True, border_size=40)
+    nim = Nimbus(full_screen=True, debug=False, border_size=40)
     cmd = Command(nim)
-    nim.boot(skip_welcome_screen=True)
+    nim.boot(skip_welcome_screen=False)
     test_plonk_logo(nim, cmd)
     test_plot(nim, cmd)
     test_set_border_low_res(nim, cmd)
