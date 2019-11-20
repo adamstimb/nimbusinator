@@ -12,7 +12,7 @@ logo = """
 |_|___|_|_|_|_|___|___|___|_|_|_|__,|_| |___|_|  
                                                   
                                                
-RM Nimbus SUB-BIOS Emulator for Python
+RM Nimbus GUI for Python
                                             
 """
 
@@ -163,108 +163,6 @@ def font_image_selecta(font_img, ascii_code, font):
     
     """
 
-
-    # Because the export from MAME is quite heavily processed we can't
-    # rely on the original coordinates to locate the fonts so these dicts
-    # are required to resolve columns and rows in x and y posiitions:
-    x_pos_table = {
-        # font 0
-        0: {
-            #col, #x
-            1: 0,
-            2: 10,
-            3: 20,
-            4: 30,
-            5: 40,
-            6: 50,
-            7: 60,
-            8: 70,
-            9: 80,
-            10: 90,
-            11: 100,
-            12: 110,
-            13: 120,
-            14: 130,
-            15: 140,
-            16: 150,
-            17: 160,
-            18: 170,
-            19: 180,
-            20: 190,
-            21: 200,
-            22: 210,
-            23: 220,
-            24: 230,
-            25: 240,
-            26: 250,
-            27: 260,
-            28: 270,
-            29: 280,
-            30: 290
-            },
-        # font 1
-        1: {
-           #col, #x
-            1: 0,
-            2: 10,
-            3: 20,
-            4: 30,
-            5: 40,
-            6: 50,
-            7: 60,
-            8: 70,
-            9: 80,
-            10: 90,
-            11: 100,
-            12: 110,
-            13: 120,
-            14: 130,
-            15: 140,
-            16: 150,
-            17: 160,
-            18: 170,
-            19: 180,
-            20: 190,
-            21: 200,
-            22: 210,
-            23: 220,
-            24: 230,
-            25: 240,
-            26: 250,
-            27: 260,
-            28: 270,
-            29: 280,
-            30: 290
-        }
-    }
-
-    y_pos_table = {
-        # font 0
-        0: {
-            #row, y
-            1: 0,
-            2: 9,
-            3: 19,
-            4: 29,
-            5: 38,
-            6: 47,
-            7: 57,
-            8: 66
-        },
-        # font 1
-        1: {
-            #row, y
-            1: 0,
-            2: 9,
-            3: 19,
-            4: 29,
-            5: 38,
-            6: 47,
-            7: 57,
-            8: 66
-        }
-    }
-
     # On our Nimbus char map PNGs delete (127) is just a blank space, so if we
     # receive any < 33 control chars, set the ascii value to 127 so a space is
     # also returned in those cases.
@@ -275,18 +173,10 @@ def font_image_selecta(font_img, ascii_code, font):
     row = ceildiv(map_number, 30)
     column = map_number - (30 * (row - 1))
     # Calculate corners of box around the char
-    x1 = x_pos_table[font][column]
-    y1 = y_pos_table[font][row]
-    x2 = x1 + 9
-    y2 = y1 + 8
-
-    # Fixed calc
     x1 = (column - 1) * 10
-    x2 = x1 + 9
+    x2 = x1 + 10
     y1 = (row - 1) * 10
-    y2 = y1 + 9
-
-
+    y2 = y1 + 10
     # Chop out the char and return as PIL
     char_img = font_img[y1:y2, x1:x2]
     return char_img

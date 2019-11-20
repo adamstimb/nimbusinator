@@ -2,7 +2,7 @@ import time
 from nimbusinator import Nimbus, Command
 
 if __name__ == '__main__': 
-    nim = Nimbus()
+    nim = Nimbus(full_screen=True)
     cmd = Command(nim)
     nim.boot()          # Boot the Nimbus
     cmd.set_mode(40)    # Low resolution mode
@@ -14,6 +14,8 @@ if __name__ == '__main__':
     cmd.plot('Greetings from', (40, 155), size=2, brush=0)
     cmd.plot('Greetings from', (41, 156), size=2, brush=13)
     cmd.plot('(well, sort of)', (100, 80), brush=14)
+    cmd.plot(' ', (20, 20), brush=14)
+    cmd.plot('       ', (20, 40), brush=13)
     # Wait 5 seconds then shutdown
     time.sleep(5)
     nim.shutdown()

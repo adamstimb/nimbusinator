@@ -29,6 +29,7 @@ def test_set_paper_high_res(nim, cmd):
         time.sleep(0.1)
 
 def test_set_curpos_and_put(nim, cmd):
+    cmd.set_cursor(True)
     for mode in [40, 80]:
         cmd.set_mode(mode)
         cmd.set_border(1)
@@ -48,6 +49,7 @@ def test_set_curpos_and_put(nim, cmd):
         cmd.set_curpos((7, 16))
         cmd.put(big_test)
         time.sleep(2)
+    cmd.set_cursor(False)
 
 def test_plonk_logo(nim, cmd):
     cmd.set_mode(80)
@@ -138,6 +140,7 @@ if __name__ == '__main__':
     nim = Nimbus(full_screen=True, debug=False, border_size=40)
     cmd = Command(nim)
     nim.boot(skip_welcome_screen=False)
+    test_set_curpos_and_put(nim, cmd)
     test_plonk_logo(nim, cmd)
     test_plot(nim, cmd)
     test_set_border_low_res(nim, cmd)

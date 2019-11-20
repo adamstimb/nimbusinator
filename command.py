@@ -82,6 +82,7 @@ class Command:
             self.set_border(0)
             self.set_brush(3)
             self.set_pen(3)
+            self.set_curpos((1, 1))
             self.cls()
             return
         if columns == 40:
@@ -91,11 +92,24 @@ class Command:
             self.set_border(0)
             self.set_brush(15)
             self.set_pen(15)
+            self.set_curpos((1, 1))
             self.cls()
             return
         # Invalid choice (RM Basic wasn't fussy about this but I am)
         message('{} is not a valid choice for columns since set_mode only accepts 40 or 80'.format(columns))
         fatal(self.nimbus)
+
+
+    def set_cursor(self, flag):
+        """Show or hide cursor
+
+        Args:
+            flag (boolean): True to show cursor, False to hide
+
+        """
+        if self.nimbus.debug:
+            message('set cursor {}'.format(flag))
+        self.nimbus.show_cursor = flag
 
 
     def plonk_logo(self, coord):
