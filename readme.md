@@ -88,9 +88,10 @@ if __name__ == '__main__':
     nim.shutdown()
 ```
 
-## Useful links
+## Links
 
 - [Center for Computing History](http://www.computinghistory.org.uk/) - original RM Nimbus manuals and technical data
 - [The Nimbus Museum](https://thenimbus.co.uk/) - online museum that looks like the Welcome Disk!
 - [mame](https://www.mamedev.org/) - comprehensive retro computer emulation project
 - [Freesound pack: Floppy disk drive](https://freesound.org/people/MrAuralization/packs/15891/) - source of the floppy drive sounds
+- [Ironstone Innovation](https://ironstoneinnovation.eu) - what I do for a living
