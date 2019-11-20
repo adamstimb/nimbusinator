@@ -1,5 +1,6 @@
 import time
-from nimbusinator import Nimbus, Command
+from nimbus import Nimbus
+from command import Command
 
 if __name__ == '__main__': 
     nim = Nimbus(full_screen=True)

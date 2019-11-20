@@ -1,6 +1,7 @@
 import time
 import random
-from nimbusinator import Nimbus, Command
+from nimbus import Nimbus
+from command import Command
 
 def test_set_border_low_res(nim, cmd):
     cmd.set_mode(40)
