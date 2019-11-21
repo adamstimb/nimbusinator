@@ -77,6 +77,7 @@ class Nimbus:
         self.keyboard_buffer = []
         self.ctrl_pressed = False
         self.enter_was_pressed = False
+        self.backspace_was_pressed = False
         self.vs = VideoStream(self.screen_size, queue_size=16).start()  # VideoStream object to display the Nimbus
 
 
@@ -291,6 +292,9 @@ class Nimbus:
             # Handle ENTER hit
             if key == keyboard.Key.enter:
                 self.enter_was_pressed = True
+            # Handle BACKSPACE hit
+            if key == keyboard.Key.backspace:
+                self.backspace_was_pressed = True
             # Also add spaces to buffer
             if key == keyboard.Key.space:
                 self.keyboard_buffer.append(' ')

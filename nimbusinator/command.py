@@ -356,17 +356,30 @@ class Command:
         """
         if self.nimbus.debug:
             message('input {}'.format(prompt))
-        # Flush buffer, reset enter flag
+        # Flush buffer, reset enter + delete flag
         self.flush()
         self.nimbus.enter_was_pressed = False
-        # Print the prompt
+        self.nimbus.backspace_was_pressed = False
+        # Print the prompt and get start cursor position
         self.put(prompt)
+        start_col, start_row = self.ask_curpos()
+        # Collect response in this string:
         response = ''
         # Collect and echo chars from buffer until enter was pressed
         while not self.nimbus.enter_was_pressed:
             new_char = self.gets()
             response += new_char
             self.put(new_char)
+            # Handle delete
+            if self.nimbus.backspace_was_pressed and len(response) == 0:
+                self.nimbus.backspace_was_pressed = False
+            if self.nimbus.backspace_was_pressed and len(response) > 0:
+                now_col, now_row = self.ask_curpos()
+                response = response[:-1]
+                self.set_curpos((now_col - 1, now_row))
+                self.put(' ')
+                self.set_curpos((now_col - 1, now_row))
+                self.nimbus.backspace_was_pressed = False
         # Enter was pressed, flush buffer and reset enter flag
         self.nimbus.enter_was_pressed = False
         self.flush()
