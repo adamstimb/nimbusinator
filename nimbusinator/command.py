@@ -356,13 +356,17 @@ class Command:
         """
         if self.nimbus.debug:
             message('input {}'.format(prompt))
+        # Get max columns for this screen mode
+        if self.nimbus.screen_size == (320, 250):
+            max_columns = 40
+        if self.nimbus.screen_size == (640, 250):
+            max_columns = 80
         # Flush buffer, reset enter + delete flag
         self.flush()
         self.nimbus.enter_was_pressed = False
         self.nimbus.backspace_was_pressed = False
         # Print the prompt and get start cursor position
         self.put(prompt)
-        start_col, start_row = self.ask_curpos()
         # Collect response in this string:
         response = ''
         # Collect and echo chars from buffer until enter was pressed
@@ -376,9 +380,24 @@ class Command:
             if self.nimbus.backspace_was_pressed and len(response) > 0:
                 now_col, now_row = self.ask_curpos()
                 response = response[:-1]
-                self.set_curpos((now_col - 1, now_row))
+                # Move cursor left
+                # If we're about to move off the left-hand side of the screen
+                # it must be because we're on a line below where the input
+                # started.  So, we need to move up one row and locate cursor
+                # at right-hand side, wipe whatever char is there, then re-
+                # position
+                next_col = now_col - 1
+                if next_col == 0:
+                    # Go up one row
+                    next_col = max_columns
+                    next_row = now_row - 1
+                else:
+                    # Go back one column
+                    next_row = now_row
+                # Wipe char in this location, reposition, and reset flag
+                self.set_curpos((next_col, next_row))
                 self.put(' ')
-                self.set_curpos((now_col - 1, now_row))
+                self.set_curpos((next_col, next_row))
                 self.nimbus.backspace_was_pressed = False
         # Enter was pressed, flush buffer and reset enter flag
         self.nimbus.enter_was_pressed = False
