@@ -314,6 +314,70 @@ class Command:
         self.nimbus.update_screen(screen_data)
 
 
+    def flush(self):
+        """Clears the keyboard buffer
+
+        """
+
+        if self.nimbus.debug:
+            message('flush')
+        self.nimbus.keyboard_buffer = []
+    
+
+    def gets(self):
+        """Get the oldest char in the keyboard buffer
+
+        Equivalent to GET$ in RM Basic
+
+        Returns:
+            (str): The oldest char in the buffer
+        
+        """
+
+        if self.nimbus.debug:
+            message('get$')
+        # If the buffer isn't empty pop the last char
+        # and return it, otherwise return empty str
+        if len(self.nimbus.keyboard_buffer) > 0:
+            return self.nimbus.keyboard_buffer.pop(0)
+        else:
+            return ''
+
+
+    def input(self, prompt):
+        """Collects keyboard input until user presses ENTER
+
+        Args:
+            prompt (str): Message to be printed
+
+        Returns:
+            (str): The user's response
+        
+        """
+        if self.nimbus.debug:
+            message('input {}'.format(prompt))
+        # Flush buffer, reset enter flag
+        self.flush()
+        self.nimbus.enter_was_pressed = False
+        # Print the prompt
+        self.put(prompt)
+        response = ''
+        # Collect and echo chars from buffer until enter was pressed
+        while not self.nimbus.enter_was_pressed:
+            new_char = self.gets()
+            response += new_char
+            self.put(new_char)
+        # Enter was pressed, flush buffer and reset enter flag
+        self.nimbus.enter_was_pressed = False
+        self.flush()
+        # Force carriage return by smashing the cursor off the screen
+        col, row = self.ask_curpos()
+        self.nimbus.cursor_position = (255, row)
+        self.put('X')
+        # Return string
+        return response
+
+
     def put(self, ascii_data):
         """Put a single character or string at the current cursor position
 

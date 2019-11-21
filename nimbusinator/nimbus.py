@@ -5,8 +5,9 @@ import time
 import threading
 import random
 import simpleaudio as sa
+from pynput import keyboard
 from videostream import VideoStream
-from colour_table import colour_table, high_res_colour_table, low_res_default_colours, high_res_default_colours
+from colour_table import colour_table, low_res_default_colours, high_res_default_colours
 from command import Command
 from welcome import welcome
 
@@ -25,14 +26,12 @@ class Nimbus:
     """
 
     def __onMouse(self, event, x, y, flags, param):
-        """Handle mouse and some keyboard events
+        """Handle mouse event
 
         """
 
-        if event == cv2.EVENT_FLAG_SHIFTKEY:
-            self.shift_pressed = True
-        else:
-            self.shift_pressed = False
+
+        return
 
 
     def __init__(self, full_screen=False, debug=False, title='Nimbusinator', border_size=40):
@@ -67,7 +66,6 @@ class Nimbus:
         self.plot_font = 0                                  # Initial plot font (charset for plot)
         self.charset = 0                                    # Initial charset (font for text)
         self.colour_table = colour_table                    # Dict to to convert Nimbus colour numbers to BGR
-        self.high_res_colour_table = high_res_colour_table  # Dict to map high-res colour numbers to all Nimbus colours
         self.low_res_default_colours = low_res_default_colours.copy()
         self.high_res_default_colours = high_res_default_colours.copy()
         self.low_res_colours = low_res_default_colours.copy()
@@ -76,7 +74,9 @@ class Nimbus:
         self.cursor_flash = False
         self.show_cursor = False
         self.floppy_is_running = False
-        self.shift_pressed = False
+        self.keyboard_buffer = []
+        self.ctrl_pressed = False
+        self.enter_was_pressed = False
         self.vs = VideoStream(self.screen_size, queue_size=16).start()  # VideoStream object to display the Nimbus
 
 
@@ -195,13 +195,6 @@ class Nimbus:
         return display_data
 
 
-    def __handle_keypress_event(self, key):
-        """Add a keypress to the bufferr
-
-        """
-        message('{}')
-
-
     def __screen_runner(self):
         """Display the Nimbus in a window
 
@@ -218,14 +211,14 @@ class Nimbus:
             cv2.namedWindow(self.title, cv2.WND_PROP_FULLSCREEN)
             cv2.setWindowProperty(self.title, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
         cv2.namedWindow(self.title)
+        # Nimbus's mouse feature won't be implemented until later
         cv2.setMouseCallback(self.title, self.__onMouse)
+        # Display loop
         while self.running:
             frame = self.__render_display(self.vs.get_screen())
             cv2.imshow(self.title, frame)
-            key_pressed = cv2.waitKey(5)
-            # Handle key presses
-            if key_pressed != -1:
-                self.__handle_keypress_event(key_pressed)
+            time.sleep(0.05)
+            cv2.waitKey(5)
         if self.debug:
             message('Display loop stopped')
 
@@ -279,6 +272,42 @@ class Nimbus:
         self.floppy_is_running = flag
 
 
+    def __on_key_press(self, key):
+        """Handle control key presses
+
+        """
+        
+        # Printable chars go straight into the buffer
+        try:
+            self.keyboard_buffer.append(key.char)
+            # BUT - if CTRL-C situation then shutdown!
+            if self.ctrl_pressed and key.char.lower() == 'c':
+                message('CTRL-C detected - shutting down')
+                self.shutdown()
+        except AttributeError:
+            # Handle CTRL released
+            if key == keyboard.Key.ctrl_l or keyboard.Key.ctrl_r:
+                self.ctrl_pressed = True
+            # Handle ENTER hit
+            if key == keyboard.Key.enter:
+                self.enter_was_pressed = True
+            # Also add spaces to buffer
+            if key == keyboard.Key.space:
+                self.keyboard_buffer.append(' ')
+
+
+    def __on_key_release(self, key):
+        """Handle control key releases
+
+        """
+        # Handle CTRL released
+        if key == keyboard.Key.ctrl_l or keyboard.Key.ctrl_r:
+            self.ctrl_pressed = False
+        if key == keyboard.Key.esc:
+            # Stop listener
+            return False
+
+
     def boot(self, skip_welcome_screen=False):
         """Boot the Nimbus
 
@@ -300,17 +329,24 @@ class Nimbus:
         # Fire up cursor in another thread
         t_cursor = threading.Thread(target=self.__cycle_cursor_flash, args=())
         t_cursor.start()
-        # Fire up the flopp disk effects in another
+        # Fire up the floppy disk effects in another
         t_floppy = threading.Thread(target=self.__floppy_drive_effects, args=())
         t_floppy.start()
+        # Fire up the keyboard listener
+        listener = keyboard.Listener(
+            on_press=self.__on_key_press,
+            on_release=self.__on_key_release)
+        listener.start()
         if skip_welcome_screen:
             # don't bother with loading screen
             message('Running')
+            Command(self).set_mode(80)
             return
         else:
             if self.debug:
                 message('Running Welcome Screen')
             welcome(Command(self), self)
+            Command(self).set_mode(80)
             if self.debug:
                 message('Welcome Screen finished')
             message('Running')

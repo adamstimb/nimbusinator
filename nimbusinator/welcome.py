@@ -46,8 +46,6 @@ def welcome(cmd, nim):
     # Welcome
     cmd.plot('Welcome', (235, 140), size=3, brush=0, font=1)
     cmd.plot('Welcome', (232, 142), size=3, brush=2, font=1)
-    # Looking for an operating system
-    cmd.plot('Looking for an operating system - please wait', (135, 100), brush=3, font=1)
     # Memory
     cmd.plot('total memory size {m: >5} Mbytes'.format(m=total_mem), (15, 5), brush=0, font=1)
     cmd.plot('used  memory size {m: >5} Mbytes'.format(m=used_mem), (15, 15), brush=0, font=1)
@@ -57,10 +55,16 @@ def welcome(cmd, nim):
     cmd.area([(395, 6), (630, 6), (630, 30), (395, 30), (395, 6)], brush=3)
     cmd.plot('Firmware version: {}'.format(py_version), (400, 18), brush=0, font=1)
     cmd.plot('Serial number: {}'.format(platform.release()[:8]), (400, 8), brush=0, font=1)
-    # Dwell
+    # Please supply an operating system
+    cmd.plot('Please supply an operating system', (180, 100), brush=3, font=1)
+    time.sleep(1.3)
+    cmd.plot('Please supply an operating system', (180, 100), brush=1, font=1)
+    # Looking for an operating system
+    cmd.plot('Looking for an operating system - please wait', (135, 100), brush=3, font=1)
+    time.sleep(1)
+    nim.run_floppy(True)
     time.sleep(2)
     # Loading operating system
-    nim.run_floppy(True)
     cmd.plot('Looking for an operating system - please wait', (135, 100), brush=1, font=1)
     cmd.plot('Loading operating system', (220, 100), brush=3, font=1)
     time.sleep(4)

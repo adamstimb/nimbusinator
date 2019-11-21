@@ -3,7 +3,7 @@ from nimbus import Nimbus
 from command import Command
 
 if __name__ == '__main__': 
-    nim = Nimbus(full_screen=True)
+    nim = Nimbus(full_screen=False)
     cmd = Command(nim)
     nim.boot()          # Boot the Nimbus
     cmd.set_mode(40)    # Low resolution mode
@@ -18,5 +18,5 @@ if __name__ == '__main__':
     cmd.plot(' ', (20, 20), brush=14)
     cmd.plot('       ', (20, 40), brush=13)
     # Wait 5 seconds then shutdown
-    time.sleep(5)
+    time.sleep(20)
     nim.shutdown()

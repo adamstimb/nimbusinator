@@ -4,7 +4,7 @@ RM Nimbus GUI for Python
 
 ## About
 
-Nimbusinator is a graphical user-interface package for Python that mimicks the graphics and text drivers of the RM Nimbus PC186.  It is _not_ an emulation of the Nimbus itself.  But this means you get the best of both worlds:  Cutting-edge Python computing power, beautifully presented in up to 16 colours!
+Nimbusinator is a graphical user-interface package for Python that mimicks the graphics and text drivers of the RM Nimbus PC186.  It is _not_ an emulation of the Nimbus itself.  This means you get the best of both worlds:  Cutting-edge Python computing power, beautifully presented in up to 16 colours!
 
 ## Usage
 
