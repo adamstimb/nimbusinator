@@ -10,10 +10,12 @@ from videostream import VideoStream
 from colour_table import colour_table, low_res_default_colours, high_res_default_colours
 from command import Command
 from welcome import welcome
+import os
 
+# get full path of this script
+real_path = os.path.dirname(os.path.realpath(__file__))
 
-# Floppy drive sounds: https://freesound.org/people/MrAuralization/packs/15891/
-
+# define default cursor image
 default_cursor_image = np.ones((2, 10, 3), dtype=np.uint8) * 255
 
 
@@ -54,10 +56,11 @@ class Nimbus:
         self.debug = debug                                  # Debug flag
         self.running = True                                 # Flag to run or stop the Nimbus
         self.title = title                                  # Display window title
-        self.font_images = self.__load_fonts()
-        self.logo = cv2.imread('data/rm-nimbus-logo.png')
+        self.font_images = self.__load_fonts()              # Font images
+        logo_path = os.path.join(real_path, 'data', 'rm-nimbus-logo.png')
+        self.logo = cv2.imread(logo_path)                   # Nimbus logo image
         self.screen_size = (640, 250)                       # Screen size (initializes in high-res mode)
-        self.border_size = border_size
+        self.border_size = border_size                      # Border size
         self.border_colour = 0                              # High-res initial border colour is blue
         self.paper_colour = 0                               # High-res initial paper colour is blue
         self.brush_colour = 3                               # High-res initial brush colour is white
@@ -66,19 +69,19 @@ class Nimbus:
         self.plot_font = 0                                  # Initial plot font (charset for plot)
         self.charset = 0                                    # Initial charset (font for text)
         self.colour_table = colour_table                    # Dict to to convert Nimbus colour numbers to BGR
-        self.low_res_default_colours = low_res_default_colours.copy()
-        self.high_res_default_colours = high_res_default_colours.copy()
-        self.low_res_colours = low_res_default_colours.copy()
-        self.high_res_colours = high_res_default_colours.copy()
-        self.cursor_image = default_cursor_image.copy()
-        self.cursor_flash = False
-        self.show_cursor = False
-        self.floppy_is_running = False
-        self.keyboard_buffer = []
-        self.ctrl_pressed = False
-        self.enter_was_pressed = False
-        self.backspace_was_pressed = False
-        self.vs = VideoStream(self.screen_size, queue_size=16).start()  # VideoStream object to display the Nimbus
+        self.low_res_default_colours = low_res_default_colours.copy()       # Low-res default colour table
+        self.high_res_default_colours = high_res_default_colours.copy()     # High-res default colour table
+        self.low_res_colours = low_res_default_colours.copy()               # Editable low-res colour table
+        self.high_res_colours = high_res_default_colours.copy()             # Editable high-res colour table
+        self.cursor_image = default_cursor_image.copy()     # Text cursor image
+        self.cursor_flash = False                           # Cursor flash flag
+        self.show_cursor = False                            # Show cursor flag
+        self.floppy_is_running = False                      # Floppy drive running flag
+        self.keyboard_buffer = []                           # Keyboard buffer
+        self.ctrl_pressed = False                           # CTRL is pressed flag
+        self.enter_was_pressed = False                      # ENTER was pressed flag
+        self.backspace_was_pressed = False                  # BACKSPACE was pressed flag
+        self.__vs = VideoStream(self.screen_size, queue_size=16).start()  # VideoStream object to display the Nimbus
 
 
     def __load_fonts(self):
@@ -86,7 +89,8 @@ class Nimbus:
             message('Loading fonts')
         fonts = {}
         for font in range(0, 2):
-            font_img = cv2.imread('data/font{}.png'.format(font))
+            font_img_path = os.path.join(real_path, 'data', 'font{}.png'.format(font))
+            font_img = cv2.imread(font_img_path)
             fonts[font] = []
             for ascii_code in range(0, 256):
                 fonts[font].append(font_image_selecta(font_img, ascii_code, font))
@@ -129,7 +133,7 @@ class Nimbus:
 
         if self.debug:
             message('Updating screen data')
-        self.vs.update_screen(new_screen_data)
+        self.__vs.update_screen(new_screen_data)
 
 
     def get_screen(self):
@@ -144,7 +148,7 @@ class Nimbus:
 
         if self.debug:
             message('Getting screen data')
-        return self.vs.get_screen()
+        return self.__vs.get_screen()
 
 
     def __cycle_cursor_flash(self):
@@ -216,7 +220,7 @@ class Nimbus:
         cv2.setMouseCallback(self.title, self.__onMouse)
         # Display loop
         while self.running:
-            frame = self.__render_display(self.vs.get_screen())
+            frame = self.__render_display(self.__vs.get_screen())
             cv2.imshow(self.title, frame)
             time.sleep(0.05)
             cv2.waitKey(5)
@@ -239,8 +243,10 @@ class Nimbus:
             dash = []
             dot = []
             for i in range(1, 5):
-                dash.append(sa.WaveObject.from_wave_file('data/floppy-dash{}.wav'.format(i)))
-                dot.append(sa.WaveObject.from_wave_file('data/floppy-dot{}.wav'.format(i)))
+                dash_path = os.path.join(real_path, 'data', 'floppy-dash{}.wav'.format(i))
+                dot_path = os.path.join(real_path, 'data', 'floppy-dot{}.wav'.format(i))
+                dash.append(sa.WaveObject.from_wave_file(dash_path))
+                dot.append(sa.WaveObject.from_wave_file(dot_path))
             # If flag is True play a bunch of grinding floppy drive sounds
             if self.floppy_is_running:
                 # play dash (pick one at random)
