@@ -324,6 +324,7 @@ class Nimbus:
         """
 
         # otherwise go ahead
+        message('Press CTRL-C to interrupt')
         message('Booting up')
         if self.debug:
             message('Dropping runner into a thread')

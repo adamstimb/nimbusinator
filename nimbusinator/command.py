@@ -484,6 +484,7 @@ class Command:
                 new_row = self.nimbus.get_cursor_position()[1]
             # move cursor
             self.set_curpos((new_column, new_row))
+         
             
     def print(self, text):
         """Print a string with carriage return at end
