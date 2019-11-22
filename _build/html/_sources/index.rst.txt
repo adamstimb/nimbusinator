@@ -3,14 +3,6 @@ nimbusinator
 
 RM Nimbus GUI for Python
 
-Summary
--------
-
-.. autosummary::
-
-   command.Command
-   nimbus.Nimbus
-
 About
 -----
 
