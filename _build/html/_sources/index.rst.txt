@@ -79,10 +79,10 @@ Installation
 
 .. code-block:: bash
 
-    # Linux users first need to install libasound2:
+    # In case you don't already have it:
     sudo apt-get install -y python3-dev libasound2-dev
 
-    # Everyone else go straight to:
+    # Otherwise go straight to:
     pip install nimbusinator
 
 Quick-start
