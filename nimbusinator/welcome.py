@@ -40,7 +40,7 @@ def welcome(cmd, nim):
     cmd.area([(0, 0), (640, 0), (640, 250), (0, 250), (0, 0)], brush=2)
     cmd.area([(3, 2), (637, 2), (637, 248), (3, 248), (3, 2)], brush=1)
     # Nimbus logo with frame
-    cmd.area([(12, 211), (317, 211), (317, 245), (12, 245), (12, 211)], brush=2)
+    cmd.area([(12, 211), (314, 211), (314, 242), (12, 242), (12, 211)], brush=2)
     cmd.plonk_logo((13, 211))
     # Welcome
     cmd.plot('Welcome', (235, 140), size=3, brush=0, font=1)
