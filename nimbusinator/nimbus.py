@@ -1,4 +1,4 @@
-#from nimbusinator.tools import logo, message, fatal, colour_to_bgr, font_image_selecta, colrows_to_xy, plonk_image
+from nimbusinator.tools import logo, message, fatal, colour_to_bgr, font_image_selecta, colrows_to_xy, plonk_image
 import cv2
 import numpy as np
 import time
@@ -8,7 +8,7 @@ import simpleaudio as sa
 from pynput import keyboard
 from videostream import VideoStream
 from colour_table import colour_table, low_res_default_colours, high_res_default_colours
-#from nimbusinator.command import Command
+from nimbusinator.command import Command
 from welcome import welcome
 import os
 
