@@ -6,6 +6,8 @@ RM Nimbus GUI for Python
 
 Nimbusinator is a graphical user-interface package for Python that mimicks the graphics and text drivers of the RM Nimbus PC186.  It is _not_ an emulation of the Nimbus itself.  This means you get the best of both worlds:  Cutting-edge Python computing power, beautifully presented in up to 16 colours!
 
+[Read the docs for full details](https://nimbusinator.readthedocs.io/)
+
 ## Usage
 
 To implement a Nimbus user interface all you need to do is import the `Nimbus` and `Command` classes, like this:
@@ -93,6 +95,7 @@ if __name__ == '__main__':
 
 ## Links
 
+- [Read the Docs](https://nimbusinator.readthedocs.io/) - Full documentation
 - [Center for Computing History](http://www.computinghistory.org.uk/) - original RM Nimbus manuals and technical data
 - [The Nimbus Museum](https://thenimbus.co.uk/) - online museum that looks like the Welcome Disk!
 - [mame](https://www.mamedev.org/) - comprehensive retro computer emulation project
