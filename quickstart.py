@@ -1,11 +1,10 @@
-import time
-from nimbus import Nimbus
-from command import Command
+from nimbusinator import Nimbus, Command
+
 
 if __name__ == '__main__': 
     nim = Nimbus(full_screen=False)
     cmd = Command(nim)
-    nim.boot()          # Boot the Nimbus
+    nim.boot(skip_welcome_screen=False)          # Boot the Nimbus
     cmd.set_mode(40)    # Low resolution mode
     cmd.set_border(1)   # Dark blue border
     cmd.set_paper(9)    # Light blue paper
@@ -18,5 +17,5 @@ if __name__ == '__main__':
     cmd.plot(' ', (20, 20), brush=14)
     cmd.plot('       ', (20, 40), brush=13)
     # Wait 5 seconds then shutdown
-    time.sleep(20)
+    nim.sleep(5)
     nim.shutdown()

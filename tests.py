@@ -1,33 +1,31 @@
-import time
 import random
-from nimbus import Nimbus
-from command import Command
+from nimbusinator import Nimbus, Command
 
 def test_set_border_low_res(nim, cmd):
     cmd.set_mode(40)
     for i in range(0, 16):
         cmd.set_border(i)
-        time.sleep(0.1)
+        nim.sleep(0.1)
 
 def test_set_paper_low_res(nim, cmd):
     cmd.set_mode(40)
     for i in range(0, 16):
         cmd.set_paper(i)
         cmd.cls()
-        time.sleep(0.1)
+        nim.sleep(0.1)
 
 def test_set_border_high_res(nim, cmd):
     cmd.set_mode(80)
     for i in range(0, 4):
         cmd.set_border(i)
-        time.sleep(0.1)
+        nim.sleep(0.1)
 
 def test_set_paper_high_res(nim, cmd):
     cmd.set_mode(80)
     for i in range(0, 4):
         cmd.set_paper(i)
         cmd.cls()
-        time.sleep(0.1)
+        nim.sleep(0.1)
 
 def test_set_curpos_and_put(nim, cmd):
     cmd.set_cursor(True)
@@ -49,7 +47,7 @@ def test_set_curpos_and_put(nim, cmd):
             cmd.set_charset(random.randint(0, 1))
         cmd.set_curpos((7, 16))
         cmd.put(big_test)
-        time.sleep(2)
+        nim.sleep(2)
     cmd.set_cursor(False)
 
 def test_plonk_logo(nim, cmd):
@@ -75,7 +73,7 @@ def test_plot(nim, cmd):
         brush = random.randint(0, 3)
         font = random.randint(0, 1)
         cmd.plot("Farts!", (x, y), size=(x_size, y_size), brush=brush, direction=direction, font=font)
-    time.sleep(1)
+    nim.sleep(1)
     cmd.set_mode(40)
     for i in range(0, 2000):
         x = random.randint(0, 350)
@@ -86,7 +84,7 @@ def test_plot(nim, cmd):
         brush = random.randint(0, 15)
         font = random.randint(0, 1)
         cmd.plot("PANTS!!!", (x, y), size=(x_size, y_size), brush=brush, direction=direction, font=font)
-    time.sleep(1)
+    nim.sleep(1)
 
 def test_area(nim, cmd):
     cmd.set_mode(40)
@@ -99,7 +97,7 @@ def test_area(nim, cmd):
         y3 = 0 + random.randint(-10, 10)
         brush = random.randint(0, 15)
         cmd.area([(x1, y1), (x2, y2), (x3, y3), (x1, y1)], brush=brush)
-    time.sleep(1)
+    nim.sleep(1)
     cmd.set_mode(80)
     for i in range(0, 2000):
         x1 = 0 + random.randint(-10, 10)
@@ -110,7 +108,7 @@ def test_area(nim, cmd):
         y3 = 0 + random.randint(-10, 10)
         brush = random.randint(0, 3)
         cmd.area([(x1, y1), (x2, y2), (x3, y3), (x1, y1)], brush=brush)
-    time.sleep(1)
+    nim.sleep(1)
 
 def test_line(nim, cmd):
     cmd.set_mode(40)
@@ -123,7 +121,7 @@ def test_line(nim, cmd):
         y3 = 0 + random.randint(-10, 10)
         brush = random.randint(0, 15)
         cmd.line([(x1, y1), (x2, y2), (x3, y3), (x1, y1)], brush=brush)
-    time.sleep(1)
+    nim.sleep(1)
     cmd.set_mode(80)
     for i in range(0, 2000):
         x1 = 0 + random.randint(-10, 10)
@@ -134,14 +132,13 @@ def test_line(nim, cmd):
         y3 = 0 + random.randint(-10, 10)
         brush = random.randint(0, 3)
         cmd.line([(x1, y1), (x2, y2), (x3, y3), (x1, y1)], brush=brush)
-    time.sleep(1)
+    nim.sleep(1)
 
 
 if __name__ == '__main__': 
-    nim = Nimbus(full_screen=True, debug=False, border_size=40)
+    nim = Nimbus(full_screen=False, border_size=40)
     cmd = Command(nim)
     nim.boot(skip_welcome_screen=False)
-    test_set_curpos_and_put(nim, cmd)
     test_plonk_logo(nim, cmd)
     test_plot(nim, cmd)
     test_set_border_low_res(nim, cmd)
@@ -151,5 +148,5 @@ if __name__ == '__main__':
     test_line(nim, cmd)
     test_area(nim, cmd)
     test_set_curpos_and_put(nim, cmd)
-    time.sleep(2)
+    nim.sleep(2)
     nim.shutdown()

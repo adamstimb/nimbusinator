@@ -1,4 +1,4 @@
-from tools import logo, message, fatal, colour_to_bgr, font_image_selecta, colrows_to_xy, plonk_image
+#from nimbusinator.tools import logo, message, fatal, colour_to_bgr, font_image_selecta, colrows_to_xy, plonk_image
 import cv2
 import numpy as np
 import time
@@ -8,9 +8,10 @@ import simpleaudio as sa
 from pynput import keyboard
 from videostream import VideoStream
 from colour_table import colour_table, low_res_default_colours, high_res_default_colours
-from command import Command
+#from nimbusinator.command import Command
 from welcome import welcome
 import os
+
 
 # get full path of this script
 real_path = os.path.dirname(os.path.realpath(__file__))
@@ -23,7 +24,12 @@ class Nimbus:
     """Nimbus video display class.
 
     This class represents the Nimbus video display that will host the user
-    interface for your application.  
+    interface for your application.  When created, the new Nimbus object 
+    will not be visible until the boot() method has been called.
+
+    Args:
+        full_screen (bool), optional: Full screen mode
+        title (str), optional: The title of the display window
 
     """
 
@@ -36,31 +42,36 @@ class Nimbus:
         return
 
 
-    def __init__(self, full_screen=False, debug=False, title='Nimbusinator', border_size=40):
+    def __init__(self, full_screen=False, title='Nimbusinator', border_size=40):
         """Create a new Nimbus object
 
-        When created, the new Nimbus object is in a default state but will
+        When created, the new Nimbus object  will
         not be visible until the boot() method has been called.
 
         Args:
             full_screen (bool), optional: Full screen mode
-            debug (bool), optional: Log debugging messages in the console if set to True
             title (str), optional: The title of the display window
 
         """
 
+        # Show logo in console
         print(logo)
-        if debug:
-            message('Running in debug mode.  Performance will be severely impeded, but still faster than a real Nimbus :D')
+
+        # Validate params
+        assert isinstance(full_screen, bool), "value of full_screen must be boolean, not {}".format(full_screen)
+        assert isinstance(title, str), "value of title must be string, not {}".format(title)
+        assert isinstance(border_size, int), "value of border_size must be integer, not {}".format(border_size)
+        assert (border_size >= 0 and border_size <= 100), "border_size must >= 0 and <= 100, not {}".format(border_size)
+
+        # Define class params
         self.full_screen = full_screen                      # Full screen flag
-        self.debug = debug                                  # Debug flag
-        self.running = True                                 # Flag to run or stop the Nimbus
+        self.running = False                                # Flag to run or stop the Nimbus
         self.title = title                                  # Display window title
         self.font_images = self.__load_fonts()              # Font images
         logo_path = os.path.join(real_path, 'data', 'rm-nimbus-logo.png')
         self.logo = cv2.imread(logo_path)                   # Nimbus logo image
         self.screen_size = (640, 250)                       # Screen size (initializes in high-res mode)
-        self.border_size = border_size                      # Border size
+        self.border_size = border_size                      # Border size (min 0, max 100)
         self.border_colour = 0                              # High-res initial border colour is blue
         self.paper_colour = 0                               # High-res initial paper colour is blue
         self.brush_colour = 3                               # High-res initial brush colour is white
@@ -85,8 +96,13 @@ class Nimbus:
 
 
     def __load_fonts(self):
-        if self.debug:
-            message('Loading fonts')
+        """Load fonts from PNG files
+
+        Returns:
+            (dict): A dict of PIL images for font 0 and font 1
+
+        """
+
         fonts = {}
         for font in range(0, 2):
             font_img_path = os.path.join(real_path, 'data', 'font{}.png'.format(font))
@@ -96,6 +112,7 @@ class Nimbus:
                 fonts[font].append(font_image_selecta(font_img, ascii_code, font))
         return fonts
 
+
     def get_cursor_position(self):
         """Get current cursor position
 
@@ -104,9 +121,8 @@ class Nimbus:
 
         """
 
-        if self.debug:
-            message('Get cursor position')
         return self.cursor_position
+
 
     def update_cursor_position(self, new_cursor_position):
         """Update cursor position
@@ -116,8 +132,6 @@ class Nimbus:
 
         """
 
-        if self.debug:
-            message('Update cursor position to {}'.format(new_cursor_position))
         self.cursor_position = new_cursor_position
 
 
@@ -131,8 +145,6 @@ class Nimbus:
 
         """
 
-        if self.debug:
-            message('Updating screen data')
         self.__vs.update_screen(new_screen_data)
 
 
@@ -146,8 +158,6 @@ class Nimbus:
         
         """
 
-        if self.debug:
-            message('Getting screen data')
         return self.__vs.get_screen()
 
 
@@ -162,6 +172,7 @@ class Nimbus:
             time.sleep(0.5)
             cursor_flash = self.cursor_flash
             self.cursor_flash = not cursor_flash
+        return
 
 
     def __render_display(self, screen_data):
@@ -207,12 +218,9 @@ class Nimbus:
         the running flag to False.  It must be run within its own thread.
 
         """
-        if self.debug:
-            message('Running display loop')
+
         # Set full screen mode in OpenCV
         if self.full_screen:
-            if self.debug:
-                message('Full screen mode')
             cv2.namedWindow(self.title, cv2.WND_PROP_FULLSCREEN)
             cv2.setWindowProperty(self.title, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
         cv2.namedWindow(self.title)
@@ -224,8 +232,9 @@ class Nimbus:
             cv2.imshow(self.title, frame)
             time.sleep(0.05)
             cv2.waitKey(5)
-        if self.debug:
-            message('Display loop stopped')
+        # Stop cv2 if shutting down
+        cv2.destroyAllWindows()
+        return
 
 
     def __floppy_drive_effects(self):
@@ -243,19 +252,26 @@ class Nimbus:
             dash = []
             dot = []
             for i in range(1, 5):
+                # Abort if shutting down
+                if not self.running:
+                    return
+                # Otherwise load sound effects
                 dash_path = os.path.join(real_path, 'data', 'floppy-dash{}.wav'.format(i))
                 dot_path = os.path.join(real_path, 'data', 'floppy-dot{}.wav'.format(i))
                 dash.append(sa.WaveObject.from_wave_file(dash_path))
                 dot.append(sa.WaveObject.from_wave_file(dot_path))
             # If flag is True play a bunch of grinding floppy drive sounds
-            if self.floppy_is_running:
+            if self.floppy_is_running and self.running:
                 # play dash (pick one at random)
                 play_obj = dash[random.randint(0, 3)].play()
                 play_obj.wait_done()
-                # play random number of dots
+                # Abort is shutting down
+                if not self.running:
+                    return
+                # Otherwise play random number of dots
                 for i in range(0, random.randint(1, 5)):
-                    # break out if drive is stopped
-                    if not self.floppy_is_running:
+                    # break out if drive is stopped or shutting down
+                    if not self.floppy_is_running or not self.running:
                         return
                     else:
                         # pick one at random
@@ -274,8 +290,6 @@ class Nimbus:
 
         """
 
-        if self.debug:
-            message('run floppy {}'.format(flag))
         self.floppy_is_running = flag
 
 
@@ -289,7 +303,7 @@ class Nimbus:
             self.keyboard_buffer.append(key.char)
             # BUT - if CTRL-C situation then shutdown!
             if self.ctrl_pressed and key.char.lower() == 'c':
-                message('CTRL-C detected - shutting down')
+                message('CTRL-C detected')
                 self.shutdown()
         except AttributeError:
             # Handle CTRL released
@@ -310,12 +324,10 @@ class Nimbus:
         """Handle control key releases
 
         """
+
         # Handle CTRL released
         if key == keyboard.Key.ctrl_l or keyboard.Key.ctrl_r:
             self.ctrl_pressed = False
-        if key == keyboard.Key.esc:
-            # Stop listener
-            return False
 
 
     def boot(self, skip_welcome_screen=False):
@@ -329,50 +341,79 @@ class Nimbus:
 
         """
 
+        # Validate params
+        assert isinstance(skip_welcome_screen, bool), "value of skip_welcome_screen must be boolean, not {}".format(skip_welcome_screen)
+
         # otherwise go ahead
         message('Press CTRL-C to interrupt')
         message('Booting up')
-        if self.debug:
-            message('Dropping runner into a thread')
+        # Set running flag
+        self.running = True
         # Fire up screen runner in a thread
-        t_screen = threading.Thread(target=self.__screen_runner, args=())
-        t_screen.start()
+        self.__t_screen = threading.Thread(target=self.__screen_runner, args=())
+        self.__t_screen.start()
         # Fire up cursor in another thread
-        t_cursor = threading.Thread(target=self.__cycle_cursor_flash, args=())
-        t_cursor.start()
+        self.__t_cursor = threading.Thread(target=self.__cycle_cursor_flash, args=())
+        self.__t_cursor.start()
         # Fire up the floppy disk effects in another
-        t_floppy = threading.Thread(target=self.__floppy_drive_effects, args=())
-        t_floppy.start()
+        self.__t_floppy = threading.Thread(target=self.__floppy_drive_effects, args=())
+        self.__t_floppy.start()
         # Fire up the keyboard listener
         listener = keyboard.Listener(
             on_press=self.__on_key_press,
             on_release=self.__on_key_release)
         listener.start()
         if skip_welcome_screen:
-            # don't bother with loading screen
-            message('Running')
+            # don't bother with welcome screen
             Command(self).set_mode(80)
+            message('Done')
             return
         else:
-            if self.debug:
-                message('Running Welcome Screen')
+            # roll the welcome screen
             welcome(Command(self), self)
             Command(self).set_mode(80)
-            if self.debug:
-                message('Welcome Screen finished')
-            message('Running')
+            message('Done')
 
-  
-    def shutdown(self):
-        """Shutdown the Nimbus
 
-        Stop everything and close the display Window.  This must be called to exit
-        the application cleanly.
+    def sleep(self, sleep_time):
+        """Pause execution like time.sleep()
+
+        Unlike time.sleep(), this built-in sleep method will be interrupted
+        if the user hits CTRL-C.  Sleep time measured in seconds.
 
         """
 
-        message('Shutting down')
-        if self.debug:
-            message('Stopping display loop and destroying cv2 windows')
-        self.running = False
-        cv2.destroyAllWindows()
+        # Validate params
+        assert isinstance(sleep_time, (int, float)), "The value of sleep_time must be an integer or float, not {}".format(type(sleep_time))
+        assert sleep_time > 0.01, "The value of sleep_time must be > 0.01, not {}".format(sleep_time)
+
+        # Take 10 ms sleeps until sleep_time is reached
+        # and check after each sleep if the Nimbus is still running
+        elapsed_time = 0
+        while elapsed_time <= sleep_time and self.running:
+            if not self.running:
+                break
+            time.sleep(0.01)
+            elapsed_time += 0.01
+        return
+
+
+    def shutdown(self):
+        """Shutdown the Nimbus
+
+        Stop everything and close the display Window.
+
+        """
+
+        # only shut down if running
+        if self.running:
+            message('Shutting down')
+            message('Press CTRL-C again to exit immediately')
+            # Set running flag and join all threads
+            self.running = False
+            self.__t_cursor.join()
+            self.__t_floppy.join()
+            self.__t_screen.join()
+            raise SystemExit('Exited')
+        else:
+            raise SystemExit('Exited')

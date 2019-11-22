@@ -53,20 +53,23 @@ To cleanly exit your application, call the `shutdown` method on the `Nimbus` obj
 nim.shutdown()
 ```
 
+## Supported Operating systems
+
+- Linux
+
 ## Installation
 
 ```bash
-# Linux users first need to install libasound2:
+# In case you don't already have it:
 sudo apt-get install -y python3-dev libasound2-dev
 
-# Everyone else go straight to:
+# Otherwise go straight to:
 pip install nimbusinator
 ```
 
 ## Quick-start
 
 ```python
-import time
 from nimbusinator import Nimbus, Command
 
 if __name__ == '__main__': 
@@ -84,7 +87,7 @@ if __name__ == '__main__':
     cmd.plot('Greetings from', (31, 156), size=2, brush=13)
     cmd.plot('(not really)', (110, 80), brush=14)
     # Wait 5 seconds then shutdown
-    time.sleep(5)
+    nim.sleep(5)
     nim.shutdown()
 ```
 

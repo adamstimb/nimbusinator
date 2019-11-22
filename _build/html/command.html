@@ -1,0 +1,388 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>nimbusinator.Command &#8212; nimbusinator 0.0.1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Release Notes" href="release-notes.html" />
+    <link rel="prev" title="nimbusinator.Nimbus" href="nimbus.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-command">
+<span id="nimbusinator-command"></span><h1>nimbusinator.Command<a class="headerlink" href="#module-command" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="command.Command">
+<em class="property">class </em><code class="sig-prename descclassname">command.</code><code class="sig-name descname">Command</code><span class="sig-paren">(</span><em class="sig-param">nimbus</em><span class="sig-paren">)</span><a class="headerlink" href="#command.Command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Nimbus commands</p>
+<p>This class contains the commands to control the Nimbus display.  The commands
+mimick the syntax found in RM Basic but re-written Pythonically.  In creating an
+object of this class it must be bound to a pre-existing Nimbus object.  It is
+highly recommended to read the original Nimbus manuals (particularly RM Basic)
+to get a deeper understanding of how these commands originally worked.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>nimbus</strong> (<a class="reference internal" href="nimbus.html#nimbus.Nimbus" title="nimbus.Nimbus"><em>Nimbus</em></a>) – The Nimbus object to bind to</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="command.Command.area">
+<code class="sig-name descname">area</code><span class="sig-paren">(</span><em class="sig-param">coord_list</em>, <em class="sig-param">brush=None</em><span class="sig-paren">)</span><a class="headerlink" href="#command.Command.area" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw a filled polygon</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>coord_list</strong> (<em>list</em>) – A list of (x, y) tuples</p></li>
+<li><p><strong>brush</strong> (<em>int</em>) – Colour value (High-resolution: 0-3, low-resolution: 0-15)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="command.Command.ask_charset">
+<code class="sig-name descname">ask_charset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#command.Command.ask_charset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the current charset for text</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>0 is the standard font, 1 is the other font</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>charset (int)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="command.Command.ask_curpos">
+<code class="sig-name descname">ask_curpos</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#command.Command.ask_curpos" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the current cursor position</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The current cursor position (column, row)</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>cursor_position (tuple)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="command.Command.cls">
+<code class="sig-name descname">cls</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#command.Command.cls" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clear the screen of all text and graphics and reset cursor position</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="command.Command.flush">
+<code class="sig-name descname">flush</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#command.Command.flush" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clears the keyboard buffer</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="command.Command.gets">
+<code class="sig-name descname">gets</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#command.Command.gets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the oldest char in the keyboard buffer</p>
+<p>Equivalent to GET$ in RM Basic</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The oldest char in the buffer</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>(str)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="command.Command.input">
+<code class="sig-name descname">input</code><span class="sig-paren">(</span><em class="sig-param">prompt</em><span class="sig-paren">)</span><a class="headerlink" href="#command.Command.input" title="Permalink to this definition">¶</a></dt>
+<dd><p>Collects keyboard input until user presses ENTER</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>prompt</strong> (<em>str</em>) – Message to be printed</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The user’s response</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(str)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="command.Command.line">
+<code class="sig-name descname">line</code><span class="sig-paren">(</span><em class="sig-param">coord_list</em>, <em class="sig-param">brush=None</em><span class="sig-paren">)</span><a class="headerlink" href="#command.Command.line" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw one or more connected straight lines</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>coord_list</strong> (<em>list</em>) – A list of (x, y) tuples</p></li>
+<li><p><strong>brush</strong> (<em>int</em>) – Colour value (High-resolution: 0-3, low-resolution: 0-15)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="command.Command.plonk_logo">
+<code class="sig-name descname">plonk_logo</code><span class="sig-paren">(</span><em class="sig-param">coord</em><span class="sig-paren">)</span><a class="headerlink" href="#command.Command.plonk_logo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plonk the RM Nimbus logo on screen</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>coord</strong> (<em>tuple</em>) – The (x, y) position to plonk the logo</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="command.Command.plot">
+<code class="sig-name descname">plot</code><span class="sig-paren">(</span><em class="sig-param">text</em>, <em class="sig-param">coord</em>, <em class="sig-param">size=1</em>, <em class="sig-param">brush=None</em>, <em class="sig-param">direction=0</em>, <em class="sig-param">font=None</em><span class="sig-paren">)</span><a class="headerlink" href="#command.Command.plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot text on the screen</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> (<em>str</em>) – The text to be plotted</p></li>
+<li><p><strong>coord</strong> (<em>tuple</em>) – The (x, y) position of the text</p></li>
+<li><p><strong>size</strong> (<em>int</em>) – Font size. To elongate pass a tuple (x_size, y_size)</p></li>
+<li><p><strong>brush</strong> (<em>int</em>) – Brush colour</p></li>
+<li><p><strong>direction</strong> (<em>int</em>) – 0=normal, 1=-90deg, 2=180deg, 3=-270deg</p></li>
+<li><p><strong>font</strong> (<em>int</em>) – 0 is the standard font, 1 is the other font</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="command.Command.print">
+<code class="sig-name descname">print</code><span class="sig-paren">(</span><em class="sig-param">text</em><span class="sig-paren">)</span><a class="headerlink" href="#command.Command.print" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print a string with carriage return at end</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>text</strong> (<em>str</em>) – The text to be printed</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="command.Command.put">
+<code class="sig-name descname">put</code><span class="sig-paren">(</span><em class="sig-param">ascii_data</em><span class="sig-paren">)</span><a class="headerlink" href="#command.Command.put" title="Permalink to this definition">¶</a></dt>
+<dd><p>Put a single character or string at the current cursor position</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ascii_data</strong> (<em>int/str</em>) – If an int is passed the corresponding ASCII character
+will be plotted.  If a string is passed then the
+string will be printed without a terminating carriage
+return.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="command.Command.set_border">
+<code class="sig-name descname">set_border</code><span class="sig-paren">(</span><em class="sig-param">colour</em><span class="sig-paren">)</span><a class="headerlink" href="#command.Command.set_border" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the border colour</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>colour</strong> (<em>int</em>) – Colour value (High-resolution: 0-3, low-resolution: 0-15)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="command.Command.set_brush">
+<code class="sig-name descname">set_brush</code><span class="sig-paren">(</span><em class="sig-param">colour</em><span class="sig-paren">)</span><a class="headerlink" href="#command.Command.set_brush" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the brush colour</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>colour</strong> (<em>int</em>) – Colour value (High-resolution: 0-3, low-resolution: 0-15)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="command.Command.set_charset">
+<code class="sig-name descname">set_charset</code><span class="sig-paren">(</span><em class="sig-param">charset</em><span class="sig-paren">)</span><a class="headerlink" href="#command.Command.set_charset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the charset for text</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>charset</strong> (<em>int</em>) – 0 is the standard font, 1 is the other font!</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="command.Command.set_colour">
+<code class="sig-name descname">set_colour</code><span class="sig-paren">(</span><em class="sig-param">colour1</em>, <em class="sig-param">colour2</em><span class="sig-paren">)</span><a class="headerlink" href="#command.Command.set_colour" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set a colour to a new colour</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>colour1</strong> (<em>int</em>) – The colour code to be changed</p></li>
+<li><p><strong>colour2</strong> (<em>int</em>) – The new colour to be assigned to colour1</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="command.Command.set_curpos">
+<code class="sig-name descname">set_curpos</code><span class="sig-paren">(</span><em class="sig-param">cursor_position</em><span class="sig-paren">)</span><a class="headerlink" href="#command.Command.set_curpos" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the cursor position</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>cursor_position</strong> (<em>tuple</em>) – The new cursor position (column, row)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="command.Command.set_cursor">
+<code class="sig-name descname">set_cursor</code><span class="sig-paren">(</span><em class="sig-param">flag</em><span class="sig-paren">)</span><a class="headerlink" href="#command.Command.set_cursor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Show or hide cursor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>flag</strong> (<em>boolean</em>) – True to show cursor, False to hide</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="command.Command.set_mode">
+<code class="sig-name descname">set_mode</code><span class="sig-paren">(</span><em class="sig-param">columns</em><span class="sig-paren">)</span><a class="headerlink" href="#command.Command.set_mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select either high-resolution or low-resolution screen mode</p>
+<p>In RM Basic the screen resolution was set by the number of columns:
+40 for low-resolution and 80 for high-resolution.  Any other values
+has no effect.  Nimbusinator is more strict and will yield an error
+if any other values are entered.  Check the original RM Basic manual
+for a description of how screen resolutions worked on the Nimbus.
+High-resolution mode is particularly odd.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>columns</strong> (<em>int</em>) – The number of colums (40 or 80)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="command.Command.set_paper">
+<code class="sig-name descname">set_paper</code><span class="sig-paren">(</span><em class="sig-param">colour</em><span class="sig-paren">)</span><a class="headerlink" href="#command.Command.set_paper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the paper colour</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>colour</strong> (<em>int</em>) – Colour value (High-resolution: 0-3, low-resolution: 0-15)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="command.Command.set_pen">
+<code class="sig-name descname">set_pen</code><span class="sig-paren">(</span><em class="sig-param">colour</em><span class="sig-paren">)</span><a class="headerlink" href="#command.Command.set_pen" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the pen colour</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>colour</strong> (<em>int</em>) – Colour value (High-resolution: 0-3, low-resolution: 0-15)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">nimbusinator</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="nimbus.html">nimbusinator.Nimbus</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">nimbusinator.Command</a></li>
+<li class="toctree-l1"><a class="reference internal" href="release-notes.html">Release Notes</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="nimbus.html" title="previous chapter">nimbusinator.Nimbus</a></li>
+      <li>Next: <a href="release-notes.html" title="next chapter">Release Notes</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Tim Adams.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/command.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

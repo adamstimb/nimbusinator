@@ -1,4 +1,3 @@
-import time
 import platform
 from psutil import virtual_memory
 
@@ -56,33 +55,33 @@ def welcome(cmd, nim):
     cmd.plot('Firmware version: {}'.format(py_version), (400, 18), brush=0, font=1)
     cmd.plot('Serial number: {}'.format(platform.release()[:8]), (400, 8), brush=0, font=1)
     # Please supply an operating system
-    cmd.plot('Please supply an operating system', (180, 100), brush=3, font=1)
-    time.sleep(1.3)
-    cmd.plot('Please supply an operating system', (180, 100), brush=1, font=1)
+    cmd.plot('Please supply an operating system', (180, 110), brush=3, font=1)
+    nim.sleep(1.3)
+    cmd.plot('Please supply an operating system', (180, 110), brush=1, font=1)
     # Looking for an operating system
-    cmd.plot('Looking for an operating system - please wait', (135, 100), brush=3, font=1)
-    time.sleep(1)
+    cmd.plot('Looking for an operating system - please wait', (135, 110), brush=3, font=1)
+    nim.sleep(1)
     nim.run_floppy(True)
-    time.sleep(2)
+    nim.sleep(2)
     # Loading operating system
-    cmd.plot('Looking for an operating system - please wait', (135, 100), brush=1, font=1)
-    cmd.plot('Loading operating system', (220, 100), brush=3, font=1)
-    time.sleep(4)
+    cmd.plot('Looking for an operating system - please wait', (135, 110), brush=1, font=1)
+    cmd.plot('Loading operating system', (220, 110), brush=3, font=1)
+    nim.sleep(4)
     # Pretend DOS boot sequence
     cmd.set_mode(80)
     cmd.set_colour(0, 0)
     cmd.cls()
     cmd.set_cursor(True)
-    time.sleep(1.3)
+    nim.sleep(1.3)
     os_string = '{} - Version {}'.format(platform.system(), platform.release())
     cmd.print(os_string)
     cmd.print(' ')
-    time.sleep(1.7)
+    nim.sleep(1.7)
     python_version = 'Python {}'.format(platform.sys.version)
     for text in python_version.split('\n'):
         cmd.print(text)
-    time.sleep(3.2)
+    nim.sleep(3.2)
     nim.run_floppy(False)
-    time.sleep(1.2)
+    nim.sleep(1.2)
     cmd.set_cursor(False)
     # Done

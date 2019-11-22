@@ -1,0 +1,220 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>nimbusinator.Nimbus &#8212; nimbusinator 0.0.1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="nimbusinator.Command" href="command.html" />
+    <link rel="prev" title="nimbusinator" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-nimbus">
+<span id="nimbusinator-nimbus"></span><h1>nimbusinator.Nimbus<a class="headerlink" href="#module-nimbus" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="nimbus.Nimbus">
+<em class="property">class </em><code class="sig-prename descclassname">nimbus.</code><code class="sig-name descname">Nimbus</code><span class="sig-paren">(</span><em class="sig-param">full_screen=False</em>, <em class="sig-param">title='Nimbusinator'</em>, <em class="sig-param">border_size=40</em><span class="sig-paren">)</span><a class="headerlink" href="#nimbus.Nimbus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Nimbus video display class.</p>
+<p>This class represents the Nimbus video display that will host the user
+interface for your application.  When created, the new Nimbus object
+will not be visible until the boot() method has been called.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>full_screen</strong> (<em>bool</em>) – Full screen mode</p></li>
+<li><p><strong>title</strong> (<em>str</em>) – The title of the display window</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="nimbus.Nimbus.boot">
+<code class="sig-name descname">boot</code><span class="sig-paren">(</span><em class="sig-param">skip_welcome_screen=False</em><span class="sig-paren">)</span><a class="headerlink" href="#nimbus.Nimbus.boot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Boot the Nimbus</p>
+<p>Reveal the Nimbus in all its glory, with or without a cheeky
+simulation of the famous Nimbus welcome screen.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>skip_welcome_screen</strong> (<em>bool</em>) – Go straight to the application</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nimbus.Nimbus.get_cursor_position">
+<code class="sig-name descname">get_cursor_position</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nimbus.Nimbus.get_cursor_position" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get current cursor position</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The current cursor position (col, row)</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>(tuple)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nimbus.Nimbus.get_screen">
+<code class="sig-name descname">get_screen</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nimbus.Nimbus.get_screen" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get screen data</p>
+<p>Get the screen data to be displayed from VideoStream</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The screen data to be displayed</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>(PIL image)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nimbus.Nimbus.run_floppy">
+<code class="sig-name descname">run_floppy</code><span class="sig-paren">(</span><em class="sig-param">flag</em><span class="sig-paren">)</span><a class="headerlink" href="#nimbus.Nimbus.run_floppy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run or stop the floppy drive sound effects</p>
+<p>Augment your user experience with the industrial melodies of a
+1980s PC floppy drive</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>flag</strong> (<em>boolean</em>) – True to run the drive, False to stop</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nimbus.Nimbus.shutdown">
+<code class="sig-name descname">shutdown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nimbus.Nimbus.shutdown" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shutdown the Nimbus</p>
+<p>Stop everything and close the display Window.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nimbus.Nimbus.sleep">
+<code class="sig-name descname">sleep</code><span class="sig-paren">(</span><em class="sig-param">sleep_time</em><span class="sig-paren">)</span><a class="headerlink" href="#nimbus.Nimbus.sleep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pause execution like time.sleep()</p>
+<p>Unlike time.sleep(), this built-in sleep method will be interrupted
+if the user hits CTRL-C.  Sleep time measured in seconds.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nimbus.Nimbus.update_cursor_position">
+<code class="sig-name descname">update_cursor_position</code><span class="sig-paren">(</span><em class="sig-param">new_cursor_position</em><span class="sig-paren">)</span><a class="headerlink" href="#nimbus.Nimbus.update_cursor_position" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update cursor position</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>new_cursor_position</strong> (<em>tuple</em>) – The new cursor position (col, row)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nimbus.Nimbus.update_screen">
+<code class="sig-name descname">update_screen</code><span class="sig-paren">(</span><em class="sig-param">new_screen_data</em><span class="sig-paren">)</span><a class="headerlink" href="#nimbus.Nimbus.update_screen" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update screen data</p>
+<p>Change the screen data to be displayed in VideoStream</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>new_screen_data</strong> (<em>PIL image</em>) – The new screen data to be displayed</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">nimbusinator</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">nimbusinator.Nimbus</a></li>
+<li class="toctree-l1"><a class="reference internal" href="command.html">nimbusinator.Command</a></li>
+<li class="toctree-l1"><a class="reference internal" href="release-notes.html">Release Notes</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">nimbusinator</a></li>
+      <li>Next: <a href="command.html" title="next chapter">nimbusinator.Command</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Tim Adams.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/nimbus.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

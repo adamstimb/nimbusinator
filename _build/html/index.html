@@ -1,0 +1,237 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>nimbusinator &#8212; nimbusinator 0.0.1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="nimbusinator.Nimbus" href="nimbus.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="nimbusinator">
+<h1>nimbusinator<a class="headerlink" href="#nimbusinator" title="Permalink to this headline">¶</a></h1>
+<p>RM Nimbus GUI for Python</p>
+<div class="section" id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="command.html#command.Command" title="command.Command"><code class="xref py py-obj docutils literal notranslate"><span class="pre">command.Command</span></code></a>(nimbus)</p></td>
+<td><p>Nimbus commands</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="nimbus.html#nimbus.Nimbus" title="nimbus.Nimbus"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nimbus.Nimbus</span></code></a>([full_screen, title, border_size])</p></td>
+<td><p>Nimbus video display class.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="about">
+<h2>About<a class="headerlink" href="#about" title="Permalink to this headline">¶</a></h2>
+<p>Nimbusinator is a graphical user-interface package for Python that mimicks the graphics
+and text drivers of the RM Nimbus PC186. It is not an emulation of the Nimbus itself.
+This means you get the best of both worlds: Cutting-edge Python computing power, beautifully
+presented in up to 16 colours!</p>
+</div>
+<div class="section" id="supported-operating-systems">
+<h2>Supported Operating Systems<a class="headerlink" href="#supported-operating-systems" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Linux</p></li>
+</ul>
+</div>
+<div class="section" id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+<p>To implement a Nimbus user interface all you need to do is import the <cite>Nimbus</cite> and <cite>Command</cite> classes, like this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">nimbusinator</span> <span class="kn">import</span> <span class="n">Nimbus</span><span class="p">,</span> <span class="n">Command</span>
+</pre></div>
+</div>
+<p>Then create one object of each, and bind the <cite>Command</cite> object to the <cite>Nimbus</cite> object:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">nim</span> <span class="o">=</span> <span class="n">Nimbus</span><span class="p">()</span>
+<span class="n">cmd</span> <span class="o">=</span> <span class="n">Command</span><span class="p">(</span><span class="n">nim</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To display the screen, call the <cite>boot</cite> method on the <cite>Nimbus</cite> object.  By default, you’ll see the famous blue “Welcome Screen” before control is released back to your program.  To skip the Welcome Screen simply pass the argument <cite>skip_welcome_screen=True</cite> when calling <cite>boot</cite>, like this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Boot the Nimbus with Welcome Screen</span>
+<span class="n">nim</span><span class="o">.</span><span class="n">boot</span><span class="p">()</span>
+<span class="c1"># Boot the Nimbus without Welcome Screen</span>
+<span class="n">nim</span><span class="o">.</span><span class="n">boot</span><span class="p">(</span><span class="n">skip_welcome_screen</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Note that the original Welcome Screen reported the memory status of the computer (in kilobytes!), alongside the RM firmware version and machine serial number.  Nimbusinator also displays memory status (but in units of Megabytes) and uses your Python version as the firmware version and your OS release number as the serial number.  It also uses information from your runtime environment to simulate a short DOS-like boot sequence before finally releasing control back to your application.  All the while you can enjoy the dulcet tones of an imaginary floppy drive.</p>
+<p>To bring the Nimbus programming experience into the 21st century, the API - although Pythonic - has been modelled on the syntax of RM Basic.  For example, in RM Basic to write a greeting in big, red letters in the bottom-left corner of the screen you would use the <cite>PLOT</cite> command:</p>
+<div class="highlight-basic notranslate"><div class="highlight"><pre><span></span><span class="vg">PLOT</span><span class="w"> </span><span class="s2">&quot;Hi kittens!&quot;</span><span class="p">,</span><span class="w"> </span><span class="il">10</span><span class="p">,</span><span class="w"> </span><span class="il">10</span><span class="w"> </span><span class="vg">BRUSH</span><span class="w"> </span><span class="il">2</span><span class="w"> </span><span class="vg">SIZE</span><span class="w"> </span><span class="il">4</span>
+</pre></div>
+</div>
+<p>And in Python with Nimbusinator you can write the same instruction like this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cmd</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="s1">&#39;Hi kittens!&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">brush</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>It is recommended to read the RM Basic manual to get familiar with the original commands and how graphics and text were handled on the Nimbus (see links below).</p>
+<p>To cleanly exit your application, call the <cite>shutdown</cite> method on the <cite>Nimbus</cite> object:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Always do this before your app quits:</span>
+<span class="n">nim</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Linux users first need to install libasound2:</span>
+sudo apt-get install -y python3-dev libasound2-dev
+
+<span class="c1"># Everyone else go straight to:</span>
+pip install nimbusinator
+</pre></div>
+</div>
+</div>
+<div class="section" id="quick-start">
+<h2>Quick-start<a class="headerlink" href="#quick-start" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">nimbusinator</span> <span class="kn">import</span> <span class="n">Nimbus</span><span class="p">,</span> <span class="n">Command</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="c1"># Create and bind nimbusinator objects:</span>
+    <span class="n">nim</span> <span class="o">=</span> <span class="n">Nimbus</span><span class="p">()</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="n">Command</span><span class="p">(</span><span class="n">nim</span><span class="p">)</span>
+    <span class="n">nim</span><span class="o">.</span><span class="n">boot</span><span class="p">()</span>          <span class="c1"># Boot the Nimbus</span>
+    <span class="n">cmd</span><span class="o">.</span><span class="n">set_mode</span><span class="p">(</span><span class="mi">40</span><span class="p">)</span>    <span class="c1"># Low resolution mode</span>
+    <span class="n">cmd</span><span class="o">.</span><span class="n">set_border</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>   <span class="c1"># Dark blue border</span>
+    <span class="n">cmd</span><span class="o">.</span><span class="n">set_paper</span><span class="p">(</span><span class="mi">9</span><span class="p">)</span>    <span class="c1"># Light blue paper</span>
+    <span class="n">cmd</span><span class="o">.</span><span class="n">cls</span><span class="p">()</span>           <span class="c1"># Clear screen</span>
+    <span class="n">cmd</span><span class="o">.</span><span class="n">plonk_logo</span><span class="p">((</span><span class="mi">10</span><span class="p">,</span> <span class="mi">120</span><span class="p">))</span>    <span class="c1"># Show Nimbus logo</span>
+    <span class="c1"># Display a message in cyan with shadowing</span>
+    <span class="n">cmd</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="s1">&#39;Greetings from&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">155</span><span class="p">),</span> <span class="n">size</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">brush</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">cmd</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="s1">&#39;Greetings from&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">31</span><span class="p">,</span> <span class="mi">156</span><span class="p">),</span> <span class="n">size</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">brush</span><span class="o">=</span><span class="mi">13</span><span class="p">)</span>
+    <span class="n">cmd</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="s1">&#39;(not really)&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">110</span><span class="p">,</span> <span class="mi">80</span><span class="p">),</span> <span class="n">brush</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+    <span class="c1"># Wait 5 seconds then shutdown</span>
+    <span class="n">nim</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+    <span class="n">nim</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="links">
+<h2>Links<a class="headerlink" href="#links" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/adamstimb/nimbusinator">Github</a> - Nimbusinator github repository</p></li>
+<li><p><a class="reference external" href="http://www.computinghistory.org.uk/">Center for Computing History</a> - original RM Nimbus manuals and technical data</p></li>
+<li><p><a class="reference external" href="https://thenimbus.co.uk/">The Nimbus Museum</a> - online museum that looks like the Welcome Disk!</p></li>
+<li><p><a class="reference external" href="https://www.mamedev.org/">mame</a> - comprehensive retro computer emulation project</p></li>
+<li><p><a class="reference external" href="https://freesound.org/people/MrAuralization/packs/15891/">Freesound pack: Floppy disk drive</a> - source of the floppy drive sounds</p></li>
+<li><p><a class="reference external" href="https://ironstoneinnovation.eu">Ironstone Innovation</a> - what I do for a living</p></li>
+</ul>
+<div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="nimbus.html">nimbusinator.Nimbus</a></li>
+<li class="toctree-l1"><a class="reference internal" href="command.html">nimbusinator.Command</a></li>
+<li class="toctree-l1"><a class="reference internal" href="release-notes.html">Release Notes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="release-notes.html#id1">0.0.1</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="#">nimbusinator</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="nimbus.html">nimbusinator.Nimbus</a></li>
+<li class="toctree-l1"><a class="reference internal" href="command.html">nimbusinator.Command</a></li>
+<li class="toctree-l1"><a class="reference internal" href="release-notes.html">Release Notes</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+      <li>Next: <a href="nimbus.html" title="next chapter">nimbusinator.Nimbus</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Tim Adams.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

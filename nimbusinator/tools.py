@@ -71,8 +71,7 @@ def is_valid_colour(nimbus, colour):
             return colour
         else:
             # it's fatal
-            message('{} is not a valid choice since in low-resolution mode only values between 0 and 15 are accepted'.format(colour))
-            fatal(nimbus)
+            return None
     
     # validate high-res colour
     if nimbus.screen_size == (640, 250):
@@ -81,8 +80,7 @@ def is_valid_colour(nimbus, colour):
             return colour
         else:
             # it's fatal
-            message('{} is not a valid choice since in high-resolution mode only values between 0 and 3 are accepted'.format(colour))
-            fatal(nimbus)
+            return None
 
 
 def colour_to_bgr(nimbus, colour):
