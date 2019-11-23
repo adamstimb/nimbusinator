@@ -214,7 +214,7 @@ def plonk_image(nimbus, background, smaller, coord, custom_size=None):
         # Image overhangs left-hand side so crop left-hand side of image and set x_offset to 0
         smaller = smaller[:, (-1 * x):, :]
         x_offset = 0
-    if y < 0:
+    if y < -1:
         # Image overhangs bottom so crop bottom of image
         # (because PIL has y upside down)
         smaller = smaller[:-((-1*y)), :, :]

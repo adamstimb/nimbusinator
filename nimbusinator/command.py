@@ -315,6 +315,12 @@ class Command:
         plot_img = np.zeros((10, plot_img_width, 3), dtype=np.uint8)
         x = 0
         for char in text:
+
+            # If out of extended ASCII range replace with space
+            if ord(char) > 255:
+                # It's out of range
+                char = ' '
+
             if is_black:
                 char_img = cv2.bitwise_not(self.nimbus.font_images[font][ord(char)])
             else:
@@ -395,7 +401,7 @@ class Command:
         # Collect response in this string:
         response = ''
         # Collect and echo chars from buffer until enter was pressed
-        while not self.nimbus.enter_was_pressed:
+        while not self.nimbus.enter_was_pressed and self.nimbus.running:
             new_char = self.gets()
             response += new_char
             self.put(new_char)
@@ -467,6 +473,12 @@ class Command:
         
         # Put char or chars
         for ascii in ascii_list:
+
+            # If out of extended ASCII range replace with space
+            if ord(ascii) > 255:
+                # It's out of range
+                ascii = ' '
+
             # Get char img
             char_img = self.nimbus.font_images[self.nimbus.charset][ord(ascii)]
             # Get screen position in pixels from cursor position
