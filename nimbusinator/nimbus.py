@@ -16,7 +16,7 @@ import os
 # get full path of this script
 real_path = os.path.dirname(os.path.realpath(__file__))
 
-# define default cursor image - this makes sphinx cry
+# define default cursor image - this makes sphinx cry :(
 try:
     default_cursor_image = np.ones((2, 10, 3), dtype=np.uint8) * 255
 except:

@@ -1,6 +1,0 @@
-gcc7
-opencv-python
-numpy
-simpleaudio
-pynput
-psutil
