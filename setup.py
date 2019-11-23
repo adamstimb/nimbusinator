@@ -15,6 +15,7 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     package_data={'nimbusinator': ['data/*']},
     install_requires=[
+        "gcc7",
         "opencv-python",
         "numpy",
         "simpleaudio",
