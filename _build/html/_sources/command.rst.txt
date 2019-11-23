@@ -1,5 +1,5 @@
-nimbusinator.Command
-====================
+nimbusinator.command.Command
+============================
 
-.. automodule:: command
+.. automodule:: nimbusinator.command
     :members:

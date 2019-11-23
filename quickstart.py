@@ -1,4 +1,5 @@
-from nimbusinator import Nimbus, Command
+from nimbusinator.nimbus import Nimbus
+from nimbusinator.command import Command
 
 
 if __name__ == '__main__': 

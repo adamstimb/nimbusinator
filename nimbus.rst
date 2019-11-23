@@ -1,5 +1,5 @@
-nimbusinator.Nimbus
-===================
+nimbusinator.nimbus.Nimbus
+==========================
 
-.. automodule:: nimbus
+.. automodule:: nimbusinator.nimbus
     :members:

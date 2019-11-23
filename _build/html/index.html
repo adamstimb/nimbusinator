@@ -14,7 +14,7 @@
     <script type="text/javascript" src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="nimbusinator.Nimbus" href="nimbus.html" />
+    <link rel="next" title="nimbusinator.nimbus.Nimbus" href="nimbus.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -50,7 +50,8 @@ presented in up to 16 colours!</p>
 <div class="section" id="usage">
 <h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
 <p>To implement a Nimbus user interface all you need to do is import the <cite>Nimbus</cite> and <cite>Command</cite> classes, like this:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">nimbusinator</span> <span class="kn">import</span> <span class="n">Nimbus</span><span class="p">,</span> <span class="n">Command</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">nimbusinator.nimbus</span> <span class="kn">import</span> <span class="n">Nimbus</span>
+<span class="kn">from</span> <span class="nn">nimbusinator.command</span> <span class="kn">import</span> <span class="n">Command</span>
 </pre></div>
 </div>
 <p>Then create one object of each, and bind the <cite>Command</cite> object to the <cite>Nimbus</cite> object:</p>
@@ -93,7 +94,8 @@ pip install nimbusinator
 </div>
 <div class="section" id="quick-start">
 <h2>Quick-start<a class="headerlink" href="#quick-start" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">nimbusinator</span> <span class="kn">import</span> <span class="n">Nimbus</span><span class="p">,</span> <span class="n">Command</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">nimbusinator.nimbus</span> <span class="kn">import</span> <span class="n">Nimbus</span>
+<span class="kn">from</span> <span class="nn">nimbusinator.command</span> <span class="kn">import</span> <span class="n">Command</span>
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
     <span class="c1"># Create and bind nimbusinator objects:</span>
@@ -128,10 +130,11 @@ pip install nimbusinator
 <div class="toctree-wrapper compound">
 <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="nimbus.html">nimbusinator.Nimbus</a></li>
-<li class="toctree-l1"><a class="reference internal" href="command.html">nimbusinator.Command</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nimbus.html">nimbusinator.nimbus.Nimbus</a></li>
+<li class="toctree-l1"><a class="reference internal" href="command.html">nimbusinator.command.Command</a></li>
 <li class="toctree-l1"><a class="reference internal" href="release-notes.html">Release Notes</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="release-notes.html#id1">0.0.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="release-notes.html#id1">0.0.2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="release-notes.html#id2">0.0.1</a></li>
 </ul>
 </li>
 </ul>
@@ -166,8 +169,8 @@ pip install nimbusinator
 <h3>Navigation</h3>
 <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="nimbus.html">nimbusinator.Nimbus</a></li>
-<li class="toctree-l1"><a class="reference internal" href="command.html">nimbusinator.Command</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nimbus.html">nimbusinator.nimbus.Nimbus</a></li>
+<li class="toctree-l1"><a class="reference internal" href="command.html">nimbusinator.command.Command</a></li>
 <li class="toctree-l1"><a class="reference internal" href="release-notes.html">Release Notes</a></li>
 </ul>
 
@@ -175,7 +178,7 @@ pip install nimbusinator
 <h3>Related Topics</h3>
 <ul>
   <li><a href="#">Documentation overview</a><ul>
-      <li>Next: <a href="nimbus.html" title="next chapter">nimbusinator.Nimbus</a></li>
+      <li>Next: <a href="nimbus.html" title="next chapter">nimbusinator.nimbus.Nimbus</a></li>
   </ul></li>
 </ul>
 </div>

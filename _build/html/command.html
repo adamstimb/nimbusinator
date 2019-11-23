@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>nimbusinator.Command &#8212; nimbusinator 0.0.1 documentation</title>
+    <title>nimbusinator.command.Command &#8212; nimbusinator 0.0.1 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -15,7 +15,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Release Notes" href="release-notes.html" />
-    <link rel="prev" title="nimbusinator.Nimbus" href="nimbus.html" />
+    <link rel="prev" title="nimbusinator.nimbus.Nimbus" href="nimbus.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -32,11 +32,11 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="module-command">
-<span id="nimbusinator-command"></span><h1>nimbusinator.Command<a class="headerlink" href="#module-command" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-nimbusinator.command">
+<span id="nimbusinator-command-command"></span><h1>nimbusinator.command.Command<a class="headerlink" href="#module-nimbusinator.command" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
-<dt id="command.Command">
-<em class="property">class </em><code class="sig-prename descclassname">command.</code><code class="sig-name descname">Command</code><span class="sig-paren">(</span><em class="sig-param">nimbus</em><span class="sig-paren">)</span><a class="headerlink" href="#command.Command" title="Permalink to this definition">¶</a></dt>
+<dt id="nimbusinator.command.Command">
+<em class="property">class </em><code class="sig-prename descclassname">nimbusinator.command.</code><code class="sig-name descname">Command</code><span class="sig-paren">(</span><em class="sig-param">nimbus</em><span class="sig-paren">)</span><a class="headerlink" href="#nimbusinator.command.Command" title="Permalink to this definition">¶</a></dt>
 <dd><p>Nimbus commands</p>
 <p>This class contains the commands to control the Nimbus display.  The commands
 mimick the syntax found in RM Basic but re-written Pythonically.  In creating an
@@ -45,12 +45,12 @@ highly recommended to read the original Nimbus manuals (particularly RM Basic)
 to get a deeper understanding of how these commands originally worked.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>nimbus</strong> (<a class="reference internal" href="nimbus.html#nimbus.Nimbus" title="nimbus.Nimbus"><em>Nimbus</em></a>) – The Nimbus object to bind to</p>
+<dd class="field-odd"><p><strong>nimbus</strong> (<a class="reference internal" href="nimbus.html#nimbusinator.nimbus.Nimbus" title="nimbusinator.nimbus.Nimbus"><em>Nimbus</em></a>) – The Nimbus object to bind to</p>
 </dd>
 </dl>
 <dl class="method">
-<dt id="command.Command.area">
-<code class="sig-name descname">area</code><span class="sig-paren">(</span><em class="sig-param">coord_list</em>, <em class="sig-param">brush=None</em><span class="sig-paren">)</span><a class="headerlink" href="#command.Command.area" title="Permalink to this definition">¶</a></dt>
+<dt id="nimbusinator.command.Command.area">
+<code class="sig-name descname">area</code><span class="sig-paren">(</span><em class="sig-param">coord_list</em>, <em class="sig-param">brush=None</em><span class="sig-paren">)</span><a class="headerlink" href="#nimbusinator.command.Command.area" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw a filled polygon</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -63,8 +63,8 @@ to get a deeper understanding of how these commands originally worked.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="command.Command.ask_charset">
-<code class="sig-name descname">ask_charset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#command.Command.ask_charset" title="Permalink to this definition">¶</a></dt>
+<dt id="nimbusinator.command.Command.ask_charset">
+<code class="sig-name descname">ask_charset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nimbusinator.command.Command.ask_charset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the current charset for text</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -77,8 +77,8 @@ to get a deeper understanding of how these commands originally worked.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="command.Command.ask_curpos">
-<code class="sig-name descname">ask_curpos</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#command.Command.ask_curpos" title="Permalink to this definition">¶</a></dt>
+<dt id="nimbusinator.command.Command.ask_curpos">
+<code class="sig-name descname">ask_curpos</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nimbusinator.command.Command.ask_curpos" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the current cursor position</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -91,20 +91,20 @@ to get a deeper understanding of how these commands originally worked.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="command.Command.cls">
-<code class="sig-name descname">cls</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#command.Command.cls" title="Permalink to this definition">¶</a></dt>
+<dt id="nimbusinator.command.Command.cls">
+<code class="sig-name descname">cls</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nimbusinator.command.Command.cls" title="Permalink to this definition">¶</a></dt>
 <dd><p>Clear the screen of all text and graphics and reset cursor position</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="command.Command.flush">
-<code class="sig-name descname">flush</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#command.Command.flush" title="Permalink to this definition">¶</a></dt>
+<dt id="nimbusinator.command.Command.flush">
+<code class="sig-name descname">flush</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nimbusinator.command.Command.flush" title="Permalink to this definition">¶</a></dt>
 <dd><p>Clears the keyboard buffer</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="command.Command.gets">
-<code class="sig-name descname">gets</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#command.Command.gets" title="Permalink to this definition">¶</a></dt>
+<dt id="nimbusinator.command.Command.gets">
+<code class="sig-name descname">gets</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nimbusinator.command.Command.gets" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the oldest char in the keyboard buffer</p>
 <p>Equivalent to GET$ in RM Basic</p>
 <dl class="field-list simple">
@@ -118,8 +118,8 @@ to get a deeper understanding of how these commands originally worked.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="command.Command.input">
-<code class="sig-name descname">input</code><span class="sig-paren">(</span><em class="sig-param">prompt</em><span class="sig-paren">)</span><a class="headerlink" href="#command.Command.input" title="Permalink to this definition">¶</a></dt>
+<dt id="nimbusinator.command.Command.input">
+<code class="sig-name descname">input</code><span class="sig-paren">(</span><em class="sig-param">prompt</em><span class="sig-paren">)</span><a class="headerlink" href="#nimbusinator.command.Command.input" title="Permalink to this definition">¶</a></dt>
 <dd><p>Collects keyboard input until user presses ENTER</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -135,8 +135,8 @@ to get a deeper understanding of how these commands originally worked.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="command.Command.line">
-<code class="sig-name descname">line</code><span class="sig-paren">(</span><em class="sig-param">coord_list</em>, <em class="sig-param">brush=None</em><span class="sig-paren">)</span><a class="headerlink" href="#command.Command.line" title="Permalink to this definition">¶</a></dt>
+<dt id="nimbusinator.command.Command.line">
+<code class="sig-name descname">line</code><span class="sig-paren">(</span><em class="sig-param">coord_list</em>, <em class="sig-param">brush=None</em><span class="sig-paren">)</span><a class="headerlink" href="#nimbusinator.command.Command.line" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw one or more connected straight lines</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -149,8 +149,8 @@ to get a deeper understanding of how these commands originally worked.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="command.Command.plonk_logo">
-<code class="sig-name descname">plonk_logo</code><span class="sig-paren">(</span><em class="sig-param">coord</em><span class="sig-paren">)</span><a class="headerlink" href="#command.Command.plonk_logo" title="Permalink to this definition">¶</a></dt>
+<dt id="nimbusinator.command.Command.plonk_logo">
+<code class="sig-name descname">plonk_logo</code><span class="sig-paren">(</span><em class="sig-param">coord</em><span class="sig-paren">)</span><a class="headerlink" href="#nimbusinator.command.Command.plonk_logo" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plonk the RM Nimbus logo on screen</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -160,8 +160,8 @@ to get a deeper understanding of how these commands originally worked.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="command.Command.plot">
-<code class="sig-name descname">plot</code><span class="sig-paren">(</span><em class="sig-param">text</em>, <em class="sig-param">coord</em>, <em class="sig-param">size=1</em>, <em class="sig-param">brush=None</em>, <em class="sig-param">direction=0</em>, <em class="sig-param">font=None</em><span class="sig-paren">)</span><a class="headerlink" href="#command.Command.plot" title="Permalink to this definition">¶</a></dt>
+<dt id="nimbusinator.command.Command.plot">
+<code class="sig-name descname">plot</code><span class="sig-paren">(</span><em class="sig-param">text</em>, <em class="sig-param">coord</em>, <em class="sig-param">size=1</em>, <em class="sig-param">brush=None</em>, <em class="sig-param">direction=0</em>, <em class="sig-param">font=None</em><span class="sig-paren">)</span><a class="headerlink" href="#nimbusinator.command.Command.plot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot text on the screen</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -178,8 +178,8 @@ to get a deeper understanding of how these commands originally worked.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="command.Command.print">
-<code class="sig-name descname">print</code><span class="sig-paren">(</span><em class="sig-param">text</em><span class="sig-paren">)</span><a class="headerlink" href="#command.Command.print" title="Permalink to this definition">¶</a></dt>
+<dt id="nimbusinator.command.Command.print">
+<code class="sig-name descname">print</code><span class="sig-paren">(</span><em class="sig-param">text</em><span class="sig-paren">)</span><a class="headerlink" href="#nimbusinator.command.Command.print" title="Permalink to this definition">¶</a></dt>
 <dd><p>Print a string with carriage return at end</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -189,8 +189,8 @@ to get a deeper understanding of how these commands originally worked.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="command.Command.put">
-<code class="sig-name descname">put</code><span class="sig-paren">(</span><em class="sig-param">ascii_data</em><span class="sig-paren">)</span><a class="headerlink" href="#command.Command.put" title="Permalink to this definition">¶</a></dt>
+<dt id="nimbusinator.command.Command.put">
+<code class="sig-name descname">put</code><span class="sig-paren">(</span><em class="sig-param">ascii_data</em><span class="sig-paren">)</span><a class="headerlink" href="#nimbusinator.command.Command.put" title="Permalink to this definition">¶</a></dt>
 <dd><p>Put a single character or string at the current cursor position</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -203,8 +203,8 @@ return.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="command.Command.set_border">
-<code class="sig-name descname">set_border</code><span class="sig-paren">(</span><em class="sig-param">colour</em><span class="sig-paren">)</span><a class="headerlink" href="#command.Command.set_border" title="Permalink to this definition">¶</a></dt>
+<dt id="nimbusinator.command.Command.set_border">
+<code class="sig-name descname">set_border</code><span class="sig-paren">(</span><em class="sig-param">colour</em><span class="sig-paren">)</span><a class="headerlink" href="#nimbusinator.command.Command.set_border" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the border colour</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -214,8 +214,8 @@ return.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="command.Command.set_brush">
-<code class="sig-name descname">set_brush</code><span class="sig-paren">(</span><em class="sig-param">colour</em><span class="sig-paren">)</span><a class="headerlink" href="#command.Command.set_brush" title="Permalink to this definition">¶</a></dt>
+<dt id="nimbusinator.command.Command.set_brush">
+<code class="sig-name descname">set_brush</code><span class="sig-paren">(</span><em class="sig-param">colour</em><span class="sig-paren">)</span><a class="headerlink" href="#nimbusinator.command.Command.set_brush" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the brush colour</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -225,8 +225,8 @@ return.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="command.Command.set_charset">
-<code class="sig-name descname">set_charset</code><span class="sig-paren">(</span><em class="sig-param">charset</em><span class="sig-paren">)</span><a class="headerlink" href="#command.Command.set_charset" title="Permalink to this definition">¶</a></dt>
+<dt id="nimbusinator.command.Command.set_charset">
+<code class="sig-name descname">set_charset</code><span class="sig-paren">(</span><em class="sig-param">charset</em><span class="sig-paren">)</span><a class="headerlink" href="#nimbusinator.command.Command.set_charset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the charset for text</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -236,8 +236,8 @@ return.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="command.Command.set_colour">
-<code class="sig-name descname">set_colour</code><span class="sig-paren">(</span><em class="sig-param">colour1</em>, <em class="sig-param">colour2</em><span class="sig-paren">)</span><a class="headerlink" href="#command.Command.set_colour" title="Permalink to this definition">¶</a></dt>
+<dt id="nimbusinator.command.Command.set_colour">
+<code class="sig-name descname">set_colour</code><span class="sig-paren">(</span><em class="sig-param">colour1</em>, <em class="sig-param">colour2</em><span class="sig-paren">)</span><a class="headerlink" href="#nimbusinator.command.Command.set_colour" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set a colour to a new colour</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -250,8 +250,8 @@ return.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="command.Command.set_curpos">
-<code class="sig-name descname">set_curpos</code><span class="sig-paren">(</span><em class="sig-param">cursor_position</em><span class="sig-paren">)</span><a class="headerlink" href="#command.Command.set_curpos" title="Permalink to this definition">¶</a></dt>
+<dt id="nimbusinator.command.Command.set_curpos">
+<code class="sig-name descname">set_curpos</code><span class="sig-paren">(</span><em class="sig-param">cursor_position</em><span class="sig-paren">)</span><a class="headerlink" href="#nimbusinator.command.Command.set_curpos" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the cursor position</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -261,8 +261,8 @@ return.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="command.Command.set_cursor">
-<code class="sig-name descname">set_cursor</code><span class="sig-paren">(</span><em class="sig-param">flag</em><span class="sig-paren">)</span><a class="headerlink" href="#command.Command.set_cursor" title="Permalink to this definition">¶</a></dt>
+<dt id="nimbusinator.command.Command.set_cursor">
+<code class="sig-name descname">set_cursor</code><span class="sig-paren">(</span><em class="sig-param">flag</em><span class="sig-paren">)</span><a class="headerlink" href="#nimbusinator.command.Command.set_cursor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Show or hide cursor</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -272,8 +272,8 @@ return.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="command.Command.set_mode">
-<code class="sig-name descname">set_mode</code><span class="sig-paren">(</span><em class="sig-param">columns</em><span class="sig-paren">)</span><a class="headerlink" href="#command.Command.set_mode" title="Permalink to this definition">¶</a></dt>
+<dt id="nimbusinator.command.Command.set_mode">
+<code class="sig-name descname">set_mode</code><span class="sig-paren">(</span><em class="sig-param">columns</em><span class="sig-paren">)</span><a class="headerlink" href="#nimbusinator.command.Command.set_mode" title="Permalink to this definition">¶</a></dt>
 <dd><p>Select either high-resolution or low-resolution screen mode</p>
 <p>In RM Basic the screen resolution was set by the number of columns:
 40 for low-resolution and 80 for high-resolution.  Any other values
@@ -289,8 +289,8 @@ High-resolution mode is particularly odd.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="command.Command.set_paper">
-<code class="sig-name descname">set_paper</code><span class="sig-paren">(</span><em class="sig-param">colour</em><span class="sig-paren">)</span><a class="headerlink" href="#command.Command.set_paper" title="Permalink to this definition">¶</a></dt>
+<dt id="nimbusinator.command.Command.set_paper">
+<code class="sig-name descname">set_paper</code><span class="sig-paren">(</span><em class="sig-param">colour</em><span class="sig-paren">)</span><a class="headerlink" href="#nimbusinator.command.Command.set_paper" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the paper colour</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -300,8 +300,8 @@ High-resolution mode is particularly odd.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="command.Command.set_pen">
-<code class="sig-name descname">set_pen</code><span class="sig-paren">(</span><em class="sig-param">colour</em><span class="sig-paren">)</span><a class="headerlink" href="#command.Command.set_pen" title="Permalink to this definition">¶</a></dt>
+<dt id="nimbusinator.command.Command.set_pen">
+<code class="sig-name descname">set_pen</code><span class="sig-paren">(</span><em class="sig-param">colour</em><span class="sig-paren">)</span><a class="headerlink" href="#nimbusinator.command.Command.set_pen" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the pen colour</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -333,8 +333,8 @@ High-resolution mode is particularly odd.</p>
 <h3>Navigation</h3>
 <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="nimbus.html">nimbusinator.Nimbus</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">nimbusinator.Command</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nimbus.html">nimbusinator.nimbus.Nimbus</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">nimbusinator.command.Command</a></li>
 <li class="toctree-l1"><a class="reference internal" href="release-notes.html">Release Notes</a></li>
 </ul>
 
@@ -342,7 +342,7 @@ High-resolution mode is particularly odd.</p>
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="nimbus.html" title="previous chapter">nimbusinator.Nimbus</a></li>
+      <li>Previous: <a href="nimbus.html" title="previous chapter">nimbusinator.nimbus.Nimbus</a></li>
       <li>Next: <a href="release-notes.html" title="next chapter">Release Notes</a></li>
   </ul></li>
 </ul>

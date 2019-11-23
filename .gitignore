@@ -1,3 +1,10 @@
 /__pycache__
 /.vscode
 /nimbusinator/__pycache__
+/dist
+/build
+dependency_links.txt
+PKG-INFO
+requires.txt
+SOURCES.txt
+top_level.txt

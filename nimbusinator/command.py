@@ -1,5 +1,5 @@
-from nimbusinator.tools import message, fatal, is_valid_colour, colour_to_bgr, fix_coord, colrows_to_xy
-from nimbusinator.tools import plonk_image, plonk_transparent_image, colour_char
+from .tools import message, fatal, is_valid_colour, colour_to_bgr, fix_coord, colrows_to_xy
+from .tools import plonk_image, plonk_transparent_image, colour_char
 import numpy as np
 import cv2
 import time

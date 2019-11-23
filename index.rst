@@ -23,7 +23,8 @@ To implement a Nimbus user interface all you need to do is import the `Nimbus` a
 
 .. code-block:: python
 
-    from nimbusinator import Nimbus, Command
+    from nimbusinator.nimbus import Nimbus
+    from nimbusinator.command import Command
 
 
 Then create one object of each, and bind the `Command` object to the `Nimbus` object:
@@ -82,7 +83,8 @@ Quick-start
 
 .. code-block:: python
 
-    from nimbusinator import Nimbus, Command
+    from nimbusinator.nimbus import Nimbus
+    from nimbusinator.command import Command
 
     if __name__ == '__main__': 
         # Create and bind nimbusinator objects:

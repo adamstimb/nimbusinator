@@ -1,6 +1,16 @@
 Release Notes
 =============
 
+0.0.2
+-----
+
+Revised package structure to solve module import errors with Sphinx.
+
+Nimbus and Command classes are now imported like this:
+
+from nimbusinator.nimbus import Nimbus
+from nimbusinator.command import Command
+
 0.0.1
 -----
 
