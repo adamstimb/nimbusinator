@@ -275,7 +275,7 @@ class Nimbus:
                 for i in range(0, random.randint(1, 5)):
                     # break out if drive is stopped or shutting down
                     if not self.floppy_is_running or not self.running:
-                        return
+                        break
                     else:
                         # pick one at random
                         play_obj = dot[random.randint(0, 3)].play()
@@ -293,6 +293,7 @@ class Nimbus:
 
         """
 
+        message('{}'.format(flag))
         self.floppy_is_running = flag
 
 
