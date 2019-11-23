@@ -1,6 +1,4 @@
 sphinx:
   configuration: conf.py
 
-python:
-  setup_py_install: true
 
