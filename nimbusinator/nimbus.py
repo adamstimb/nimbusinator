@@ -293,7 +293,6 @@ class Nimbus:
 
         """
 
-        message('{}'.format(flag))
         self.floppy_is_running = flag
 
 
