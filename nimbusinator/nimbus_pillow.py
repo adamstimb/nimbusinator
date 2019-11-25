@@ -11,6 +11,7 @@ import random
 import simpleaudio as sa
 from pynput import keyboard
 import os
+import pygame
 
 
 # get full path of this script
@@ -61,7 +62,7 @@ class Nimbus:
         print(logo)
 
         # Validate params
-        assert isinstance(full_screen, bool), "value of full_screen must be boolean, not {}".format(full_screen)
+        assert isinstance(full_screen, (bool, type(None))), "value of full_screen must be boolean, not {}".format(type(full_screen))
         assert isinstance(title, str), "value of title must be string, not {}".format(title)
         assert isinstance(border_size, int), "value of border_size must be integer, not {}".format(border_size)
         assert (border_size >= 0 and border_size <= 100), "border_size must >= 0 and <= 100, not {}".format(border_size)
@@ -96,6 +97,7 @@ class Nimbus:
         self.enter_was_pressed = False                      # ENTER was pressed flag
         self.backspace_was_pressed = False                  # BACKSPACE was pressed flag
         self.__vs = VideoStream(self.screen_size, queue_size=16).start()  # VideoStream object to display the Nimbus
+        self.__full_screen_display_height = 500
 
 
     def __load_fonts(self):
@@ -211,6 +213,11 @@ class Nimbus:
         # resize the combined screen_data and add it to display
         resized = cv2.resize(final_screen_data, (640, 500), interpolation=cv2.INTER_LINEAR_EXACT)
         display_data[self.border_size:self.border_size+resized.shape[0], self.border_size:self.border_size+resized.shape[1]] = resized
+        # If full screen then scale-up to full screen size
+        if self.full_screen:
+            scale = int(self.__full_screen_display_height / 500)
+            display_size_width = scale * 640
+            display_data = cv2.resize(display_data, (display_size_width, self.__full_screen_display_height),  interpolation=cv2.INTER_LINEAR_EXACT)    
         return display_data
 
 
@@ -222,21 +229,37 @@ class Nimbus:
 
         """
 
-        # Set full screen mode in OpenCV
+        # Initialize pygame and set the display caption
+        pygame.init()
+        pygame.display.set_caption(self.title)
+        
+        # Grab the first frame and set screen size accordingly
+        frame = self.__render_display(self.__vs.get_screen())
+
+        # Handle full screen
         if self.full_screen:
-            cv2.namedWindow(self.title, cv2.WND_PROP_FULLSCREEN)
-            cv2.setWindowProperty(self.title, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
-        cv2.namedWindow(self.title)
-        # Nimbus's mouse feature won't be implemented until later
-        cv2.setMouseCallback(self.title, self.__onMouse)
+            display_size = (pygame.display.Info().current_w, pygame.display.Info().current_h)
+            flags = pygame.FULLSCREEN
+            self.__full_screen_display_height = pygame.display.Info().current_h
+        else:
+            display_size = (frame.shape[1], frame.shape[0])
+            self.__full_screen_display_height = 500
+            flags = None
+        
+        display = pygame.display.set_mode(display_size, flags=flags)
+
+
         # Display loop
         while self.running:
+            # Convert BGR to RGB (eventually we'll just have RGB because this is a hangover from OpenCV)
+            rgb = frame[...,::-1].copy()
+            # Convert to surface, blit and flip
+            a = pygame.surfarray.make_surface(rgb.swapaxes(0, 1))
+            display.blit(a, (0, 0))
+            pygame.display.flip()
+            # Get next frame
             frame = self.__render_display(self.__vs.get_screen())
-            cv2.imshow(self.title, frame)
-            time.sleep(0.05)
-            cv2.waitKey(5)
-        # Stop cv2 if shutting down
-        cv2.destroyAllWindows()
+        # Loops ends when system goes into shutdown
         return
 
 
@@ -417,6 +440,7 @@ class Nimbus:
             self.__t_cursor.join()
             self.__t_floppy.join()
             self.__t_screen.join()
+            pygame.quit()
             raise SystemExit('Exited')
         else:
             raise SystemExit('Exited')
