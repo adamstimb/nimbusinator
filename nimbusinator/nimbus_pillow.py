@@ -97,7 +97,7 @@ class Nimbus:
         self.enter_was_pressed = False                      # ENTER was pressed flag
         self.backspace_was_pressed = False                  # BACKSPACE was pressed flag
         self.__vs = VideoStream(self.screen_size, queue_size=16).start()  # VideoStream object to display the Nimbus
-        self.__full_screen_display_height = 500
+        self.__full_screen_display_size = (0, 0)            # This will be updated if full_screen=True is passed
 
 
     def __load_fonts(self):
@@ -215,10 +215,19 @@ class Nimbus:
         display_data[self.border_size:self.border_size+resized.shape[0], self.border_size:self.border_size+resized.shape[1]] = resized
         # If full screen then scale-up to full screen size
         if self.full_screen:
-            scale = int(self.__full_screen_display_height / 500)
+            # get the full screen dimensions and calculate scale factore
+            full_screen_width, full_screen_height = self.__full_screen_display_size
+            scale = int(full_screen_height / 500)
+            # calculate the Nimbus display width at full screen
             display_size_width = scale * 640
-            display_data = cv2.resize(display_data, (display_size_width, self.__full_screen_display_height),  interpolation=cv2.INTER_LINEAR_EXACT)    
-        return display_data
+            # create a blank image with full screen dimensions and put the display data in the middle
+            final_display_data = np.zeros((full_screen_height, full_screen_width, 3), dtype=np.uint8)
+            x_offset = int((display_size_width - 640) / 2)
+            display_data = cv2.resize(display_data, (display_size_width, full_screen_height),  interpolation=cv2.INTER_LINEAR_EXACT)
+            final_display_data[0:display_data.shape[0], x_offset:x_offset+display_data.shape[1]] = display_data
+        else:
+            final_display_data = display_data 
+        return final_display_data
 
 
     def __screen_runner(self):
@@ -233,21 +242,21 @@ class Nimbus:
         pygame.init()
         pygame.display.set_caption(self.title)
         
-        # Grab the first frame and set screen size accordingly
-        frame = self.__render_display(self.__vs.get_screen())
-
         # Handle full screen
         if self.full_screen:
             display_size = (pygame.display.Info().current_w, pygame.display.Info().current_h)
             flags = pygame.FULLSCREEN
-            self.__full_screen_display_height = pygame.display.Info().current_h
+            self.__full_screen_display_size = (pygame.display.Info().current_w, pygame.display.Info().current_h)
         else:
             display_size = (frame.shape[1], frame.shape[0])
-            self.__full_screen_display_height = 500
+            self.__full_screen_display_size = (0, 0)
             flags = None
-        
-        display = pygame.display.set_mode(display_size, flags=flags)
 
+        # Grab the first frame and set screen size accordingly
+        frame = self.__render_display(self.__vs.get_screen())
+
+        # Set up pygame display
+        display = pygame.display.set_mode(display_size, flags=flags)
 
         # Display loop
         while self.running:
