@@ -1,9 +1,9 @@
 from .tools import logo, message, fatal, colour_to_bgr, font_image_selecta, colrows_to_xy, plonk_image
+from .tools import bgr_array_to_tuple
 from .command import Command
 from .videostream import VideoStream
 from .colour_table import colour_table, low_res_default_colours, high_res_default_colours
 from .welcome import welcome
-import cv2
 import numpy as np
 import time
 import threading
@@ -12,6 +12,7 @@ import simpleaudio as sa
 from pynput import keyboard
 import os
 import pygame
+from PIL import Image, ImageDraw, ImageColor
 
 
 # get full path of this script
@@ -72,8 +73,8 @@ class Nimbus:
         self.running = False                                # Flag to run or stop the Nimbus
         self.title = title                                  # Display window title
         self.font_images = self.__load_fonts()              # Font images
-        logo_path = os.path.join(real_path, 'data', 'rm-nimbus-logo.png')
-        self.logo = cv2.imread(logo_path)                   # Nimbus logo image
+        logo_path = os.path.join(real_path, 'data', 'rm-nimbus-logo.bmp')
+        self.logo = np.array(Image.open(logo_path))#[:,:,0:3]# Nimbus logo image (drop the 4th layer)
         self.screen_size = (640, 250)                       # Screen size (initializes in high-res mode)
         self.border_size = border_size                      # Border size (min 0, max 100)
         self.border_colour = 0                              # High-res initial border colour is blue
@@ -111,7 +112,7 @@ class Nimbus:
         fonts = {}
         for font in range(0, 2):
             font_img_path = os.path.join(real_path, 'data', 'font{}.png'.format(font))
-            font_img = cv2.imread(font_img_path)
+            font_img = np.array(Image.open(font_img_path))
             fonts[font] = []
             for ascii_code in range(0, 256):
                 fonts[font].append(font_image_selecta(font_img, ascii_code, font))
@@ -200,9 +201,8 @@ class Nimbus:
         # Calculate the actual display dimensions with border:
         horizontal_display_length = 640+(self.border_size*2)
         vertical_display_length = 500+(self.border_size*2)
-        # Make the display image as an empty array then add the border colour
-        display_data = np.zeros((vertical_display_length, horizontal_display_length, 3), dtype=np.uint8)
-        cv2.rectangle(display_data, (0,0), (horizontal_display_length, vertical_display_length), colour_to_bgr(self, self.border_colour), -1)
+        # Make the display image as an empty array filled with the border colour        
+        display_data = np.ones((vertical_display_length, horizontal_display_length, 3), dtype=np.uint8) * colour_to_bgr(self, self.border_colour)
         # Add cursor if showing cursor
         final_screen_data = screen_data.copy()
         if self.show_cursor:
@@ -211,7 +211,8 @@ class Nimbus:
             if coord[0] < self.screen_size[0] and self.cursor_flash:
                 final_screen_data = plonk_image(self, screen_data, self.cursor_image, coord)
         # resize the combined screen_data and add it to display
-        resized = cv2.resize(final_screen_data, (640, 500), interpolation=cv2.INTER_LINEAR_EXACT)
+        im = Image.fromarray(final_screen_data)
+        resized = np.array(im.resize((640, 500), resample=Image.BICUBIC))
         display_data[self.border_size:self.border_size+resized.shape[0], self.border_size:self.border_size+resized.shape[1]] = resized
         # If full screen then scale-up to full screen size
         if self.full_screen:
@@ -223,7 +224,8 @@ class Nimbus:
             # create a blank image with full screen dimensions and put the display data in the middle
             final_display_data = np.zeros((full_screen_height, full_screen_width, 3), dtype=np.uint8)
             x_offset = int((display_size_width - 640) / 2)
-            display_data = cv2.resize(display_data, (display_size_width, full_screen_height),  interpolation=cv2.INTER_LINEAR_EXACT)
+            im = Image.fromarray(display_data)
+            display_data = np.array(im.resize((display_size_width, full_screen_height), resample=Image.BICUBIC))
             final_display_data[0:display_data.shape[0], x_offset:x_offset+display_data.shape[1]] = display_data
         else:
             final_display_data = display_data 
@@ -242,6 +244,9 @@ class Nimbus:
         pygame.init()
         pygame.display.set_caption(self.title)
         
+        # Grab the first frame from stream
+        frame = self.__render_display(self.__vs.get_screen())
+
         # Handle full screen
         if self.full_screen:
             display_size = (pygame.display.Info().current_w, pygame.display.Info().current_h)
@@ -250,10 +255,7 @@ class Nimbus:
         else:
             display_size = (frame.shape[1], frame.shape[0])
             self.__full_screen_display_size = (0, 0)
-            flags = None
-
-        # Grab the first frame and set screen size accordingly
-        frame = self.__render_display(self.__vs.get_screen())
+            flags = 0
 
         # Set up pygame display
         display = pygame.display.set_mode(display_size, flags=flags)

@@ -108,6 +108,9 @@ def colour_to_bgr(nimbus, colour):
         #return nimbus.colour_table[nimbus.high_res_colour_table[colour]]
 
 
+def bgr_array_to_tuple(bgr):
+    return (bgr[0], bgr[1], bgr[2])
+
 def fix_coord(screen_size, coord):
     """Fix coordinates for use in OpenCV's drawing functions
 
