@@ -7,6 +7,46 @@
 # The full colour table here is also used in low-res mode.  The key
 # is the Nimbus colour number and the value is the BGR composition.
 colour_table = {
+    #     R    G    B
+    0:  (  0,   0,   0),    # black
+    1:  (  0,   0, 170),    # dark blue
+    2:  (170,   0,   0),    # dark red
+    3:  (170,   0, 170),    # purple
+    4:  (  0, 170,   0),    # dark green
+    5:  (  0, 170, 170),    # dark cyan
+    6:  (170,  84,   0),    # brown
+    7:  (170, 170, 170),    # light grey
+    8:  ( 84,  84,  84),    # dark grey
+    9:  ( 84,  84, 255),    # light blue
+    10: (255,  84,  84),    # light red
+    11: (255,  84, 255),    # light purple
+    12: ( 84, 255,  84),    # light green
+    13: ( 84, 255, 255),    # light cyan
+    14: (255, 255,  84),    # yellow
+    15: (255, 255, 255)     # white
+}
+
+old_colour_table_2 = {
+    #     R    G    B
+    0:  [  0,   0,   0],    # black
+    1:  [  0,   0, 170],    # dark blue
+    2:  [170,   0,   0],    # dark red
+    3:  [170,   0, 170],    # purple
+    4:  [  0, 170,   0],    # dark green
+    5:  [  0, 170, 170],    # dark cyan
+    6:  [170,  84,   0],    # brown
+    7:  [170, 170, 170],    # light grey
+    8:  [ 84,  84,  84],    # dark grey
+    9:  [ 84,  84, 255],    # light blue
+    10: [255,  84,  84],    # light red
+    11: [255,  84, 255],    # light purple
+    12: [ 84, 255,  84],    # light green
+    13: [ 84, 255, 255],    # light cyan
+    14: [255, 255,  84],    # yellow
+    15: [255, 255, 255]     # white
+}
+
+old_colour_table = {
     #     B    G    R
     0:  [  0,   0,   0],    # black
     1:  [170,   0,   0],    # dark blue

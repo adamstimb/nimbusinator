@@ -212,8 +212,14 @@ class Nimbus:
                 final_screen_data = plonk_image(self, screen_data, self.cursor_image, coord)
         # resize the combined screen_data and add it to display
         im = Image.fromarray(final_screen_data)
-        resized = np.array(im.resize((640, 500), resample=Image.BICUBIC))
+        resized = np.array(im.resize((640, 500), resample=Image.BICUBIC), dtype=np.uint8)
         display_data[self.border_size:self.border_size+resized.shape[0], self.border_size:self.border_size+resized.shape[1]] = resized
+
+        print('resized is {}, display_data is {}'.format(type(resized), type(display_data)))
+        print('resized={}'.format(resized))
+        print('display_data={}'.format(display_data))
+        im = Image.fromarray(display_data)
+
         # If full screen then scale-up to full screen size
         if self.full_screen:
             # get the full screen dimensions and calculate scale factore
@@ -229,6 +235,7 @@ class Nimbus:
             final_display_data[0:display_data.shape[0], x_offset:x_offset+display_data.shape[1]] = display_data
         else:
             final_display_data = display_data 
+        
         return final_display_data
 
 
@@ -244,15 +251,14 @@ class Nimbus:
         pygame.init()
         pygame.display.set_caption(self.title)
         
-        # Grab the first frame from stream
-        frame = self.__render_display(self.__vs.get_screen())
-
         # Handle full screen
         if self.full_screen:
-            display_size = (pygame.display.Info().current_w, pygame.display.Info().current_h)
             flags = pygame.FULLSCREEN
             self.__full_screen_display_size = (pygame.display.Info().current_w, pygame.display.Info().current_h)
+            display_size = self.__full_screen_display_size
         else:
+            # Grab the first frame from stream
+            frame = self.__render_display(self.__vs.get_screen())
             display_size = (frame.shape[1], frame.shape[0])
             self.__full_screen_display_size = (0, 0)
             flags = 0
@@ -262,14 +268,12 @@ class Nimbus:
 
         # Display loop
         while self.running:
-            # Convert BGR to RGB (eventually we'll just have RGB because this is a hangover from OpenCV)
-            rgb = frame[...,::-1].copy()
-            # Convert to surface, blit and flip
-            a = pygame.surfarray.make_surface(rgb.swapaxes(0, 1))
-            display.blit(a, (0, 0))
-            pygame.display.flip()
             # Get next frame
             frame = self.__render_display(self.__vs.get_screen())
+            # Convert to surface, blit and flip
+            a = pygame.surfarray.make_surface(frame.swapaxes(0, 1))
+            display.blit(a, (0, 0))
+            pygame.display.flip()  
         # Loops ends when system goes into shutdown
         return
 
