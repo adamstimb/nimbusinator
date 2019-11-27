@@ -5,7 +5,7 @@ with open('readme.md', 'r') as f:
 
 setuptools.setup(
     name="nimbusinator",
-    version="0.0.2",
+    version="0.1.0",
     author="Tim Adams",
     author_email="adamstimb@gmail.com",
     description="RM Nimbus GUI for Python",
@@ -16,7 +16,7 @@ setuptools.setup(
     package_data={'nimbusinator': ['data/*']},
     install_requires=[
         "Pillow",
-        "opencv-python",
+        "pygame",
         "numpy",
         "simpleaudio",
         "pynput",
