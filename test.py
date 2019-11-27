@@ -1,6 +1,6 @@
 import random
-from nimbusinator.nimbus_pg import Nimbus
-from nimbusinator.command_pg import Command
+from nimbusinator.nimbus import Nimbus
+from nimbusinator.command import Command
 
 
 def test_put(nim, cmd):
@@ -170,9 +170,9 @@ def test_line(nim, cmd):
     nim.sleep(1)
 
 if __name__ == '__main__':
-    nim = Nimbus(full_screen=False)
+    nim = Nimbus(full_screen=True)
     cmd = Command(nim)
-    nim.boot(skip_welcome_screen=True)
+    nim.boot(skip_welcome_screen=False)
     test_line(nim, cmd)
     test_area(nim, cmd)
     test_plot(nim, cmd)
