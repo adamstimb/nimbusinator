@@ -1,8 +1,7 @@
-from .tools import message, fatal, is_valid_colour, colour_to_bgr, fix_coord, colrows_to_xy
-from .tools import plonk_image, plonk_transparent_image, colour_char
-import numpy as np
-import cv2
-import time
+from .tools import is_valid_colour, colrows_to_xy, recolour, fix_coord
+from PIL import Image, ImageDraw
+import copy
+
 
 class Command:
     """Nimbus commands
@@ -18,6 +17,7 @@ class Command:
 
     """
 
+
     def __init__(self, nimbus):
         """Create a new Command object
 
@@ -32,96 +32,8 @@ class Command:
         # Validate params
         # To avoid circular import we can't put Nimbus in isintance but we can
         # assert that the object contains a string called title.
-        assert isinstance(nimbus.title, str), "Command object needs to be bound to a Nimbus object"
+        #assert isinstance(nimbus.title, str), "Command object needs to be bound to a Nimbus object"
         self.nimbus = nimbus
-
-
-    def cls(self):
-        """Clear the screen of all text and graphics and reset cursor position
-
-        """
-
-        # Wipe screen data in the Nimbus and fill screen with paper colour. First
-        # define a new PIL image to make sure it matches the current screen mode, 
-        # e.g. if set_mode was just called
-        screen_data = np.zeros((self.nimbus.screen_size[1]+1, self.nimbus.screen_size[0]+1, 3), dtype=np.uint8)
-        cv2.rectangle(screen_data, (0,0), (self.nimbus.screen_size[0], self.nimbus.screen_size[1]), colour_to_bgr(self.nimbus, self.nimbus.paper_colour),-1)
-        self.nimbus.update_screen(screen_data)
-
-
-    def set_mode(self, columns):
-        """Select either high-resolution or low-resolution screen mode
-
-        In RM Basic the screen resolution was set by the number of columns: 
-        40 for low-resolution and 80 for high-resolution.  Any other values
-        has no effect.  Nimbusinator is more strict and will yield an error
-        if any other values are entered.  Check the original RM Basic manual
-        for a description of how screen resolutions worked on the Nimbus.
-        High-resolution mode is particularly odd.
-
-        Args:
-            columns (int): The number of colums (40 or 80)
-
-        """
-        
-        # validate params
-        assert isinstance(columns, int), "The value of columns must be integer, not {}".format(columns)
-        assert (columns == 80 or columns == 40), "The value of columns can be 80 or 40, not {}".format(columns)
-
-        # change screen size and set default colours accordingly
-        if columns == 80:
-            self.nimbus.screen_size = (640, 250)
-            self.nimbus.high_res_colours = self.nimbus.high_res_default_colours.copy()
-            self.set_paper(0)
-            self.set_border(0)
-            self.set_brush(3)
-            self.set_pen(3)
-            self.set_curpos((1, 1))
-            self.cls()
-            return
-        if columns == 40:
-            self.nimbus.screen_size = (320, 250)
-            self.nimbus.low_res_colours = self.nimbus.low_res_default_colours.copy()
-            self.set_paper(0)
-            self.set_border(0)
-            self.set_brush(15)
-            self.set_pen(15)
-            self.set_curpos((1, 1))
-            self.cls()
-            return
-
-
-    def set_cursor(self, flag):
-        """Show or hide cursor
-
-        Args:
-            flag (boolean): True to show cursor, False to hide
-
-        """
-        
-        # validate params
-        assert isinstance(flag, bool), "The value of flag must be boolean, not {}".format(flag)
-
-        self.nimbus.show_cursor = flag
-
-
-    def plonk_logo(self, coord):
-        """Plonk the RM Nimbus logo on screen
-
-        Args:
-            coord (tuple): The (x, y) position to plonk the logo
-
-        """
-
-        # validate params
-        assert isinstance(coord, tuple), "The value of coord must be a tuple, not {}".format(coord)
-        assert len(coord) == 2, "The coord tuple must have 2 values, not {}".format(len(coord))
-        for i in range(0, 2):
-            assert isinstance(coord[i], int), "This value in coord must be an integer, not{}".format(coord[i])
-
-        screen_data = self.nimbus.get_screen()
-        screen_data = plonk_image(self.nimbus, screen_data, self.nimbus.logo, coord)
-        self.nimbus.update_screen(screen_data)
 
 
     def set_paper(self, colour):
@@ -134,7 +46,7 @@ class Command:
 
         # validate params
         assert isinstance(colour, int), "The value of colour must be an integer, not {}".format(type(colour))
-        assert (colour == is_valid_colour(self.nimbus, colour)), "Colour {} is out-of-range for this screen mode".format(colour)
+        assert is_valid_colour(self.nimbus, colour), "Colour {} is out-of-range for this screen mode".format(colour)
 
         self.nimbus.paper_colour = colour
         
@@ -152,12 +64,9 @@ class Command:
         assert isinstance(colour1, int), "The value of colour1 must be an integer, not {}".format(type(colour1))
         assert isinstance(colour2, int), "The value of colour2 must be an integer, not {}".format(type(colour2))
         assert (colour2 >= 0 and colour2 <= 15), "The value of colour 2 must be >= 0 and <= 15, not {}".format(colour2)
-        assert (colour1 == is_valid_colour(self.nimbus, colour1)), "Colour1 {} is out-of-range for this screen mode".format(colour1)
+        assert is_valid_colour(self.nimbus, colour1), "Colour1 {} is out-of-range for this screen mode".format(colour1)
 
-        if self.nimbus.screen_size == (320, 250):
-            self.nimbus.low_res_colours[colour1] = colour2
-        if self.nimbus.screen_size == (640, 250):
-            self.nimbus.high_res_colours[colour1] = colour2
+        self.nimbus.runtime_colours[self.nimbus.screen_mode][colour1] = self.nimbus.DEFAULT_COLOURS['lo'][colour2]
 
 
     def set_border(self, colour):
@@ -170,7 +79,7 @@ class Command:
  
         # validate params
         assert isinstance(colour, int), "The value of colour must be an integer, not {}".format(type(colour))
-        assert (colour == is_valid_colour(self.nimbus, colour)), "Colour {} is out-of-range for this screen mode".format(colour)
+        assert is_valid_colour(self.nimbus, colour), "Colour {} is out-of-range for this screen mode".format(colour)
 
         self.nimbus.border_colour = colour
     
@@ -185,7 +94,7 @@ class Command:
 
         # validate params
         assert isinstance(colour, int), "The value of colour must be an integer, not {}".format(type(colour))
-        assert (colour == is_valid_colour(self.nimbus, colour)), "Colour {} is out-of-range for this screen mode".format(colour)
+        assert is_valid_colour(self.nimbus, colour), "Colour {} is out-of-range for this screen mode".format(colour)
 
         self.nimbus.brush_colour = colour
 
@@ -200,7 +109,7 @@ class Command:
 
         # validate params
         assert isinstance(colour, int), "The value of colour must be an integer, not {}".format(type(colour))
-        assert (colour == is_valid_colour(self.nimbus, colour)), "Colour {} is out-of-range for this screen mode".format(colour)
+        assert is_valid_colour(self.nimbus, colour), "Colour {} is out-of-range for this screen mode".format(colour)
 
         self.nimbus.pen_colour = colour
 
@@ -245,13 +154,16 @@ class Command:
         for i in range(0, 2):
             assert isinstance(cursor_position[i], int), "This value in cursor_position must be an integer, not{}".format(type(cursor_position[i]))
         # Validate that cursor will still be on screen
-        assert (colrows_to_xy(self.nimbus.screen_size, (cursor_position[0], 1))[0] < self.nimbus.screen_size[0]), "Column {} is not on the screen".format(cursor_position[0])
-        assert (colrows_to_xy(self.nimbus.screen_size, (1, cursor_position[1]))[1] >= 0), "Row {} is not on the screen".format(cursor_position[1])
-        assert (cursor_position[0] >= 0), "Negative column value in {} is not permitted".format(cursor_position)
-        assert (cursor_position[1] >= 0), "Negative row value in {} is not permitted".format(cursor_position)       
+        assert cursor_position[0] >= 0, "Negative column value in {} is not permitted".format(cursor_position)
+        assert cursor_position[1] >= 0, "Negative row value in {} is not permitted".format(cursor_position)
+        assert cursor_position[1] <= 25, "There are only 25 rows, not {}".format(cursor_position[1])
+        if self.nimbus.screen_mode == 'hi':
+            assert cursor_position[0] <= 80, "There are only 80 columns in this mode, not {}".format(cursor_position[0])
+        if self.nimbus.screen_mode == 'lo':
+            assert cursor_position[0] <= 40, "There are only 40 columns in this mode, not {}".format(cursor_position[0])
 
         # Now update the cursor position
-        self.nimbus.update_cursor_position(cursor_position)
+        self.nimbus.cursor_position = cursor_position
 
 
     def ask_curpos(self):
@@ -263,88 +175,175 @@ class Command:
         """
 
         # Return cursor position
-        return self.nimbus.get_cursor_position()
+        return self.nimbus.cursor_position
 
 
-    def plot(self, text, coord, size=1, brush=None, direction=0, font=None):
-        """Plot text on the screen
+    def cls(self):
+        """Clear the screen of all text and graphics and reset cursor position
+
+        """
+
+        # Wipe paper image in the Nimbus and reset cursor position
+        
+        self.nimbus.paper_image = self.nimbus.empty_paper()
+        self.set_curpos((1, 1))
+
+
+    def set_mode(self, columns):
+        """Select either high-resolution or low-resolution screen mode
+
+        In RM Basic the screen resolution was set by the number of columns: 
+        40 for low-resolution and 80 for high-resolution.  Any other values
+        has no effect.  Nimbusinator is more strict and will yield an error
+        if any other values are entered.  Check the original RM Basic manual
+        for a description of how screen resolutions worked on the Nimbus.
+        High-resolution mode is particularly odd.
 
         Args:
-            text (str): The text to be plotted
-            coord (tuple): The (x, y) position of the text
-            size (int), optional: Font size. To elongate pass a tuple (x_size, y_size)
-            brush (int), optional: Brush colour
-            direction (int), optional: 0=normal, 1=-90deg, 2=180deg, 3=-270deg
-            font (int), optional: 0 is the standard font, 1 is the other font
+            columns (int): The number of colums (40 or 80)
+
+        """
+        
+        # validate params
+        assert isinstance(columns, int), "The value of columns must be integer, not {}".format(columns)
+        assert (columns == 80 or columns == 40), "The value of columns can be 80 or 40, not {}".format(columns)
+
+        # restore default colors
+        self.nimbus.runtime_colours = copy.deepcopy(self.nimbus.DEFAULT_COLOURS)
+
+        # change screen size and set default colours accordingly
+        if columns == 80:
+            self.nimbus.screen_mode = 'hi'
+            self.set_paper(0)
+            self.set_border(0)
+            self.set_brush(3)
+            self.set_pen(3)
+            self.set_curpos((1, 1))
+            self.cls()
+            return
+        if columns == 40:
+            self.nimbus.screen_mode = 'lo'
+            self.set_paper(0)
+            self.set_border(0)
+            self.set_brush(15)
+            self.set_pen(15)
+            self.set_curpos((1, 1))
+            self.cls()
+            return
+
+
+    def plonk_logo(self, coord):
+        """Plonk the RM Nimbus logo on screen
+
+        Args:
+            coord (tuple): The (x, y) position to plonk the logo
+
+        """
+
+        # validate params
+        assert isinstance(coord, tuple), "The value of coord must be a tuple, not {}".format(coord)
+        assert len(coord) == 2, "The coord tuple must have 2 values, not {}".format(len(coord))
+        for i in range(0, 2):
+            assert isinstance(coord[i], int), "This value in coord must be an integer, not{}".format(coord[i])
+
+        self.nimbus.plonk_image_on_paper(self.nimbus.NIMBUS_LOGO, coord)
+
+
+    def put(self, ascii_data):
+        """Put a single character or string at the current cursor position
+
+        Args:
+            ascii_data (int/str): If an int is passed the corresponding ASCII character
+                                    will be plotted.  If a string is passed then the 
+                                    string will be printed without a terminating carriage
+                                    return.
+
+        """
+        
+        # Validate params
+        assert isinstance(ascii_data, (str, int)), "The value of ascii_data must be an integer or string, not {}".format(type(ascii_data))
+
+        # Handle integer
+        if isinstance(ascii_data, int):
+            # validate in extended ASCII range
+            assert (ascii_data >= 0 and ascii_data <= 255), "The value {} of ascii_data is outside the range of Extended ASCII (0-255)".format(ascii_data)
+            # convert to char
+            ascii_list = [chr(ascii_data)]
+        # Handle string
+        if isinstance(ascii_data, str):
+            ascii_list = ascii_data
+        
+        # Put char or chars
+        for ascii in ascii_list:
+            # If out of extended ASCII range replace with space
+            if ord(ascii) > 255:
+                # It's out of range
+                ascii = ' '
+            # Get char img
+            char_img = self.nimbus.FONT_IMAGES[self.nimbus.charset][ord(ascii)]
+            # Get screen position in pixels from cursor position
+            curpos_xy = colrows_to_xy(self.nimbus.SCREEN_MODES[self.nimbus.screen_mode], self.nimbus.cursor_position)
+            # Plot char and apply paper colour underneath char
+            empty_char_image = recolour(self.nimbus, self.nimbus.EMPTY_CHAR_IMAGE, (0, 0, 0), self.nimbus.COLOUR_TABLE[self.nimbus.runtime_colours[self.nimbus.screen_mode][self.nimbus.paper_colour]], has_alpha=True)
+            self.nimbus.plonk_image_on_paper(empty_char_image, curpos_xy, transparent=True)
+            # Overlay char, colourise and preserve paper colour
+            char_img = recolour(self.nimbus, char_img, (0, 0, 0), self.nimbus.COLOUR_TABLE[self.nimbus.runtime_colours[self.nimbus.screen_mode][self.nimbus.pen_colour]], has_alpha=True)
+            self.nimbus.plonk_image_on_paper(char_img, curpos_xy, transparent=True)
+            # calculate new curpos, if over the right-hand side do carriage return
+            new_column = self.nimbus.cursor_position[0] + 1
+            if (self.nimbus.screen_mode == 'lo' and new_column > 40) or (self.nimbus.screen_mode == 'hi' and new_column > 80):
+                # do carriage return
+                new_column = 1  # return to left-hand side
+                new_row = self.nimbus.cursor_position[1] + 1  # move down
+                # if we're below, then screen, move screen data up 10 pixels and set
+                # cursor to bottom of screen
+                if new_row > 25:
+                    new_row = 25
+                    # Make a blank paper image and paste the old paper image 10 pixels higher 
+                    # than the top and update actual paper image
+                    new_paper_image = self.nimbus.empty_paper()
+                    new_paper_image.paste(self.nimbus.paper_image, (0, -10))
+                    self.nimbus.paper_image = new_paper_image
+            else:
+                # don't move cursor down
+                new_row = self.nimbus.cursor_position[1]
+            # move cursor
+            self.set_curpos((new_column, new_row))
+
+
+    def set_cursor(self, flag):
+        """Show or hide cursor
+
+        Args:
+            flag (boolean): True to show cursor, False to hide
+
+        """
+        
+        # validate params
+        assert isinstance(flag, bool), "The value of flag must be boolean, not {}".format(flag)
+
+        self.nimbus.cursor_enabled = flag
+
+
+    def print(self, text):
+        """Print a string with carriage return at end
+
+        Args:
+            text (str): The text to be printed
 
         """
 
         # Validate params
-        assert isinstance(text, str), "The value of text must be a string, not {}".format(type(str))
-        assert isinstance(coord, tuple), "The value of coord must be a tuple, not {}".format(type(coord))
-        assert len(coord) == 2, "The coord tuple must have 2 values, not {}".format(len(coord))
-        for i in range(0, 2):
-            assert isinstance(coord[i], int), "The values in coord {} must be integer, not {}".format(coord, type(coords[i]))      
-        assert isinstance(size, (int, tuple)), "The value of size must be an integer or tuple, not {}".format(type(size))
-        if isinstance(size, tuple):
-            for i in range(0, 2):
-                assert isinstance(size[i], int), "The values in size {} must be integer, not {}".format(size, type(size[i]))  
-        assert isinstance(brush, (type(None), int)), "The value of brush must be None or an integer, not {}".format(type(brush))
-        assert (brush == is_valid_colour(self.nimbus, brush)), "Brush colour {} is out-of-range for this screen mode".format(brush)
-        assert isinstance(direction, int), "The value of direction must be an integer, not {}".format(type(direction))
-        assert isinstance(font, (type(None), int)), "The value of font must be an integer, not {}".format(type(font))
-        assert (font == 0 or font == 1 or font is None), "The value of font can be 0 or 1, not {}".format(font)
-        
+        assert isinstance(text, str), "The value of text must be a string, not {}".format(type(text))
 
-        # Handle is_black workaround
-        if colour_to_bgr(self.nimbus, brush) == [0, 0, 0]:
-            is_black = True
-        else:
-            is_black = False
-
-        # Handle brush colour
-        if brush is None:
-            brush = self.nimbus.brush_colour
-
-        # Handle font
-        if font is None:
-            font = self.nimbus.plot_font
-
-        # Create a temporary image of the plotted text
-        plot_img_width = len(text) * 9
-        plot_img = np.zeros((10, plot_img_width, 3), dtype=np.uint8)
-        x = 0
-        for char in text:
-
-            # If out of extended ASCII range replace with space
-            if ord(char) > 255:
-                # It's out of range
-                char = ' '
-
-            if is_black:
-                char_img = cv2.bitwise_not(self.nimbus.font_images[font][ord(char)])
-            else:
-                char_img = colour_char(self.nimbus, brush, cv2.bitwise_not(self.nimbus.font_images[font][ord(char)]))
-            plot_img = plonk_image(self.nimbus, plot_img, char_img, (x, 0), custom_size=(plot_img_width, 10))
-            x += 8
-        
-        # resize
-        if isinstance(size, tuple):
-            # tuple: extract x_size, y_size
-            x_size, y_size = size
-        else:
-            x_size = size
-            y_size = size
-        resized = cv2.resize(plot_img, (plot_img.shape[1]*x_size, plot_img.shape[0]*y_size), interpolation=0)
-        
-        # rotate
-        for i in range(0, direction):
-            resized = cv2.rotate(resized, cv2.ROTATE_90_COUNTERCLOCKWISE)
-        
-        # rebuild screen and done
-        screen_data = self.nimbus.get_screen()
-        screen_data = plonk_transparent_image(self.nimbus, screen_data, resized, coord, is_black=is_black)
-        self.nimbus.update_screen(screen_data)
+        # Put the string and then maybe CR
+        self.put(text)
+        # Carriage return?
+        col, row = self.ask_curpos()
+        if col > 1:
+            # Yep - smash the cursor off the screen and use put to force CR
+            self.nimbus.cursor_position = (255, row)
+            self.put('X')
 
 
     def flush(self):
@@ -353,7 +352,7 @@ class Command:
         """
 
         self.nimbus.keyboard_buffer = []
-    
+
 
     def gets(self):
         """Get the oldest char in the keyboard buffer
@@ -370,7 +369,7 @@ class Command:
         if len(self.nimbus.keyboard_buffer) > 0:
             return self.nimbus.keyboard_buffer.pop(0)
         else:
-            return ''
+            return ''        
 
 
     def input(self, prompt):
@@ -388,9 +387,9 @@ class Command:
         assert isinstance(prompt, str), "The value of prompt must be a string, not {}".format(type(prompt))
 
         # Get max columns for this screen mode
-        if self.nimbus.screen_size == (320, 250):
+        if self.nimbus.screen_mode == 'lo':
             max_columns = 40
-        if self.nimbus.screen_size == (640, 250):
+        if self.nimbus.screen_mode == 'hi':
             max_columns = 80
         # Flush buffer, reset enter + delete flag
         self.flush()
@@ -441,110 +440,116 @@ class Command:
         return response
 
 
-    def put(self, ascii_data):
-        """Put a single character or string at the current cursor position
+    def plot(self, text, coord, size=1, brush=None, direction=0, font=None):
+        """Plot text on the screen
 
         Args:
-            ascii_data (int/str): If an int is passed the corresponding ASCII character
-                                    will be plotted.  If a string is passed then the 
-                                    string will be printed without a terminating carriage
-                                    return.
+            text (str): The text to be plotted
+            coord (tuple): The (x, y) position of the text
+            size (int), optional: Font size. To elongate pass a tuple (x_size, y_size)
+            brush (int), optional: Brush colour
+            direction (int), optional: 0=normal, 1=-90deg, 2=180deg, 3=-270deg
+            font (int), optional: 0 is the standard font, 1 is the other font
 
         """
-        
+
         # Validate params
-        assert isinstance(ascii_data, (str, int)), "The value of ascii_data must be an integer or string, not {}".format(type(ascii_data))
+        assert isinstance(text, str), "The value of text must be a string, not {}".format(type(str))
+        assert isinstance(coord, tuple), "The value of coord must be a tuple, not {}".format(type(coord))
+        assert len(coord) == 2, "The coord tuple must have 2 values, not {}".format(len(coord))
+        for i in range(0, 2):
+            assert isinstance(coord[i], int), "The values in coord {} must be integer, not {}".format(coord, type(coords[i]))      
+        assert isinstance(size, (int, tuple)), "The value of size must be an integer or tuple, not {}".format(type(size))
+        if isinstance(size, tuple):
+            for i in range(0, 2):
+                assert isinstance(size[i], int), "The values in size {} must be integer, not {}".format(size, type(size[i]))  
+        assert isinstance(brush, (type(None), int)), "The value of brush must be None or an integer, not {}".format(type(brush))
+        if brush is not None:
+            assert is_valid_colour(self.nimbus, brush), "Brush colour {} is out-of-range for this screen mode".format(brush)
+        assert isinstance(direction, int), "The value of direction must be an integer, not {}".format(type(direction))
+        assert isinstance(font, (type(None), int)), "The value of font must be an integer, not {}".format(type(font))
+        assert (font == 0 or font == 1 or font is None), "The value of font can be 0 or 1, not {}".format(font)
 
-        # Handle is_black workaround
-        if colour_to_bgr(self.nimbus, self.nimbus.pen_colour) == [0, 0, 0]:
-            is_black = True
-        else:
-            is_black = False
+        # Handle brush colour
+        if brush is None:
+            brush = self.nimbus.brush_colour
 
-        # Handle integer
-        if isinstance(ascii_data, int):
-            # validate in extended ASCII range
-            assert (ascii_data >= 0 and ascii_data <= 255), "The value {} of ascii_data is outside the range of Extended ASCII (0-255)".format(ascii_data)
-            # convert to char
-            ascii_list = [chr(ascii_data)]
-        # Handle string
-        if isinstance(ascii_data, str):
-            ascii_list = ascii_data
-        
-        # Put char or chars
-        for ascii in ascii_list:
+        # Handle font
+        if font is None:
+            font = self.nimbus.plot_font
 
+        # Create a temporary image of the plotted text
+        plot_img_width = len(text) * 10
+        plot_img = Image.new(
+            'RGBA',
+            (plot_img_width, 10), 
+            (0, 0, 0, 1)
+        )
+
+        # Plot chars on plot_img
+        x = 0
+        for char in text:
             # If out of extended ASCII range replace with space
-            if ord(ascii) > 255:
+            if ord(char) > 255:
                 # It's out of range
-                ascii = ' '
+                char = ' '
+            # Get char image and recolour it
+            char_img = self.nimbus.FONT_IMAGES[font][ord(char)]
+            char_img = recolour(self.nimbus, char_img, (0, 0, 0), self.nimbus.COLOUR_TABLE[self.nimbus.runtime_colours[self.nimbus.screen_mode][brush]], has_alpha=True)
+            # Plot char and increment x
+            plot_img.paste(char_img, (x, 0), mask=char_img)
+            x += 8
+        
+        # resize
+        if isinstance(size, tuple):
+            # tuple: extract x_size, y_size
+            x_size, y_size = size
+        else:
+            x_size = size
+            y_size = size
+        new_size = (plot_img.size[0] * x_size, plot_img.size[1] * y_size)
+        plot_img = plot_img.resize(new_size, resample=Image.NEAREST)
+        
+        # rotate
+        for i in range(0, direction):
+            plot_img = plot_img.transpose(Image.ROTATE_90)
+        
+        # rebuild screen and done
+        self.nimbus.plonk_image_on_paper(plot_img, coord, transparent=True)
 
-            # Get char img
-            char_img = self.nimbus.font_images[self.nimbus.charset][ord(ascii)]
-            # Get screen position in pixels from cursor position
-            curpos_xy = colrows_to_xy(self.nimbus.screen_size, self.nimbus.get_cursor_position())
-            # Plot char and apply paper colour underneath char
-            screen_data = self.nimbus.get_screen()
-            # Paper colour
-            cv2.rectangle(
-                screen_data, 
-                fix_coord(self.nimbus.screen_size, (curpos_xy[0], curpos_xy[1])), 
-                fix_coord(self.nimbus.screen_size, (curpos_xy[0] + 8, curpos_xy[1] + 10)), 
-                colour_to_bgr(self.nimbus, self.nimbus.paper_colour), 
-                -1
-            )
-            # Overlay char, colourise and preserve paper colour
-            if is_black:
-                char_img = cv2.bitwise_not(char_img)
-            else:
-                char_img = colour_char(self.nimbus, self.nimbus.pen_colour, cv2.bitwise_not(char_img))
-            screen_data = plonk_transparent_image(self.nimbus, screen_data, char_img, (curpos_xy[0], curpos_xy[1]), is_black=is_black)
-            # calculate new curpos, if over the right-hand side do carriage return
-            self.nimbus.update_screen(screen_data)
-            new_column = self.nimbus.get_cursor_position()[0] + 1
-            if colrows_to_xy(self.nimbus.screen_size, (new_column, 1))[0] >= self.nimbus.screen_size[0]:
-                # do carriage return
-                new_column = 1  # return to left-hand side
-                new_row = self.nimbus.get_cursor_position()[1] + 1  # move down
-                # if we're below, then screen, move screen data up 10 pixels and set
-                # cursor to bottom of screen
-                if colrows_to_xy(self.nimbus.screen_size, (1, new_row))[1] < 0:
-                    new_row = self.nimbus.get_cursor_position()[1]
-                    # Shove screen up.  First crop the top line:
-                    old_screen_data = self.nimbus.get_screen()[10:, :]
-                    # Make a blank screen and apply paper colour (same as Nimbus did it)
-                    screen_data = np.zeros((self.nimbus.screen_size[1]+1, self.nimbus.screen_size[0]+1, 3), dtype=np.uint8)
-                    cv2.rectangle(screen_data, (0,0), (self.nimbus.screen_size[0], self.nimbus.screen_size[1]), colour_to_bgr(self.nimbus, self.nimbus.paper_colour),-1)
-                    # And overlay the old_screen_data
-                    screen_data[:-10, :] = old_screen_data
-                    # Update screen
-                    self.nimbus.update_screen(screen_data)
-            else:
-                # don't move cursor down
-                new_row = self.nimbus.get_cursor_position()[1]
-            # move cursor
-            self.set_curpos((new_column, new_row))
-         
-            
-    def print(self, text):
-        """Print a string with carriage return at end
+
+   
+
+    def area(self, coord_list, brush=None):
+        """Draw a filled polygon
 
         Args:
-            text (str): The text to be printed
+            coord_list (list): A list of (x, y) tuples
+            brush (int), optional: Colour value (High-resolution: 0-3, low-resolution: 0-15)
 
         """
 
-        # Validate params
-        assert isinstance(text, str), "The value of text must be a string, not {}".format(type(text))
+        # validate params
+        assert isinstance(coord_list, list), "coord_list should contain a list, not {}".format(type(coord_list))
+        assert isinstance(brush, (type(None), int)), "The value of brush must be None or an integer, not {}".format(type(brush))
+        assert is_valid_colour(self.nimbus, brush), "Brush colour {} is out-of-range for this screen mode".format(brush)
+        for coord in coord_list:
+            assert len(coord) == 2, "The coord tuple must have 2 values, not {}".format(len(coord))
+            for i in range(0, 2):
+                assert isinstance(coord[i], int), "The values in coord {} must be integer, not {}".format(coord, type(coord[i]))
 
-        # Put the string and then maybe CR
-        self.put(text)
-        # Carriage return?
-        col, row = self.ask_curpos()
-        if col > 1:
-            # Yep - smash the cursor off the screen and use put to force CR
-            self.nimbus.cursor_position = (255, row)
-            self.put('X')
+        # if default brush value then get current brush colour
+        if brush is None:
+            brush = self.nimbus.brush_colour
+
+        # correct coords
+        for i in range(0, len(coord_list)):
+            coord_list[i] = fix_coord(self.nimbus.SCREEN_MODES[self.nimbus.screen_mode], coord_list[i])
+
+        # draw area
+        draw = ImageDraw.Draw(self.nimbus.paper_image)
+        rgb = self.nimbus.COLOUR_TABLE[self.nimbus.runtime_colours[self.nimbus.screen_mode][brush]]
+        draw.polygon(coord_list, outline=rgb, fill=rgb)
 
 
     def line(self, coord_list, brush=None):
@@ -559,7 +564,7 @@ class Command:
         # validate params
         assert isinstance(coord_list, list), "coord_list should contain a list, not {}".format(type(coord_list))
         assert isinstance(brush, (type(None), int)), "The value of brush must be None or an integer, not {}".format(type(brush))
-        assert (brush == is_valid_colour(self.nimbus, brush)), "Brush colour {} is out-of-range for this screen mode".format(brush)
+        assert is_valid_colour(self.nimbus, brush), "Brush colour {} is out-of-range for this screen mode".format(brush)
         for coord in coord_list:
             assert len(coord) == 2, "The coord tuple must have 2 values, not {}".format(len(coord))
             for i in range(0, 2):
@@ -568,44 +573,12 @@ class Command:
         # if default brush value then get current brush colour
         if brush is None:
             brush = self.nimbus.brush_colour
-        # validate brush
-        brush = is_valid_colour(self.nimbus, brush)
-        # draw lines on screen
-        screen_data = self.nimbus.get_screen()
-        for i in range(0, len(coord_list) - 1):
-            cv2.line(screen_data, fix_coord(self.nimbus.screen_size, coord_list[i]), fix_coord(self.nimbus.screen_size, coord_list[i+1]), colour_to_bgr(self.nimbus, brush), 1)
-        self.nimbus.update_screen(screen_data)
-    
 
-    def area(self, coord_list, brush=None):
-        """Draw a filled polygon
+        # correct coords
+        for i in range(0, len(coord_list)):
+            coord_list[i] = fix_coord(self.nimbus.SCREEN_MODES[self.nimbus.screen_mode], coord_list[i])
 
-        Args:
-            coord_list (list): A list of (x, y) tuples
-            brush (int), optional: Colour value (High-resolution: 0-3, low-resolution: 0-15)
-
-        """
-
-        # validate params
-        assert isinstance(coord_list, list), "coord_list should contain a list, not {}".format(type(coord_list))
-        assert isinstance(brush, (type(None), int)), "The value of brush must be None or an integer, not {}".format(type(brush))
-        assert (brush == is_valid_colour(self.nimbus, brush)), "Brush colour {} is out-of-range for this screen mode".format(brush)
-        for coord in coord_list:
-            assert len(coord) == 2, "The coord tuple must have 2 values, not {}".format(len(coord))
-            for i in range(0, 2):
-                assert isinstance(coord[i], int), "The values in coord {} must be integer, not {}".format(coord, type(coord[i]))
-
-        # if default brush value then get current brush colour
-        if brush is None:
-            brush = self.nimbus.brush_colour
-        # validate brush
-        brush = is_valid_colour(self.nimbus, brush)
-        # convert coord_list into array
-        poly_list = []
-        for coord in coord_list:
-            coord = fix_coord(self.nimbus.screen_size, coord)
-            poly_list.append([coord[0], coord[1]])
-        # draw filled polygon on screen
-        screen_data = self.nimbus.get_screen()
-        cv2.fillPoly(screen_data, np.array([poly_list]), colour_to_bgr(self.nimbus, brush))
-        self.nimbus.update_screen(screen_data)
+        # draw lines
+        draw = ImageDraw.Draw(self.nimbus.paper_image)
+        rgb = self.nimbus.COLOUR_TABLE[self.nimbus.runtime_colours[self.nimbus.screen_mode][brush]]
+        draw.line(coord_list, fill=rgb)

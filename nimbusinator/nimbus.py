@@ -1,27 +1,24 @@
-from .tools import logo, message, fatal, colour_to_bgr, font_image_selecta, colrows_to_xy, plonk_image
-from .command import Command
-from .videostream import VideoStream
-from .colour_table import colour_table, low_res_default_colours, high_res_default_colours
-from .welcome import welcome
-import cv2
-import numpy as np
+import os
+import sys
 import time
+os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
+import pygame
+import copy
+import numpy as np
+from .tools import logo, message, pil_to_pygame_image, fix_coord, char_image_selecta, colrows_to_xy, recolour
+from .colour_table import colour_table, default_colours
+from PIL import Image, ImageDraw, ImageColor
 import threading
 import random
-import simpleaudio as sa
 from pynput import keyboard
-import os
+import simpleaudio as sa
+from .welcome import welcome
+from .command import Command
 
 
 # get full path of this script
 real_path = os.path.dirname(os.path.realpath(__file__))
 
-# define default cursor image - this makes sphinx cry :(
-try:
-    default_cursor_image = np.ones((2, 10, 3), dtype=np.uint8) * 255
-except:
-    message('Warning - could not create cursor.  Are you running Sphinx?')
-    default_cursor_image = []
 
 class Nimbus:
     """Nimbus video display class.
@@ -36,15 +33,6 @@ class Nimbus:
 
     """
 
-    def __onMouse(self, event, x, y, flags, param):
-        """Handle mouse event
-
-        """
-
-
-        return
-
-
     def __init__(self, full_screen=False, title='Nimbusinator', border_size=40):
         """Create a new Nimbus object
 
@@ -57,45 +45,63 @@ class Nimbus:
 
         """
 
-        # Show logo in console
         print(logo)
 
-        # Validate params
-        assert isinstance(full_screen, bool), "value of full_screen must be boolean, not {}".format(full_screen)
-        assert isinstance(title, str), "value of title must be string, not {}".format(title)
-        assert isinstance(border_size, int), "value of border_size must be integer, not {}".format(border_size)
-        assert (border_size >= 0 and border_size <= 100), "border_size must >= 0 and <= 100, not {}".format(border_size)
+        # Constants
+        self.SCREEN_MODES = {                           # The absolute screen resolution for
+            'hi': (640, 250),                           # high (80 column) and low-res (40
+            'lo': (320, 250)                            # column) modes
+            }
+        self.FONT_IMAGES = self.__load_fonts()              # Font images
+        self.COLOUR_TABLE = colour_table                # This is the RGB colour table from the Nimbus
+        self.DEFAULT_COLOURS = default_colours          # The default colours which cannot be changed during runtime
+        self.NORMALIZED_PAPER_SIZE = (640, 500)         # After drawing graphics and chars the paper is normalized to this size
+        # Background size is the normalized paper size plus 2x border size:
+        background_width = self.NORMALIZED_PAPER_SIZE[0] + (2 * border_size)
+        background_height = self.NORMALIZED_PAPER_SIZE[1] + (2 * border_size)
+        self.BACKGROUND_SIZE = (background_width, background_height)
+        # RM Nimbus logo
+        logo_path = os.path.join(real_path, 'data', 'rm-nimbus-logo.bmp')
+        self.NIMBUS_LOGO = Image.open(logo_path)
+        self.CURSOR_IMAGE = Image.new(
+            'RGB',
+            (10, 2), 
+            (0, 0, 0)
+        )
+        self.EMPTY_CHAR_IMAGE = Image.new(
+            'RGB',
+            (10, 10),
+            (0, 0, 0)
+        )
 
-        # Define class params
-        self.full_screen = full_screen                      # Full screen flag
-        self.running = False                                # Flag to run or stop the Nimbus
-        self.title = title                                  # Display window title
-        self.font_images = self.__load_fonts()              # Font images
-        logo_path = os.path.join(real_path, 'data', 'rm-nimbus-logo.png')
-        self.logo = cv2.imread(logo_path)                   # Nimbus logo image
-        self.screen_size = (640, 250)                       # Screen size (initializes in high-res mode)
-        self.border_size = border_size                      # Border size (min 0, max 100)
-        self.border_colour = 0                              # High-res initial border colour is blue
-        self.paper_colour = 0                               # High-res initial paper colour is blue
-        self.brush_colour = 3                               # High-res initial brush colour is white
-        self.pen_colour = 3                                 # High-res initial pen colour is white
-        self.cursor_position = (1, 1)                       # Initial cursor position is top-left
-        self.plot_font = 0                                  # Initial plot font (charset for plot)
-        self.charset = 0                                    # Initial charset (font for text)
-        self.colour_table = colour_table                    # Dict to to convert Nimbus colour numbers to BGR
-        self.low_res_default_colours = low_res_default_colours.copy()       # Low-res default colour table
-        self.high_res_default_colours = high_res_default_colours.copy()     # High-res default colour table
-        self.low_res_colours = low_res_default_colours.copy()               # Editable low-res colour table
-        self.high_res_colours = high_res_default_colours.copy()             # Editable high-res colour table
-        self.cursor_image = default_cursor_image.copy()     # Text cursor image
-        self.cursor_flash = False                           # Cursor flash flag
-        self.show_cursor = False                            # Show cursor flag
-        self.floppy_is_running = False                      # Floppy drive running flag
-        self.keyboard_buffer = []                           # Keyboard buffer
-        self.ctrl_pressed = False                           # CTRL is pressed flag
-        self.enter_was_pressed = False                      # ENTER was pressed flag
-        self.backspace_was_pressed = False                  # BACKSPACE was pressed flag
-        self.__vs = VideoStream(self.screen_size, queue_size=16).start()  # VideoStream object to display the Nimbus
+        # Settings
+        self.full_screen = full_screen
+        self.title = title
+        self.border_size = border_size
+
+        # Variables
+        self.screen_mode = 'hi'
+        self.runtime_colours = copy.deepcopy(self.DEFAULT_COLOURS)   # These colours can be changed at runtime
+        self.paper_colour = 1
+        self.border_colour = 1
+        self.brush_colour = 3
+        self.pen_colour = 3
+        self.charset = 0
+        self.plot_font = 0
+        self.cursor_position = (1, 1)
+        self.cursor_enabled = False
+        self.keyboard_buffer = []
+
+        # Initialize with empty paper
+        self.paper_image = self.empty_paper()
+
+        # Status flags
+        self.running = False                          # Set to True to run the Nimbus and the display
+        self.__cursor_flash = False                     # Make cursor visible if True
+        self.ctrl_pressed = False
+        self.enter_was_pressed = False
+        self.backspace_was_pressed = False
+        self.floppy_is_running = False
 
 
     def __load_fonts(self):
@@ -108,60 +114,63 @@ class Nimbus:
 
         fonts = {}
         for font in range(0, 2):
-            font_img_path = os.path.join(real_path, 'data', 'font{}.png'.format(font))
-            font_img = cv2.imread(font_img_path)
+            font_img_path = os.path.join(real_path, 'data', 'font{}-alpha.png'.format(font))
+            font_img = Image.open(font_img_path)
             fonts[font] = []
             for ascii_code in range(0, 256):
-                fonts[font].append(font_image_selecta(font_img, ascii_code, font))
+                fonts[font].append(char_image_selecta(font_img, ascii_code, font))
         return fonts
 
 
-    def get_cursor_position(self):
-        """Get current cursor position
+    def empty_paper(self):
+        """Return empty paper filled with the current paper colour"""
 
-        Returns:
-            (tuple): The current cursor position (col, row)
-
-        """
-
-        return self.cursor_position
-
-
-    def update_cursor_position(self, new_cursor_position):
-        """Update cursor position
-
-        Args:
-            new_cursor_position (tuple): The new cursor position (col, row)
-
-        """
-
-        self.cursor_position = new_cursor_position
+        return Image.new(
+            'RGB',
+            self.SCREEN_MODES[self.screen_mode], 
+            self.__get_rgb(self.paper_colour)
+        )
 
 
-    def update_screen(self, new_screen_data):
-        """Update screen data
-
-        Change the screen data to be displayed in VideoStream
+    def __get_rgb(self, colour):
+        """Get an RGB tuple for a given colour code and current screen mode
 
         Args:
-            new_screen_data (PIL image): The new screen data to be displayed
-
-        """
-
-        self.__vs.update_screen(new_screen_data)
-
-
-    def get_screen(self):
-        """Get screen data
-
-        Get the screen data to be displayed from VideoStream
-
-        Returns:
-            (PIL image): The screen data to be displayed
+            colours (int): The Nimbus colour
         
+        Returns:
+            (tuple): The RGB tuple
+
         """
 
-        return self.__vs.get_screen()
+        return self.COLOUR_TABLE[self.runtime_colours[self.screen_mode][colour]]
+
+
+    def plonk_image_on_paper(self, img, coord, transparent=False):
+        """Plonk a PIL image somewhere on the paper
+        
+        The passed coordinates are consistent with RM Nimbus implemented, i.e.
+        bottom-left of screen = (0, 0) and any images are located relative to
+        their bottom-left corner
+
+        Args:
+            img (PIL image): The image to be plonked
+            coord (tuple): The coordinate tuple (x, y)
+            transparent (bool): True if image contains an alpha layer for transparency
+
+        """
+
+        # Flip y
+        x, y = fix_coord(self.SCREEN_MODES[self.screen_mode], coord)
+
+        # And change point-of-reference to bottom-left corner position
+        y -= img.size[1]
+        
+        # Then paste image
+        if transparent:
+            self.paper_image.paste(img, (x, y), mask=img)
+        else:
+            self.paper_image.paste(img, (x, y))
 
 
     def __cycle_cursor_flash(self):
@@ -171,73 +180,100 @@ class Nimbus:
 
         """
         while self.running:
-            # When the Nimbus is boot flip cursor flash every 0.5 secs
+            # If the Nimbus is running flip cursor flash every 0.5 secs
             time.sleep(0.5)
-            cursor_flash = self.cursor_flash
-            self.cursor_flash = not cursor_flash
+            cursor_flash = self.__cursor_flash
+            self.__cursor_flash = not cursor_flash
         return
 
 
-    def __render_display(self, screen_data):
-        """Generate final display data including border
+    def __display_loop(self):
+        """The display loop
 
-        In low-resolution mode the screen size is doubled and maintanes the same
-        aspect ratio. It is then centrally overlayed on a larger image that acts
-        as a border.  In high-resolution mode the original Nimbus would stretch
-        the screen vertically to match the aspect ratio of low-resolution mode,
-        making everything appear elongated.  It is then overlayed on the border as
-        before.
-
-        Args:
-            screen_data (PIL image): The screen data to be displayed
-
-        Returns:
-            display_data (PIL image): The finished display data
-        """
-
-        # Calculate the actual display dimensions with border:
-        horizontal_display_length = 640+(self.border_size*2)
-        vertical_display_length = 500+(self.border_size*2)
-        # Make the display image as an empty array then add the border colour
-        display_data = np.zeros((vertical_display_length, horizontal_display_length, 3), dtype=np.uint8)
-        cv2.rectangle(display_data, (0,0), (horizontal_display_length, vertical_display_length), colour_to_bgr(self, self.border_colour), -1)
-        # Add cursor if showing cursor
-        final_screen_data = screen_data.copy()
-        if self.show_cursor:
-            coord = colrows_to_xy(self.screen_size, self.cursor_position)
-            # Only overlay cursor if on screen and cursor flash is true
-            if coord[0] < self.screen_size[0] and self.cursor_flash:
-                final_screen_data = plonk_image(self, screen_data, self.cursor_image, coord)
-        # resize the combined screen_data and add it to display
-        resized = cv2.resize(final_screen_data, (640, 500), interpolation=cv2.INTER_LINEAR_EXACT)
-        display_data[self.border_size:self.border_size+resized.shape[0], self.border_size:self.border_size+resized.shape[1]] = resized
-        return display_data
-
-
-    def __screen_runner(self):
-        """Display the Nimbus in a window
-
-        This function contains a loop which can be broken by setting
-        the running flag to False.  It must be run within its own thread.
+        Normalize paper image.  Overlay normalized image on background
+        image to make the video image.  If not in full screen mode
+        just show the video image.  If in full screen mode scale the
+        video image to the display height, overlay it on a background
+        image that has the same dimensions as the display, and show.
+        The loop breaks if self.running becomes false.  This method
+        must be run in its own thread.
 
         """
 
-        # Set full screen mode in OpenCV
-        if self.full_screen:
-            cv2.namedWindow(self.title, cv2.WND_PROP_FULLSCREEN)
-            cv2.setWindowProperty(self.title, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
-        cv2.namedWindow(self.title)
-        # Nimbus's mouse feature won't be implemented until later
-        cv2.setMouseCallback(self.title, self.__onMouse)
-        # Display loop
         while self.running:
-            frame = self.__render_display(self.__vs.get_screen())
-            cv2.imshow(self.title, frame)
-            time.sleep(0.05)
-            cv2.waitKey(5)
-        # Stop cv2 if shutting down
-        cv2.destroyAllWindows()
-        return
+            # Overlay flash cursor if enabled
+            paper_image_plus_cursor = self.paper_image.copy()
+            if self.__cursor_flash and self.cursor_enabled:
+                # Recolour cursor image to pen colour
+                cursor_image = recolour(self, self.CURSOR_IMAGE, (0, 0, 0), self.COLOUR_TABLE[self.runtime_colours[self.screen_mode][self.pen_colour]], has_alpha=True)
+                # Paste cursor image on paper_image_plus_cursor at x, y
+                # Flip y
+                x, y = fix_coord(self.SCREEN_MODES[self.screen_mode], colrows_to_xy(self.SCREEN_MODES[self.screen_mode], self.cursor_position))
+                # Change point-of-reference to bottom-left corner position
+                y -= 2
+                # And paste cursor
+                paper_image_plus_cursor.paste(cursor_image, (x, y))
+            # Normalized paper image
+            normalized_paper_image = paper_image_plus_cursor.resize(self.NORMALIZED_PAPER_SIZE, resample=Image.NEAREST)
+            # Create background image with border colour
+            background_image = Image.new(
+                'RGB',
+                self.BACKGROUND_SIZE,
+                self.__get_rgb(self.border_colour)
+            )
+            # Overlay normalized paper image on background
+            background_image.paste(normalized_paper_image, (self.border_size, self.border_size))
+            # Handle full screen
+            if self.full_screen:
+                # Calculate new dimensions, resize and calculate x offset
+                scale = self.__full_screen_display_size[1] / self.BACKGROUND_SIZE[1]
+                new_size = (int(self.BACKGROUND_SIZE[0] * scale), self.__full_screen_display_size[1])
+                background_image = background_image.resize(new_size, resample=Image.BICUBIC)
+                display_x_offset = int((self.__full_screen_display_size[0] - new_size[0]) / 2)
+            else:
+                # Windows, so no x offset or resizing
+                display_x_offset = 0
+            # Create the video image, blit it and flip it
+            video_image = pil_to_pygame_image(background_image)
+            self.__pygame_display.blit(video_image, (display_x_offset, 0))
+            pygame.display.flip()
+
+
+    def __on_key_press(self, key):
+        """Handle control key presses
+
+        """
+        
+        # Printable chars go straight into the buffer
+        try:
+            self.keyboard_buffer.append(key.char)
+            # BUT - if CTRL-C situation then shutdown!
+            if self.ctrl_pressed and key.char.lower() == 'c':
+                message('CTRL-C detected')
+                self.shutdown()
+        except AttributeError:
+            # Handle CTRL released
+            if key == keyboard.Key.ctrl_l or keyboard.Key.ctrl_r:
+                self.ctrl_pressed = True
+            # Handle ENTER hit
+            if key == keyboard.Key.enter:
+                self.enter_was_pressed = True
+            # Handle BACKSPACE hit
+            if key == keyboard.Key.backspace:
+                self.backspace_was_pressed = True
+            # Also add spaces to buffer
+            if key == keyboard.Key.space:
+                self.keyboard_buffer.append(' ')
+
+
+    def __on_key_release(self, key):
+        """Handle control key releases
+
+        """
+
+        # Handle CTRL released
+        if key == keyboard.Key.ctrl_l or keyboard.Key.ctrl_r:
+            self.ctrl_pressed = False
 
 
     def __floppy_drive_effects(self):
@@ -296,76 +332,48 @@ class Nimbus:
         self.floppy_is_running = flag
 
 
-    def __on_key_press(self, key):
-        """Handle control key presses
-
-        """
-        
-        # Printable chars go straight into the buffer
-        try:
-            self.keyboard_buffer.append(key.char)
-            # BUT - if CTRL-C situation then shutdown!
-            if self.ctrl_pressed and key.char.lower() == 'c':
-                message('CTRL-C detected')
-                self.shutdown()
-        except AttributeError:
-            # Handle CTRL released
-            if key == keyboard.Key.ctrl_l or keyboard.Key.ctrl_r:
-                self.ctrl_pressed = True
-            # Handle ENTER hit
-            if key == keyboard.Key.enter:
-                self.enter_was_pressed = True
-            # Handle BACKSPACE hit
-            if key == keyboard.Key.backspace:
-                self.backspace_was_pressed = True
-            # Also add spaces to buffer
-            if key == keyboard.Key.space:
-                self.keyboard_buffer.append(' ')
-
-
-    def __on_key_release(self, key):
-        """Handle control key releases
-
-        """
-
-        # Handle CTRL released
-        if key == keyboard.Key.ctrl_l or keyboard.Key.ctrl_r:
-            self.ctrl_pressed = False
-
-
     def boot(self, skip_welcome_screen=False):
-        """Boot the Nimbus
+        """Boot the Nimbus"""
 
-        Reveal the Nimbus in all its glory, with or without a cheeky
-        simulation of the famous Nimbus welcome screen.
+        # Don't boot if already running
+        if self.running:
+            message('The Nimbus is already running')
+            return
 
-        Args:
-            skip_welcome_screen (bool), optional: Go straight to the application
-
-        """
-
-        # Validate params
-        assert isinstance(skip_welcome_screen, bool), "value of skip_welcome_screen must be boolean, not {}".format(skip_welcome_screen)
-
-        # otherwise go ahead
-        message('Press CTRL-C to interrupt')
         message('Booting up')
-        # Set running flag
+
+        # Initialize pygame and handle full screen
+        pygame.init()
+        pygame.display.set_caption(self.title)
+        if self.full_screen:
+            # Full screen - get full screen size as display size and set pygame flags
+            self.__full_screen_display_size = (pygame.display.Info().current_w, pygame.display.Info().current_h)
+            display_size = self.__full_screen_display_size
+            flags = pygame.FULLSCREEN
+        else:
+            # Run in window - use background size as display size and set pygame flags
+            display_size = self.BACKGROUND_SIZE
+            flags = 0
+        self.__pygame_display = pygame.display.set_mode(display_size, flags=flags)
+
+        # Set flags
         self.running = True
-        # Fire up screen runner in a thread
-        self.__t_screen = threading.Thread(target=self.__screen_runner, args=())
-        self.__t_screen.start()
+
+        # Start display loop in a thread
+        self.__display_thread = threading.Thread(target=self.__display_loop, args=())
+        self.__display_thread.start()
         # Fire up cursor in another thread
-        self.__t_cursor = threading.Thread(target=self.__cycle_cursor_flash, args=())
-        self.__t_cursor.start()
+        self.__cursor_thread = threading.Thread(target=self.__cycle_cursor_flash, args=())
+        self.__cursor_thread.start()
         # Fire up the floppy disk effects in another
-        self.__t_floppy = threading.Thread(target=self.__floppy_drive_effects, args=())
-        self.__t_floppy.start()
+        self.__floppy_thread = threading.Thread(target=self.__floppy_drive_effects, args=())
+        self.__floppy_thread.start()
         # Fire up the keyboard listener
-        listener = keyboard.Listener(
+        self.__keyboard_listener = keyboard.Listener(
             on_press=self.__on_key_press,
             on_release=self.__on_key_release)
-        listener.start()
+        self.__keyboard_listener.start()
+
         if skip_welcome_screen:
             # don't bother with welcome screen
             Command(self).set_mode(80)
@@ -376,6 +384,29 @@ class Nimbus:
             welcome(Command(self), self)
             Command(self).set_mode(80)
             message('Done')
+    
+    def shutdown(self):
+        """Shut down the Nimbus"""
+
+        # Passshutdown if not running
+        if not self.running:
+            return
+
+        message('Shutting down')
+
+        # Set flags
+        self.running = False
+
+        # Join threads
+        self.__display_thread.join()
+        self.__cursor_thread.join()
+
+        # Stop keyboard listener
+        self.__keyboard_listener.stop()
+
+        # Quit pygame and exit
+        pygame.quit()
+        sys.exit(1)
 
 
     def sleep(self, sleep_time):
@@ -399,24 +430,3 @@ class Nimbus:
             time.sleep(0.01)
             elapsed_time += 0.01
         return
-
-
-    def shutdown(self):
-        """Shutdown the Nimbus
-
-        Stop everything and close the display Window.
-
-        """
-
-        # only shut down if running
-        if self.running:
-            message('Shutting down')
-            message('Press CTRL-C again to exit immediately')
-            # Set running flag and join all threads
-            self.running = False
-            self.__t_cursor.join()
-            self.__t_floppy.join()
-            self.__t_screen.join()
-            raise SystemExit('Exited')
-        else:
-            raise SystemExit('Exited')
