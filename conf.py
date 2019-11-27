@@ -43,8 +43,9 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 # Mock imports seems to work best with readthedocs
 autodoc_mock_imports = [
-    'cv2',
-    'opencv-python',
+    'pygame',
+    'PIL',
+    'Pillow',
     'numpy',
     'simpleaudio',
     'pynput',
