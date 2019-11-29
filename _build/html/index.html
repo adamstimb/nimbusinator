@@ -1,51 +1,160 @@
 
-<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta charset="utf-8" />
-    <title>nimbusinator &#8212; nimbusinator 0.0.2 documentation</title>
-    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/language_data.js"></script>
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>nimbusinator &mdash; nimbusinator 0.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="nimbusinator.nimbus.Nimbus" href="nimbus.html" />
+    <link rel="next" title="nimbusinator.nimbus.Nimbus" href="nimbus.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
    
-  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
-
-  </head><body>
-  
-
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
           
 
-          <div class="body" role="main">
+          
+            <a href="#" class="icon icon-home"> nimbusinator
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="nimbus.html">nimbusinator.nimbus.Nimbus</a></li>
+<li class="toctree-l1"><a class="reference internal" href="command.html">nimbusinator.command.Command</a></li>
+<li class="toctree-l1"><a class="reference internal" href="release-notes.html">Release Notes</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">nimbusinator</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="#">Docs</a> &raquo;</li>
+        
+      <li>nimbusinator</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <div class="section" id="nimbusinator">
 <h1>nimbusinator<a class="headerlink" href="#nimbusinator" title="Permalink to this headline">¶</a></h1>
 <p>RM Nimbus GUI for Python</p>
 <div class="section" id="about">
 <h2>About<a class="headerlink" href="#about" title="Permalink to this headline">¶</a></h2>
-<p>Nimbusinator is a graphical user-interface package for Python that mimicks the graphics
-and text drivers of the RM Nimbus PC186. It is not an emulation of the Nimbus itself.
-This means you get the best of both worlds: Cutting-edge Python computing power, beautifully
-presented in up to 16 colours!</p>
-</div>
-<div class="section" id="supported-operating-systems">
-<h2>Supported Operating Systems<a class="headerlink" href="#supported-operating-systems" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
-<li><p>Linux</p></li>
-</ul>
+<p>Nimbusinator is a graphical user-interface package for Python that mimicks the graphics and text drivers of the RM Nimbus PC186.  It is <em>not</em> an emulation of the Nimbus itself.  This means you get the best of both worlds:  Cutting-edge Python computing power, beautifully presented in up to 16 colours!</p>
+<p>Disclaimer: Nimbusinator is a tribute project and is in no way linked to or endorsed by RM plc.</p>
 </div>
 <div class="section" id="usage">
 <h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
@@ -84,12 +193,17 @@ presented in up to 16 colours!</p>
 </div>
 <div class="section" id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># In case you don&#39;t already have it:</span>
-sudo apt-get install -y python3-dev libasound2-dev
+<p>Nimbusinator is technically cross-platform but there are differences in the way PyGame’s dependencies are installed between operating systems.  So far I have only tested installation on Ubuntu 19.04 (see below).
+If you have tested PyGame successfully on other platforms please drop the magic formula in <a class="reference external" href="https://github.com/adamstimb/nimbusinator/issues">the issues</a> and I’ll add it below.</p>
+<div class="section" id="ubuntu-19-04">
+<h3>Ubuntu 19.04<a class="headerlink" href="#ubuntu-19-04" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Install dependencies for pygame and simpleaudio:</span>
+sudo apt-get install -y python3-dev libasound2-dev python3-setuptools python3-numpy python3-opengl libsdl-image1.2-dev libsdl-mixer1.2-dev libsdl-ttf2.0-dev libsmpeg-dev libsdl1.2-dev libportmidi-dev libswscale-dev libavformat-dev libavcodec-dev libtiff5-dev libx11-6 libx11-dev fluid-soundfont-gm timgm6mb-soundfont xfonts-base xfonts-100dpi xfonts-75dpi xfonts-cyrillic fontconfig fonts-freefont-ttf libfreetype6-dev
 
-<span class="c1"># Otherwise go straight to:</span>
+<span class="c1"># Then activate your Python env and install:</span>
 pip install nimbusinator
 </pre></div>
+</div>
 </div>
 </div>
 <div class="section" id="quick-start">
@@ -122,7 +236,9 @@ pip install nimbusinator
 <ul class="simple">
 <li><p><a class="reference external" href="https://github.com/adamstimb/nimbusinator">Github</a> - Nimbusinator github repository</p></li>
 <li><p><a class="reference external" href="http://www.computinghistory.org.uk/">Center for Computing History</a> - original RM Nimbus manuals and technical data</p></li>
+<li><p><a class="reference external" href="http://www.computinghistory.org.uk/det/41537/RM-Nimbus-PC-(Later-Beige-Model)/">Center for Computing History - RM Nimbus PC (Later Beige Model)</a> - online exhibit</p></li>
 <li><p><a class="reference external" href="https://thenimbus.co.uk/">The Nimbus Museum</a> - online museum that looks like the Welcome Disk!</p></li>
+<li><p><a class="reference external" href="https://en.wikipedia.org/wiki/RM_Nimbus">RM Nimbus</a> - Wikipedia article</p></li>
 <li><p><a class="reference external" href="https://www.mamedev.org/">mame</a> - comprehensive retro computer emulation project</p></li>
 <li><p><a class="reference external" href="https://freesound.org/people/MrAuralization/packs/15891/">Freesound pack: Floppy disk drive</a> - source of the floppy drive sounds</p></li>
 <li><p><a class="reference external" href="https://ironstoneinnovation.eu">Ironstone Innovation</a> - what I do for a living</p></li>
@@ -133,8 +249,9 @@ pip install nimbusinator
 <li class="toctree-l1"><a class="reference internal" href="nimbus.html">nimbusinator.nimbus.Nimbus</a></li>
 <li class="toctree-l1"><a class="reference internal" href="command.html">nimbusinator.command.Command</a></li>
 <li class="toctree-l1"><a class="reference internal" href="release-notes.html">Release Notes</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="release-notes.html#id1">0.0.2</a></li>
-<li class="toctree-l2"><a class="reference internal" href="release-notes.html#id2">0.0.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="release-notes.html#id1">0.1.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="release-notes.html#id2">0.0.2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="release-notes.html#id3">0.0.1</a></li>
 </ul>
 </li>
 </ul>
@@ -151,73 +268,50 @@ pip install nimbusinator
 </div>
 
 
+           </div>
+           
           </div>
-          
-        </div>
-      </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="#">nimbusinator</a></h1>
-
-
-
-
-
-
-
-
-<h3>Navigation</h3>
-<p class="caption"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="nimbus.html">nimbusinator.nimbus.Nimbus</a></li>
-<li class="toctree-l1"><a class="reference internal" href="command.html">nimbusinator.command.Command</a></li>
-<li class="toctree-l1"><a class="reference internal" href="release-notes.html">Release Notes</a></li>
-</ul>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="#">Documentation overview</a><ul>
-      <li>Next: <a href="nimbus.html" title="next chapter">nimbusinator.nimbus.Nimbus</a></li>
-  </ul></li>
-</ul>
-</div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
-      <input type="submit" value="Go" />
-    </form>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="nimbus.html" class="btn btn-neutral float-right" title="nimbusinator.nimbus.Nimbus" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
     </div>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+  
 
+  <hr/>
 
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Tim Adams
 
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
-
-
-
+</footer>
 
         </div>
       </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &copy;2019, Tim Adams.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
-      
-      |
-      <a href="_sources/index.rst.txt"
-          rel="nofollow">Page source</a>
-    </div>
 
-    
+    </section>
 
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
     
-  </body>
+   
+
+</body>
 </html>

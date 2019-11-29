@@ -1,36 +1,153 @@
 
-<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta charset="utf-8" />
-    <title>nimbusinator.command.Command &#8212; nimbusinator 0.0.2 documentation</title>
-    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/language_data.js"></script>
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>nimbusinator.command.Command &mdash; nimbusinator 0.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Release Notes" href="release-notes.html" />
-    <link rel="prev" title="nimbusinator.nimbus.Nimbus" href="nimbus.html" />
+    <link rel="prev" title="nimbusinator.nimbus.Nimbus" href="nimbus.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
    
-  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
-
-  </head><body>
-  
-
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
           
 
-          <div class="body" role="main">
+          
+            <a href="index.html" class="icon icon-home"> nimbusinator
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="nimbus.html">nimbusinator.nimbus.Nimbus</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">nimbusinator.command.Command</a></li>
+<li class="toctree-l1"><a class="reference internal" href="release-notes.html">Release Notes</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">nimbusinator</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>nimbusinator.command.Command</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/command.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <div class="section" id="module-nimbusinator.command">
 <span id="nimbusinator-command-command"></span><h1>nimbusinator.command.Command<a class="headerlink" href="#module-nimbusinator.command" title="Permalink to this headline">¶</a></h1>
@@ -63,15 +180,24 @@ to get a deeper understanding of how these commands originally worked.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="nimbusinator.command.Command.ask_brush">
+<code class="sig-name descname">ask_brush</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nimbusinator.command.Command.ask_brush" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the current brush colour</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="nimbusinator.command.Command.ask_charset">
 <code class="sig-name descname">ask_charset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nimbusinator.command.Command.ask_charset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the current charset for text</p>
+<p>0 is the standard font, 1 is the other font</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>0 is the standard font, 1 is the other font</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>charset (int)</p>
+<dd class="field-odd"><p>int</p>
 </dd>
 </dl>
 </dd></dl>
@@ -79,13 +205,59 @@ to get a deeper understanding of how these commands originally worked.</p>
 <dl class="method">
 <dt id="nimbusinator.command.Command.ask_curpos">
 <code class="sig-name descname">ask_curpos</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nimbusinator.command.Command.ask_curpos" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets the current cursor position</p>
+<dd><p>Gets the current cursor position as column index, row index</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The current cursor position (column, row)</p>
+<dd class="field-odd"><p>(int, int)</p>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>cursor_position (tuple)</p>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nimbusinator.command.Command.ask_paper">
+<code class="sig-name descname">ask_paper</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nimbusinator.command.Command.ask_paper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the current paper colour</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nimbusinator.command.Command.ask_pen">
+<code class="sig-name descname">ask_pen</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nimbusinator.command.Command.ask_pen" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the current pen colour</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nimbusinator.command.Command.ask_plot_font">
+<code class="sig-name descname">ask_plot_font</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nimbusinator.command.Command.ask_plot_font" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the current plot_font</p>
+<p>0 is the standard font, 1 is the other font</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nimbusinator.command.Command.circle">
+<code class="sig-name descname">circle</code><span class="sig-paren">(</span><em class="sig-param">radius</em>, <em class="sig-param">coord_list</em>, <em class="sig-param">brush=None</em><span class="sig-paren">)</span><a class="headerlink" href="#nimbusinator.command.Command.circle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw one or more circles</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>radius</strong> (<em>int</em>) – The radius of the circle</p></li>
+<li><p><strong>coord_list</strong> (<em>list</em>) – A list of (x, y) tuples</p></li>
+<li><p><strong>brush</strong> (<em>int</em>) – Colour value (High-resolution: 0-3, low-resolution: 0-15)</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -109,10 +281,7 @@ to get a deeper understanding of how these commands originally worked.</p>
 <p>Equivalent to GET$ in RM Basic</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The oldest char in the buffer</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>(str)</p>
+<dd class="field-odd"><p>str</p>
 </dd>
 </dl>
 </dd></dl>
@@ -120,16 +289,13 @@ to get a deeper understanding of how these commands originally worked.</p>
 <dl class="method">
 <dt id="nimbusinator.command.Command.input">
 <code class="sig-name descname">input</code><span class="sig-paren">(</span><em class="sig-param">prompt</em><span class="sig-paren">)</span><a class="headerlink" href="#nimbusinator.command.Command.input" title="Permalink to this definition">¶</a></dt>
-<dd><p>Collects keyboard input until user presses ENTER</p>
+<dd><p>Collects keyboard input until user presses ENTER then returns the input as a string</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>prompt</strong> (<em>str</em>) – Message to be printed</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The user’s response</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>(str)</p>
+<dd class="field-even"><p>str</p>
 </dd>
 </dl>
 </dd></dl>
@@ -275,12 +441,12 @@ return.</p>
 <dt id="nimbusinator.command.Command.set_mode">
 <code class="sig-name descname">set_mode</code><span class="sig-paren">(</span><em class="sig-param">columns</em><span class="sig-paren">)</span><a class="headerlink" href="#nimbusinator.command.Command.set_mode" title="Permalink to this definition">¶</a></dt>
 <dd><p>Select either high-resolution or low-resolution screen mode</p>
-<p>In RM Basic the screen resolution was set by the number of columns:
-40 for low-resolution and 80 for high-resolution.  Any other values
-has no effect.  Nimbusinator is more strict and will yield an error
-if any other values are entered.  Check the original RM Basic manual
-for a description of how screen resolutions worked on the Nimbus.
-High-resolution mode is particularly odd.</p>
+<p>In RM Basic the screen resolution was set by the number of columns:  40 for low-resolution and 80 for
+high-resolution.  Any other values had no effect.  Nimbusinator is more strict and will yield an error
+if any other values are entered.  Check the original RM Basic manual for a description of how screen
+resolutions worked on the Nimbus.</p>
+<p>MODE 40: 40 columns, 25 rows; 320 pixels wide, 250 pixels high; 16 colours</p>
+<p>MODE 80: 80 columns, 25 rows; 640 pixels wide, 250 pixels high (but doubled along vertical axis); 4 colours</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>columns</strong> (<em>int</em>) – The number of colums (40 or 80)</p>
@@ -310,79 +476,83 @@ High-resolution mode is particularly odd.</p>
 </dl>
 </dd></dl>
 
+<dl class="method">
+<dt id="nimbusinator.command.Command.set_plot_font">
+<code class="sig-name descname">set_plot_font</code><span class="sig-paren">(</span><em class="sig-param">plot_font</em><span class="sig-paren">)</span><a class="headerlink" href="#nimbusinator.command.Command.set_plot_font" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the plot font</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>plot_font</strong> (<em>int</em>) – 0 is the standard font, 1 is the other font!</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nimbusinator.command.Command.slice">
+<code class="sig-name descname">slice</code><span class="sig-paren">(</span><em class="sig-param">radius</em>, <em class="sig-param">from_angle</em>, <em class="sig-param">to_angle</em>, <em class="sig-param">coord_list</em>, <em class="sig-param">brush=None</em><span class="sig-paren">)</span><a class="headerlink" href="#nimbusinator.command.Command.slice" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw one or more pie slices</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>radius</strong> (<em>int</em>) – The radius of the slice</p></li>
+<li><p><strong>from_angle</strong> (<em>int</em>) – The starting angle (degrees)</p></li>
+<li><p><strong>to_angle</strong> (<em>int</em>) – The finishing angle (degrees)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </div>
 
 
+           </div>
+           
           </div>
-          
-        </div>
-      </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="index.html">nimbusinator</a></h1>
-
-
-
-
-
-
-
-
-<h3>Navigation</h3>
-<p class="caption"><span class="caption-text">Contents:</span></p>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="nimbus.html">nimbusinator.nimbus.Nimbus</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">nimbusinator.command.Command</a></li>
-<li class="toctree-l1"><a class="reference internal" href="release-notes.html">Release Notes</a></li>
-</ul>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="nimbus.html" title="previous chapter">nimbusinator.nimbus.Nimbus</a></li>
-      <li>Next: <a href="release-notes.html" title="next chapter">Release Notes</a></li>
-  </ul></li>
-</ul>
-</div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
-      <input type="submit" value="Go" />
-    </form>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="release-notes.html" class="btn btn-neutral float-right" title="Release Notes" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="nimbus.html" class="btn btn-neutral float-left" title="nimbusinator.nimbus.Nimbus" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
     </div>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+  
 
+  <hr/>
 
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Tim Adams
 
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
-
-
-
+</footer>
 
         </div>
       </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &copy;2019, Tim Adams.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
-      
-      |
-      <a href="_sources/command.rst.txt"
-          rel="nofollow">Page source</a>
-    </div>
 
-    
+    </section>
 
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
     
-  </body>
+   
+
+</body>
 </html>

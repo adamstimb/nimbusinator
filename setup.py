@@ -15,12 +15,13 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     package_data={'nimbusinator': ['data/*']},
     install_requires=[
+        "PySDL2",
         "Pillow",
-        "pygame",
         "numpy",
         "simpleaudio",
         "pynput",
-        "psutil"
+        "psutil",
+        "pygame>=1.9.3,<2.0;python_version!='3.3'",
     ],
     classifiers=[
         "Programming Language :: Python :: 3",

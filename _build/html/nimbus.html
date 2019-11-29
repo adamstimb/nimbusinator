@@ -1,36 +1,153 @@
 
-<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta charset="utf-8" />
-    <title>nimbusinator.nimbus.Nimbus &#8212; nimbusinator 0.0.2 documentation</title>
-    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/language_data.js"></script>
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>nimbusinator.nimbus.Nimbus &mdash; nimbusinator 0.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="nimbusinator.command.Command" href="command.html" />
-    <link rel="prev" title="nimbusinator" href="index.html" />
+    <link rel="prev" title="nimbusinator" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
    
-  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
-
-  </head><body>
-  
-
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
           
 
-          <div class="body" role="main">
+          
+            <a href="index.html" class="icon icon-home"> nimbusinator
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">nimbusinator.nimbus.Nimbus</a></li>
+<li class="toctree-l1"><a class="reference internal" href="command.html">nimbusinator.command.Command</a></li>
+<li class="toctree-l1"><a class="reference internal" href="release-notes.html">Release Notes</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">nimbusinator</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>nimbusinator.nimbus.Nimbus</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/nimbus.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <div class="section" id="module-nimbusinator.nimbus">
 <span id="nimbusinator-nimbus-nimbus"></span><h1>nimbusinator.nimbus.Nimbus<a class="headerlink" href="#module-nimbusinator.nimbus" title="Permalink to this headline">¶</a></h1>
@@ -53,40 +170,39 @@ will not be visible until the boot() method has been called.</p>
 <dt id="nimbusinator.nimbus.Nimbus.boot">
 <code class="sig-name descname">boot</code><span class="sig-paren">(</span><em class="sig-param">skip_welcome_screen=False</em><span class="sig-paren">)</span><a class="headerlink" href="#nimbusinator.nimbus.Nimbus.boot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Boot the Nimbus</p>
-<p>Reveal the Nimbus in all its glory, with or without a cheeky
-simulation of the famous Nimbus welcome screen.</p>
+<p>This will reveal the display screen and start all the Nimbus-related processed.  By
+default the Nimbus will go through the Welcome Screen and a mock boot-up sequence
+before returning control to your app.  You can bypass the Welcome Screen by passing
+skip_welcome_screen=True.  Once boot() has been called, the Nimbus can be interrupted
+and stopped programmatically by calling the shutdown() method, or during runtime by
+the user pressing CTRL-C.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>skip_welcome_screen</strong> (<em>bool</em>) – Go straight to the application</p>
+<dd class="field-odd"><p><strong>skip_welcome_screen</strong> (<em>bool</em>) – Bypass the Welcome Screen and boot sequence</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="method">
-<dt id="nimbusinator.nimbus.Nimbus.get_cursor_position">
-<code class="sig-name descname">get_cursor_position</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nimbusinator.nimbus.Nimbus.get_cursor_position" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get current cursor position</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The current cursor position (col, row)</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>(tuple)</p>
-</dd>
-</dl>
+<dt id="nimbusinator.nimbus.Nimbus.empty_paper">
+<code class="sig-name descname">empty_paper</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nimbusinator.nimbus.Nimbus.empty_paper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return empty paper filled with the current paper colour</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="nimbusinator.nimbus.Nimbus.get_screen">
-<code class="sig-name descname">get_screen</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nimbusinator.nimbus.Nimbus.get_screen" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get screen data</p>
-<p>Get the screen data to be displayed from VideoStream</p>
+<dt id="nimbusinator.nimbus.Nimbus.plonk_image_on_paper">
+<code class="sig-name descname">plonk_image_on_paper</code><span class="sig-paren">(</span><em class="sig-param">img</em>, <em class="sig-param">coord</em>, <em class="sig-param">transparent=False</em><span class="sig-paren">)</span><a class="headerlink" href="#nimbusinator.nimbus.Nimbus.plonk_image_on_paper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plonk a PIL image somewhere on the paper</p>
+<p>The passed coordinates are consistent with RM Nimbus implemented, i.e.
+bottom-left of screen = (0, 0) and any images are located relative to
+their bottom-left corner</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The screen data to be displayed</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>(PIL image)</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>img</strong> (<em>PIL image</em>) – The image to be plonked</p></li>
+<li><p><strong>coord</strong> (<em>tuple</em>) – The coordinate tuple (x, y)</p></li>
+<li><p><strong>transparent</strong> (<em>bool</em>) – True if image contains an alpha layer for transparency</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -107,8 +223,9 @@ simulation of the famous Nimbus welcome screen.</p>
 <dl class="method">
 <dt id="nimbusinator.nimbus.Nimbus.shutdown">
 <code class="sig-name descname">shutdown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nimbusinator.nimbus.Nimbus.shutdown" title="Permalink to this definition">¶</a></dt>
-<dd><p>Shutdown the Nimbus</p>
-<p>Stop everything and close the display Window.</p>
+<dd><p>Shut down the Nimbus</p>
+<p>Stops all commands from executing, stops all Nimbus-related processes,
+closes the display window and halts program execution.</p>
 </dd></dl>
 
 <dl class="method">
@@ -119,102 +236,57 @@ simulation of the famous Nimbus welcome screen.</p>
 if the user hits CTRL-C.  Sleep time measured in seconds.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="nimbusinator.nimbus.Nimbus.update_cursor_position">
-<code class="sig-name descname">update_cursor_position</code><span class="sig-paren">(</span><em class="sig-param">new_cursor_position</em><span class="sig-paren">)</span><a class="headerlink" href="#nimbusinator.nimbus.Nimbus.update_cursor_position" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update cursor position</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>new_cursor_position</strong> (<em>tuple</em>) – The new cursor position (col, row)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="nimbusinator.nimbus.Nimbus.update_screen">
-<code class="sig-name descname">update_screen</code><span class="sig-paren">(</span><em class="sig-param">new_screen_data</em><span class="sig-paren">)</span><a class="headerlink" href="#nimbusinator.nimbus.Nimbus.update_screen" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update screen data</p>
-<p>Change the screen data to be displayed in VideoStream</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>new_screen_data</strong> (<em>PIL image</em>) – The new screen data to be displayed</p>
-</dd>
-</dl>
-</dd></dl>
-
 </dd></dl>
 
 </div>
 
 
+           </div>
+           
           </div>
-          
-        </div>
-      </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="index.html">nimbusinator</a></h1>
-
-
-
-
-
-
-
-
-<h3>Navigation</h3>
-<p class="caption"><span class="caption-text">Contents:</span></p>
-<ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">nimbusinator.nimbus.Nimbus</a></li>
-<li class="toctree-l1"><a class="reference internal" href="command.html">nimbusinator.command.Command</a></li>
-<li class="toctree-l1"><a class="reference internal" href="release-notes.html">Release Notes</a></li>
-</ul>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="index.html" title="previous chapter">nimbusinator</a></li>
-      <li>Next: <a href="command.html" title="next chapter">nimbusinator.command.Command</a></li>
-  </ul></li>
-</ul>
-</div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
-      <input type="submit" value="Go" />
-    </form>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="command.html" class="btn btn-neutral float-right" title="nimbusinator.command.Command" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="nimbusinator" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
     </div>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+  
 
+  <hr/>
 
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Tim Adams
 
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
-
-
-
+</footer>
 
         </div>
       </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &copy;2019, Tim Adams.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
-      
-      |
-      <a href="_sources/nimbus.rst.txt"
-          rel="nofollow">Page source</a>
-    </div>
 
-    
+    </section>
 
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
     
-  </body>
+   
+
+</body>
 </html>

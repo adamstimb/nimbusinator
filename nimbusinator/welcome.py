@@ -38,13 +38,13 @@ def welcome(cmd, nim):
     cmd.set_border(1)
     # Frame
     cmd.area([(0, 0), (640, 0), (640, 250), (0, 250), (0, 0)], brush=2)
-    cmd.area([(3, 2), (637, 2), (637, 248), (3, 248), (3, 2)], brush=1)
+    cmd.area([(3, 3), (636, 3), (636, 248), (3, 248), (3, 3)], brush=1)
     # Nimbus logo with frame
-    cmd.area([(11, 214), (313, 214), (313, 245), (11, 245), (11, 214)], brush=2)
+    cmd.area([(10, 214), (313, 214), (313, 245), (10, 245), (10, 214)], brush=2)
     cmd.plonk_logo((12, 214))
     # Welcome
-    cmd.plot('Welcome', (235, 140), size=3, brush=0, font=1)
-    cmd.plot('Welcome', (232, 142), size=3, brush=2, font=1)
+    cmd.plot('Welcome', (238, 145), size=3, brush=0, font=1)
+    cmd.plot('Welcome', (236, 147), size=3, brush=2, font=1)
     # Memory
     cmd.plot('total memory size {m: >5} Mbytes'.format(m=total_mem), (15, 5), brush=0, font=1)
     cmd.plot('used  memory size {m: >5} Mbytes'.format(m=used_mem), (15, 15), brush=0, font=1)
@@ -55,17 +55,16 @@ def welcome(cmd, nim):
     cmd.plot('Firmware version: {}'.format(py_version), (400, 17), brush=0, font=1)
     cmd.plot('Serial number: {}'.format(platform.release()[:8]), (400, 7), brush=0, font=1)
     # Please supply an operating system
-    cmd.plot('Please supply an operating system', (180, 110), brush=3, font=1)
+    cmd.plot('Please supply an operating system', (188, 100), brush=3, font=1)
     nim.sleep(1.3)
-    cmd.plot('Please supply an operating system', (180, 110), brush=1, font=1)
+    cmd.plot('Please supply an operating system', (188, 100), brush=1, font=1)
     # Looking for an operating system
-    cmd.plot('Looking for an operating system - please wait', (135, 110), brush=3, font=1)
-    nim.sleep(1)
+    cmd.plot('Looking for an operating system - please wait', (140, 100), brush=3, font=1)
     nim.run_floppy(True)
     nim.sleep(2)
     # Loading operating system
-    cmd.plot('Looking for an operating system - please wait', (135, 110), brush=1, font=1)
-    cmd.plot('Loading operating system', (220, 110), brush=3, font=1)
+    cmd.plot('Looking for an operating system - please wait', (140, 100), brush=1, font=1)
+    cmd.plot('Loading operating system', (224, 100), brush=3, font=1)
     nim.sleep(4)
     # Pretend DOS boot sequence
     cmd.set_mode(80)
@@ -74,7 +73,19 @@ def welcome(cmd, nim):
     cmd.set_cursor(True)
     nim.sleep(1.3)
     os_string = '{} - Version {}'.format(platform.system(), platform.release())
+    os_string = os_string[:70]
+    os_string = '   {}   '.format(os_string)
+    # print os string in a groovy box thing
+    bar = ''
+    for i in range(0, len(os_string)):
+        bar += ' '
+    cmd.set_paper(3)
+    cmd.set_pen(0)
+    cmd.print(bar)
     cmd.print(os_string)
+    cmd.print(bar)
+    cmd.set_paper(0)
+    cmd.set_pen(3)
     cmd.print(' ')
     nim.sleep(1.7)
     python_version = 'Python {}'.format(platform.sys.version)

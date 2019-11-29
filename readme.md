@@ -6,6 +6,8 @@ RM Nimbus GUI for Python
 
 Nimbusinator is a graphical user-interface package for Python that mimicks the graphics and text drivers of the RM Nimbus PC186.  It is _not_ an emulation of the Nimbus itself.  This means you get the best of both worlds:  Cutting-edge Python computing power, beautifully presented in up to 16 colours!
 
+Disclaimer: Nimbusinator is a tribute project and is in no way linked to or endorsed by RM plc.
+
 [Read the docs for full details](https://nimbusinator.readthedocs.io/)
 
 ## Usage
@@ -56,17 +58,17 @@ To cleanly exit your application, call the `shutdown` method on the `Nimbus` obj
 nim.shutdown()
 ```
 
-## Supported Operating systems
-
-- Linux
-
 ## Installation
 
-```bash
-# In case you don't already have it:
-sudo apt-get install -y python3-dev libasound2-dev
+Nimbusinator is technically cross-platform but there are differences in the way PyGame's dependencies are installed between operating systems.  So far I have only tested installation on Ubuntu 19.04 (see below).  If you have tested PyGame successfully on other platforms please drop the magic formula in [the issues](https://github.com/adamstimb/nimbusinator/issues) and I'll add it below.
 
-# Otherwise go straight to:
+### Ubuntu 19.04
+
+```bash
+# Install dependencies for pygame and simpleaudio:
+sudo apt-get install -y python3-dev libasound2-dev python3-setuptools python3-numpy python3-opengl libsdl-image1.2-dev libsdl-mixer1.2-dev libsdl-ttf2.0-dev libsmpeg-dev libsdl1.2-dev libportmidi-dev libswscale-dev libavformat-dev libavcodec-dev libtiff5-dev libx11-6 libx11-dev fluid-soundfont-gm timgm6mb-soundfont xfonts-base xfonts-100dpi xfonts-75dpi xfonts-cyrillic fontconfig fonts-freefont-ttf libfreetype6-dev
+
+# Then activate your Python env and install:
 pip install nimbusinator
 ```
 
@@ -99,7 +101,9 @@ if __name__ == '__main__':
 
 - [Read the Docs](https://nimbusinator.readthedocs.io/) - Full documentation
 - [Center for Computing History](http://www.computinghistory.org.uk/) - original RM Nimbus manuals and technical data
+- [Center for Computing History - RM Nimbus PC (Later Beige Model)](http://www.computinghistory.org.uk/det/41537/RM-Nimbus-PC-(Later-Beige-Model)/) - online exhibit
 - [The Nimbus Museum](https://thenimbus.co.uk/) - online museum that looks like the Welcome Disk!
+- [RM Nimbus](https://en.wikipedia.org/wiki/RM_Nimbus) - Wikipedia article
 - [mame](https://www.mamedev.org/) - comprehensive retro computer emulation project
 - [Freesound pack: Floppy disk drive](https://freesound.org/people/MrAuralization/packs/15891/) - source of the floppy drive sounds
 - [Ironstone Innovation](https://ironstoneinnovation.eu) - what I do for a living

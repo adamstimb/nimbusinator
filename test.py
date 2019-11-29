@@ -3,6 +3,42 @@ from nimbusinator.nimbus import Nimbus
 from nimbusinator.command import Command
 
 
+def test_slice(nim, cmd):
+    for mode in [40, 80]:
+        cmd.set_mode(mode)
+        if mode == 80:
+            x_max = 650
+            colour_max = 3
+        else:
+            x_max = 320
+            colour_max = 15
+        for i in range(0, 5000): 
+            x = random.randint(0, x_max)
+            y = random.randint(0, 250)
+            radius = random.randint(1, 50)
+            from_angle = random.randint(1, 359)
+            to_angle = 360 - random.randint(0, from_angle)
+            brush = random.randint(0, colour_max)
+            cmd.slice(radius, from_angle, to_angle, [(x, y)], brush=brush)
+        nim.sleep(1)
+
+def test_circle(nim, cmd):
+    for mode in [40, 80]:
+        cmd.set_mode(mode)
+        if mode == 80:
+            x_max = 650
+            colour_max = 3
+        else:
+            x_max = 320
+            colour_max = 15
+        for i in range(0, 5000): 
+            x = random.randint(0, x_max)
+            y = random.randint(0, 250)
+            radius = random.randint(1, 50)
+            brush = random.randint(0, colour_max)
+            cmd.circle(radius, [(x, y)], brush=brush)
+        nim.sleep(1)
+
 def test_put(nim, cmd):
     for charset in [0, 1]:
         cmd.set_charset(charset)
@@ -21,6 +57,7 @@ def test_put(nim, cmd):
                     max_pen_colour = 3
                 for i in range(0, max_pen_colour + 1):
                     cmd.set_pen(i)
+                    cmd.set_paper(max_pen_colour - i)
                     cmd.put('blah blah BLAH  1234 *&*#@@_-')
             nim.sleep(1)
 
@@ -43,6 +80,7 @@ def test_print(nim, cmd):
                     max_pen_colour = 3
                 for i in range(0, max_pen_colour + 1):
                     cmd.set_pen(i)
+                    cmd.set_paper(max_pen_colour - i)
                     cmd.print('What is your favourite colour?')
                     cmd.print('Blue -- no, red!')
             nim.sleep(1)
@@ -173,6 +211,8 @@ if __name__ == '__main__':
     nim = Nimbus(full_screen=True)
     cmd = Command(nim)
     nim.boot(skip_welcome_screen=False)
+    test_slice(nim, cmd)
+    test_circle(nim, cmd)
     test_line(nim, cmd)
     test_area(nim, cmd)
     test_plot(nim, cmd)

@@ -333,7 +333,19 @@ class Nimbus:
 
 
     def boot(self, skip_welcome_screen=False):
-        """Boot the Nimbus"""
+        """Boot the Nimbus
+        
+        This will reveal the display screen and start all the Nimbus-related processed.  By 
+        default the Nimbus will go through the Welcome Screen and a mock boot-up sequence 
+        before returning control to your app.  You can bypass the Welcome Screen by passing 
+        skip_welcome_screen=True.  Once boot() has been called, the Nimbus can be interrupted 
+        and stopped programmatically by calling the shutdown() method, or during runtime by 
+        the user pressing CTRL-C. 
+
+        Args:
+            skip_welcome_screen (bool), optional: Bypass the Welcome Screen and boot sequence
+            
+        """
 
         # Don't boot if already running
         if self.running:
@@ -386,7 +398,12 @@ class Nimbus:
             message('Done')
     
     def shutdown(self):
-        """Shut down the Nimbus"""
+        """Shut down the Nimbus
+        
+        Stops all commands from executing, stops all Nimbus-related processes,
+        closes the display window and halts program execution.
+
+        """
 
         # Passshutdown if not running
         if not self.running:

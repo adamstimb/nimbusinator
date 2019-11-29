@@ -44,6 +44,10 @@ class Command:
 
         """
 
+        # return if shutdown detected
+        if not self.nimbus.running:
+            return
+
         # validate params
         assert isinstance(colour, int), "The value of colour must be an integer, not {}".format(type(colour))
         assert is_valid_colour(self.nimbus, colour), "Colour {} is out-of-range for this screen mode".format(colour)
@@ -59,6 +63,10 @@ class Command:
             colour2 (int): The new colour to be assigned to colour1
         
         """
+
+        # return if shutdown detected
+        if not self.nimbus.running:
+            return
 
         # validate params
         assert isinstance(colour1, int), "The value of colour1 must be an integer, not {}".format(type(colour1))
@@ -77,6 +85,10 @@ class Command:
             
         """
  
+        # return if shutdown detected
+        if not self.nimbus.running:
+            return
+
         # validate params
         assert isinstance(colour, int), "The value of colour must be an integer, not {}".format(type(colour))
         assert is_valid_colour(self.nimbus, colour), "Colour {} is out-of-range for this screen mode".format(colour)
@@ -91,6 +103,10 @@ class Command:
             colour (int): Colour value (High-resolution: 0-3, low-resolution: 0-15)
             
         """
+
+        # return if shutdown detected
+        if not self.nimbus.running:
+            return
 
         # validate params
         assert isinstance(colour, int), "The value of colour must be an integer, not {}".format(type(colour))
@@ -107,6 +123,10 @@ class Command:
             
         """
 
+        # return if shutdown detected
+        if not self.nimbus.running:
+            return
+
         # validate params
         assert isinstance(colour, int), "The value of colour must be an integer, not {}".format(type(colour))
         assert is_valid_colour(self.nimbus, colour), "Colour {} is out-of-range for this screen mode".format(colour)
@@ -122,6 +142,10 @@ class Command:
 
         """
 
+        # return if shutdown detected
+        if not self.nimbus.running:
+            return
+
         # validate params
         assert isinstance(charset, int), "The value of charset must be an integer, not {}".format(type(charset))
         assert (charset == 0 or charset == 1), "The value of charset can be either 0 or 1, not {}".format(charset)
@@ -129,15 +153,81 @@ class Command:
         self.nimbus.charset = charset
 
 
+    def set_plot_font(self, plot_font):
+        """Set the plot font
+
+        Args:
+            plot_font (int): 0 is the standard font, 1 is the other font!
+
+        """
+
+        # return if shutdown detected
+        if not self.nimbus.running:
+            return
+
+        # validate params
+        assert isinstance(plot_font, int), "The value of plot_font must be an integer, not {}".format(type(plot_font))
+        assert (plot_font == 0 or plot_font == 1), "The value of plot_font can be either 0 or 1, not {}".format(plot_font)
+
+        self.nimbus.plot_font = plot_font
+
+
     def ask_charset(self):
         """Return the current charset for text
 
+        0 is the standard font, 1 is the other font
+
         Returns:
-            charset (int): 0 is the standard font, 1 is the other font
+            int
 
         """
 
         return self.nimbus.charset
+
+
+    def ask_plot_font(self):
+        """Return the current plot_font
+
+        0 is the standard font, 1 is the other font
+
+        Returns:
+            int
+
+        """
+
+        return self.nimbus.plot_font
+        
+
+    def ask_pen(self):
+        """Return the current pen colour
+
+        Returns:
+            int
+
+        """
+
+        return self.nimbus.pen_colour
+
+
+    def ask_paper(self):
+        """Return the current paper colour
+
+        Returns:
+            int
+
+        """
+
+        return self.nimbus.paper_colour
+
+
+    def ask_brush(self):
+        """Return the current brush colour
+
+        Returns:
+            int
+        """
+
+        return self.nimbus.brush_colour
 
 
     def set_curpos(self, cursor_position):
@@ -147,6 +237,10 @@ class Command:
             cursor_position (tuple): The new cursor position (column, row)
 
         """
+
+        # return if shutdown detected
+        if not self.nimbus.running:
+            return
 
         # Validate params
         assert isinstance(cursor_position, tuple), "The value of cursor_position must be a tuple, not {}".format(type(cursor_position))
@@ -167,10 +261,10 @@ class Command:
 
 
     def ask_curpos(self):
-        """Gets the current cursor position
+        """Gets the current cursor position as column index, row index
 
         Returns:
-            cursor_position (tuple): The current cursor position (column, row)
+            (int, int)
 
         """
 
@@ -183,8 +277,11 @@ class Command:
 
         """
 
+        # return if shutdown detected
+        if not self.nimbus.running:
+            return
+
         # Wipe paper image in the Nimbus and reset cursor position
-        
         self.nimbus.paper_image = self.nimbus.empty_paper()
         self.set_curpos((1, 1))
 
@@ -192,18 +289,24 @@ class Command:
     def set_mode(self, columns):
         """Select either high-resolution or low-resolution screen mode
 
-        In RM Basic the screen resolution was set by the number of columns: 
-        40 for low-resolution and 80 for high-resolution.  Any other values
-        has no effect.  Nimbusinator is more strict and will yield an error
-        if any other values are entered.  Check the original RM Basic manual
-        for a description of how screen resolutions worked on the Nimbus.
-        High-resolution mode is particularly odd.
+        In RM Basic the screen resolution was set by the number of columns:  40 for low-resolution and 80 for 
+        high-resolution.  Any other values had no effect.  Nimbusinator is more strict and will yield an error
+        if any other values are entered.  Check the original RM Basic manual for a description of how screen 
+        resolutions worked on the Nimbus.
+
+        MODE 40: 40 columns, 25 rows; 320 pixels wide, 250 pixels high; 16 colours
+
+        MODE 80: 80 columns, 25 rows; 640 pixels wide, 250 pixels high (but doubled along vertical axis); 4 colours
 
         Args:
             columns (int): The number of colums (40 or 80)
 
         """
-        
+
+        # return if shutdown detected
+        if not self.nimbus.running:
+            return
+
         # validate params
         assert isinstance(columns, int), "The value of columns must be integer, not {}".format(columns)
         assert (columns == 80 or columns == 40), "The value of columns can be 80 or 40, not {}".format(columns)
@@ -240,6 +343,10 @@ class Command:
 
         """
 
+        # return if shutdown detected
+        if not self.nimbus.running:
+            return
+
         # validate params
         assert isinstance(coord, tuple), "The value of coord must be a tuple, not {}".format(coord)
         assert len(coord) == 2, "The coord tuple must have 2 values, not {}".format(len(coord))
@@ -259,7 +366,11 @@ class Command:
                                     return.
 
         """
-        
+
+        # return if shutdown detected
+        if not self.nimbus.running:
+            return
+
         # Validate params
         assert isinstance(ascii_data, (str, int)), "The value of ascii_data must be an integer or string, not {}".format(type(ascii_data))
 
@@ -275,6 +386,11 @@ class Command:
         
         # Put char or chars
         for ascii in ascii_list:
+
+            # return if shutdown detected
+            if not self.nimbus.running:
+                return
+
             # If out of extended ASCII range replace with space
             if ord(ascii) > 255:
                 # It's out of range
@@ -318,7 +434,11 @@ class Command:
             flag (boolean): True to show cursor, False to hide
 
         """
-        
+
+        # return if shutdown detected
+        if not self.nimbus.running:
+            return
+
         # validate params
         assert isinstance(flag, bool), "The value of flag must be boolean, not {}".format(flag)
 
@@ -332,6 +452,10 @@ class Command:
             text (str): The text to be printed
 
         """
+
+        # return if shutdown detected
+        if not self.nimbus.running:
+            return
 
         # Validate params
         assert isinstance(text, str), "The value of text must be a string, not {}".format(type(text))
@@ -351,6 +475,10 @@ class Command:
 
         """
 
+        # return if shutdown detected
+        if not self.nimbus.running:
+            return
+
         self.nimbus.keyboard_buffer = []
 
 
@@ -360,7 +488,7 @@ class Command:
         Equivalent to GET$ in RM Basic
 
         Returns:
-            (str): The oldest char in the buffer
+            str
         
         """
 
@@ -373,16 +501,20 @@ class Command:
 
 
     def input(self, prompt):
-        """Collects keyboard input until user presses ENTER
+        """Collects keyboard input until user presses ENTER then returns the input as a string
 
         Args:
             prompt (str): Message to be printed
 
         Returns:
-            (str): The user's response
+            str
         
         """
-        
+
+        # return if shutdown detected
+        if not self.nimbus.running:
+            return
+
         # Validata params
         assert isinstance(prompt, str), "The value of prompt must be a string, not {}".format(type(prompt))
 
@@ -453,6 +585,10 @@ class Command:
 
         """
 
+        # return if shutdown detected
+        if not self.nimbus.running:
+            return
+
         # Validate params
         assert isinstance(text, str), "The value of text must be a string, not {}".format(type(str))
         assert isinstance(coord, tuple), "The value of coord must be a tuple, not {}".format(type(coord))
@@ -489,6 +625,11 @@ class Command:
         # Plot chars on plot_img
         x = 0
         for char in text:
+
+            # return if shutdown detected
+            if not self.nimbus.running:
+                return
+
             # If out of extended ASCII range replace with space
             if ord(char) > 255:
                 # It's out of range
@@ -518,8 +659,6 @@ class Command:
         self.nimbus.plonk_image_on_paper(plot_img, coord, transparent=True)
 
 
-   
-
     def area(self, coord_list, brush=None):
         """Draw a filled polygon
 
@@ -528,6 +667,10 @@ class Command:
             brush (int), optional: Colour value (High-resolution: 0-3, low-resolution: 0-15)
 
         """
+
+        # return if shutdown detected
+        if not self.nimbus.running:
+            return
 
         # validate params
         assert isinstance(coord_list, list), "coord_list should contain a list, not {}".format(type(coord_list))
@@ -561,6 +704,10 @@ class Command:
 
         """
 
+        # return if shutdown detected
+        if not self.nimbus.running:
+            return
+
         # validate params
         assert isinstance(coord_list, list), "coord_list should contain a list, not {}".format(type(coord_list))
         assert isinstance(brush, (type(None), int)), "The value of brush must be None or an integer, not {}".format(type(brush))
@@ -582,3 +729,97 @@ class Command:
         draw = ImageDraw.Draw(self.nimbus.paper_image)
         rgb = self.nimbus.COLOUR_TABLE[self.nimbus.runtime_colours[self.nimbus.screen_mode][brush]]
         draw.line(coord_list, fill=rgb)
+
+
+    def circle(self, radius, coord_list, brush=None):
+        """Draw one or more circles
+
+        Args:
+            radius (int): The radius of the circle
+            coord_list (list): A list of (x, y) tuples
+            brush (int), optional: Colour value (High-resolution: 0-3, low-resolution: 0-15)
+        
+        """
+
+        # return if shutdown detected
+        if not self.nimbus.running:
+            return
+
+        # validate params
+        assert isinstance(radius, int), "radius must be an integer, not {}".format(type(radius))
+        assert radius > 0, "radius must be greater than zero, not {}".format(radius)
+        assert isinstance(coord_list, list), "coord_list should contain a list, not {}".format(type(coord_list))
+        assert isinstance(brush, (type(None), int)), "The value of brush must be None or an integer, not {}".format(type(brush))
+        assert is_valid_colour(self.nimbus, brush), "Brush colour {} is out-of-range for this screen mode".format(brush)
+        for coord in coord_list:
+            assert len(coord) == 2, "The coord tuple must have 2 values, not {}".format(len(coord))
+            for i in range(0, 2):
+                assert isinstance(coord[i], int), "The values in coord {} must be integer, not {}".format(coord, type(coord[i]))
+
+        # if default brush value then get current brush colour
+        if brush is None:
+            brush = self.nimbus.brush_colour
+
+        # draw cirtles
+        draw = ImageDraw.Draw(self.nimbus.paper_image)
+        rgb = self.nimbus.COLOUR_TABLE[self.nimbus.runtime_colours[self.nimbus.screen_mode][brush]]
+        for coord in coord_list:
+
+            # return if shutdown detected
+            if not self.nimbus.running:
+                return
+
+            # define 'bounding box'
+            r = radius
+            x, y = coord
+            box = [(x-r, y-r), (x+r, y+r)]
+            draw.ellipse(box, outline=rgb, fill=rgb)
+
+
+    def slice(self, radius, from_angle, to_angle, coord_list, brush=None):
+        """Draw one or more pie slices
+
+        Args:
+            radius (int): The radius of the slice
+            from_angle (int): The starting angle (degrees)
+            to_angle (int): The finishing angle (degrees)
+        
+        """
+        
+        # return if shutdown detected
+        if not self.nimbus.running:
+            return
+
+        # validate params
+        assert isinstance(radius, int), "radius must be an integer, not {}".format(type(radius))
+        assert radius > 0, "radius must be greater than zero, not {}".format(radius)
+        assert isinstance(from_angle, int), "from_angle must be an integer, not {}".format(type(from_angle))
+        assert isinstance(to_angle, int), "to_angle must be an integer, not {}".format(type(to_angle))
+        assert from_angle >= 0 and from_angle <= 360, "from_angle must be between 0 and 360 degrees, not {}".format(from_angle)
+        assert to_angle >=0 and to_angle <= 360, "to_angle must be between 0 and 360 degrees, not {}".format(to_angle)
+        assert isinstance(coord_list, list), "coord_list should contain a list, not {}".format(type(coord_list))
+        assert isinstance(brush, (type(None), int)), "The value of brush must be None or an integer, not {}".format(type(brush))
+        assert is_valid_colour(self.nimbus, brush), "Brush colour {} is out-of-range for this screen mode".format(brush)
+        for coord in coord_list:
+            assert len(coord) == 2, "The coord tuple must have 2 values, not {}".format(len(coord))
+            for i in range(0, 2):
+                assert isinstance(coord[i], int), "The values in coord {} must be integer, not {}".format(coord, type(coord[i]))
+
+        # if default brush value then get current brush colour
+        if brush is None:
+            brush = self.nimbus.brush_colour
+
+        # draw slices      
+        draw = ImageDraw.Draw(self.nimbus.paper_image)
+        rgb = self.nimbus.COLOUR_TABLE[self.nimbus.runtime_colours[self.nimbus.screen_mode][brush]]
+        for coord in coord_list:
+
+            # return if shutdown detected
+            if not self.nimbus.running:
+                return
+
+            # define 'bounding box'
+            r = radius
+            x, y = coord
+            box = [(x-r, y-r), (x+r, y+r)]
+            draw.pieslice(box, from_angle, to_angle, outline=rgb, fill=rgb)      
