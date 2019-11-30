@@ -169,7 +169,7 @@ def test_area(nim, cmd):
         x3 = 300 + random.randint(-10, 10)
         y3 = 0 + random.randint(-10, 10)
         brush = random.randint(0, 15)
-        cmd.area([(x1, y1), (x2, y2), (x3, y3), (x1, y1)], brush=brush)
+        cmd.area([(x1, y1), (x2, y2), (x3, y3), (x1, y1)], brush=brush, scale=2)
     nim.sleep(1)
     cmd.set_mode(80)
     for i in range(0, 2000):
@@ -180,7 +180,7 @@ def test_area(nim, cmd):
         x3 = 650 + random.randint(-10, 10)
         y3 = 0 + random.randint(-10, 10)
         brush = random.randint(0, 3)
-        cmd.area([(x1, y1), (x2, y2), (x3, y3), (x1, y1)], brush=brush)
+        cmd.area([(x1, y1), (x2, y2), (x3, y3), (x1, y1)], brush=brush, scale=2)
     nim.sleep(1)
 
 def test_line(nim, cmd):
@@ -208,12 +208,12 @@ def test_line(nim, cmd):
     nim.sleep(1)
 
 if __name__ == '__main__':
-    nim = Nimbus(full_screen=True)
+    nim = Nimbus(full_screen=False)
     cmd = Command(nim)
-    nim.boot(skip_welcome_screen=False)
-    test_slice(nim, cmd)
-    test_circle(nim, cmd)
-    test_line(nim, cmd)
+    nim.boot(skip_welcome_screen=True)
+    #test_slice(nim, cmd)
+    #test_circle(nim, cmd)
+    #test_line(nim, cmd)
     test_area(nim, cmd)
     test_plot(nim, cmd)
     test_input(nim, cmd)

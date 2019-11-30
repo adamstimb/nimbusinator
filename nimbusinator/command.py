@@ -1,5 +1,5 @@
 from .tools import is_valid_colour, colrows_to_xy, recolour, fix_coord
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageOps
 import copy
 
 
@@ -659,13 +659,13 @@ class Command:
         self.nimbus.plonk_image_on_paper(plot_img, coord, transparent=True)
 
 
-    def area(self, coord_list, brush=None):
+    def area(self, coord_list, brush=None, scale=1):
         """Draw a filled polygon
 
         Args:
             coord_list (list): A list of (x, y) tuples
             brush (int), optional: Colour value (High-resolution: 0-3, low-resolution: 0-15)
-
+            scale (int), optional: Scale factor. To elongate pass a tuple (x_size, y_size)
         """
 
         # return if shutdown detected
@@ -680,19 +680,75 @@ class Command:
             assert len(coord) == 2, "The coord tuple must have 2 values, not {}".format(len(coord))
             for i in range(0, 2):
                 assert isinstance(coord[i], int), "The values in coord {} must be integer, not {}".format(coord, type(coord[i]))
+        assert isinstance(scale, (int, tuple)), "The value of scale must be an integer or tuple, not {}".format(type(scale))
+        if isinstance(scale, tuple):
+            for i in range(0, 2):
+                assert isinstance(scale[i], int), "The values in scale {} must be integer, not {}".format(scale, type(scale[i]))  
+        assert isinstance(brush, (type(None), int)), "The value of brush must be None or an integer, not {}".format(type(brush))
+
 
         # if default brush value then get current brush colour
         if brush is None:
             brush = self.nimbus.brush_colour
 
-        # correct coords
-        for i in range(0, len(coord_list)):
-            coord_list[i] = fix_coord(self.nimbus.SCREEN_MODES[self.nimbus.screen_mode], coord_list[i])
+        # ACTUALLY......this should be for how POINTS are scaled.  I think AREA would
+        # just multiply the coordinates by the scaling factor.  So: Implement POINTS
+        # use this code for that.  Then change this lot to do a scaling factor instead.
 
-        # draw area
-        draw = ImageDraw.Draw(self.nimbus.paper_image)
+
+        # Create temporary image with transparent background for drawing on.  This
+        # can then be scaled if required before being draw on the paper image.  
+        # 
+        # First
+        # Calculate how big the image should be to fit the area in, using the first
+        # coordinate as the origin.
+        origin = coord_list[0]
+        # get min and max x, y
+        min_x = 0
+        min_y = 0
+        max_x = 0
+        max_y = 0
+        for coord in coord_list:
+            x, y = coord
+            if x < min_x:
+                min_x = x
+            if y < min_y:
+                min_y = y
+            if x > max_x:
+                max_x = x
+            if y > max_y:
+                max_y = y
+        x_length = max_x - min_x
+        y_length = max_y - min_y
+        # Now create the temporary image
+        temp_img = Image.new(
+            'RGBA',
+            (x_length, y_length), 
+            (0, 0, 0, 1)
+        )
+        # Correct the coordinates for the temporary image
+        for i in range(0, len(coord_list)):
+            x, y = coord_list[i]
+            x -= min_x
+            y -= min_y
+            coord_list[i] = (x, y)
+        # draw area on temp image
+        draw = ImageDraw.Draw(temp_img)
         rgb = self.nimbus.COLOUR_TABLE[self.nimbus.runtime_colours[self.nimbus.screen_mode][brush]]
         draw.polygon(coord_list, outline=rgb, fill=rgb)
+        # scale image
+        if isinstance(scale, tuple):
+            # tuple: extract x_size, y_size
+            x_size, y_size = scale
+        else:
+            x_size = scale
+            y_size = scale
+        new_size = (temp_img.size[0] * x_size, temp_img.size[1] * y_size)
+        temp_img = temp_img.resize(new_size, resample=Image.NEAREST)
+        # flip it
+        temp_img = ImageOps.flip(temp_img)     
+        # rebuild screen and done
+        self.nimbus.plonk_image_on_paper(temp_img, origin, transparent=True)
 
 
     def line(self, coord_list, brush=None):
