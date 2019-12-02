@@ -5,7 +5,7 @@ os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 import pygame
 import copy
 import numpy as np
-from .tools import logo, message, pil_to_pygame_image, fix_coord, char_image_selecta, colrows_to_xy, recolour
+from .tools import logo, message, pil_to_pygame_image, fix_coord, char_image_selecta, colrows_to_xy, recolour, points_to_nparray
 from .colour_table import colour_table, default_colours
 from PIL import Image, ImageDraw, ImageColor
 import threading
@@ -14,6 +14,7 @@ from pynput import keyboard
 import simpleaudio as sa
 from .welcome import welcome
 from .command import Command
+from .supported_control_keys import supported_control_keys
 
 
 # get full path of this script
@@ -53,6 +54,20 @@ class Nimbus:
             'lo': (320, 250)                            # column) modes
             }
         self.FONT_IMAGES = self.__load_fonts()              # Font images
+        
+        test = np.array(self.FONT_IMAGES[0][70])
+        for row in test:
+            out = ''
+            for col in row:
+                colstr = str(col)
+                if colstr == '[  0   0   0 255]':
+                    char = 'X'
+                else:
+                    char = '_'
+                out += '{}'.format(char)
+
+
+        self.SUPPORTED_CONTROL_KEYS = supported_control_keys
         self.COLOUR_TABLE = colour_table                # This is the RGB colour table from the Nimbus
         self.DEFAULT_COLOURS = default_colours          # The default colours which cannot be changed during runtime
         self.NORMALIZED_PAPER_SIZE = (640, 500)         # After drawing graphics and chars the paper is normalized to this size
@@ -91,6 +106,10 @@ class Nimbus:
         self.cursor_position = (1, 1)
         self.cursor_enabled = False
         self.keyboard_buffer = []
+        # Set up default and user-define points
+        self.points_styles = self.__init_points_styles()
+        self.points_style = 0
+        self.control_char = ''
 
         # Initialize with empty paper
         self.paper_image = self.empty_paper()
@@ -102,6 +121,21 @@ class Nimbus:
         self.enter_was_pressed = False
         self.backspace_was_pressed = False
         self.floppy_is_running = False
+
+
+    def __init_points_styles(self):
+        """Initialize a list of default points styles and empty styles"""
+
+        styles = []
+        for i in range(0, 256):
+            styles.append(
+                Image.new(
+                    'RGBA',
+                    (8, 8),
+                    (255, 255, 255, 0)
+                )       
+            )
+        return styles
 
 
     def __load_fonts(self):
@@ -264,6 +298,14 @@ class Nimbus:
             # Also add spaces to buffer
             if key == keyboard.Key.space:
                 self.keyboard_buffer.append(' ')
+            # The following keys can be detected by gets by sending -1 to the 
+            # buffer and logging the key in control_char
+            for control_key, control_key_string in self.SUPPORTED_CONTROL_KEYS.items():
+                if key == control_key:
+                    self.keyboard_buffer.append(-1)
+                    self.control_char = control_key_string
+                    break
+
 
 
     def __on_key_release(self, key):

@@ -173,3 +173,23 @@ def recolour(nimbus, img, colour1, colour2, has_alpha=False):
     data[..., :-1][white_areas.T] = colour2
 
     return Image.fromarray(data)
+
+
+def points_to_nparray(points_list):
+    """Convert points_list from a set_points command into a numpy array"""
+
+    empty = [255, 255, 255, 0]
+    fill = [0, 0, 0, 255]
+
+    rows = []
+
+    for points in points_list:
+        row = []
+        for char in points:
+            if char == '.':
+                row.append(fill)
+            if char == ' ':
+                row.append(empty)
+        rows.append(row)
+
+    return np.array(rows, dtype=np.uint8)
