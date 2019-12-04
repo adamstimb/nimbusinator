@@ -273,6 +273,18 @@ class Command:
         return self.nimbus.cursor_position
 
 
+    def ask_points_style(self):
+        """Gets the current points style
+
+        Returns:
+            int
+
+        """
+
+        # Return points style
+        return self.nimbus.points_style
+
+
     def cls(self):
         """Clear the screen of all text and graphics and reset cursor position
 
@@ -486,7 +498,11 @@ class Command:
     def gets(self):
         """Get the oldest char in the keyboard buffer
 
-        Equivalent to GET$ in RM Basic
+        Equivalent to GET$ in RM Basic except it will also return the following
+        values if a control key is pressed: '__F1__', '__F2__', ..., '__F10__',
+        '__CTRL_L__', '__CTRL_R__', '__ENTER__', '__BACKSPACE__', '__ESC__',
+        '__DELETE__', '__HOME__', '__PAGE_UP__', '__END__', '__PAGE_DOWN__',
+        '__INSERT__', '__UP__', '__DOWN__', '__LEFT__', '__RIGHT__', '__TAB__'
 
         Returns:
             str
@@ -583,6 +599,7 @@ class Command:
         col, row = self.ask_curpos()
         self.nimbus.cursor_position = (255, row)
         self.put('X')
+
         # Return string
         return response
 
