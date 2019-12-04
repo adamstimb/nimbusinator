@@ -37,11 +37,11 @@ def welcome(cmd, nim):
     cmd.set_colour(1, 9)
     cmd.set_border(1)
     # Frame
-    cmd.area([(0, 0), (640, 0), (640, 250), (0, 250), (0, 0)], brush=2)
-    cmd.area([(3, 3), (636, 3), (636, 248), (3, 248), (3, 3)], brush=1)
+    cmd.area([(0, 0), (639, 0), (639, 249), (0, 249), (0, 0)], brush=2)
+    cmd.area([(3, 2), (636, 2), (636, 247), (3, 247), (3, 2)], brush=1)
     # Nimbus logo with frame
-    cmd.area([(10, 214), (313, 214), (313, 245), (10, 245), (10, 214)], brush=2)
-    cmd.plonk_logo((12, 214))
+    cmd.area([(8, 214), (313, 214), (313, 245), (8, 245), (8, 214)], brush=2)
+    cmd.plonk_logo((11, 214))
     # Welcome
     cmd.plot('Welcome', (238, 145), size=3, brush=0, font=1)
     cmd.plot('Welcome', (236, 147), size=3, brush=2, font=1)
@@ -50,10 +50,10 @@ def welcome(cmd, nim):
     cmd.plot('used  memory size {m: >5} Mbytes'.format(m=used_mem), (15, 15), brush=0, font=1)
     cmd.plot('main  memory size {m: >5} Mbytes'.format(m=free_mem), (15, 25), brush=0, font=1)
     # Version info
-    cmd.area([(393, 5), (632, 5), (632, 31), (393, 31), (393, 5)], brush=2)
-    cmd.area([(395, 6), (629, 6), (629, 30), (395, 30), (395, 6)], brush=3)
-    cmd.plot('Firmware version: {}'.format(py_version), (400, 17), brush=0, font=1)
-    cmd.plot('Serial number: {}'.format(platform.release()[:8]), (400, 7), brush=0, font=1)
+    cmd.area([(393, 4), (632, 4), (632, 30), (393, 30), (393, 4)], brush=2)
+    cmd.area([(395, 5), (629, 5), (629, 29), (395, 29), (395, 5)], brush=3)
+    cmd.plot('Firmware version: {}'.format(py_version), (400, 16), brush=0, font=1)
+    cmd.plot('Serial number: {}'.format(platform.release()[:8]), (400, 6), brush=0, font=1)
     # Please supply an operating system
     cmd.plot('Please supply an operating system', (188, 100), brush=3, font=1)
     nim.sleep(1.3)

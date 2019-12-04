@@ -1,5 +1,6 @@
-from .tools import is_valid_colour, colrows_to_xy, recolour, fix_coord
-from PIL import Image, ImageDraw
+from .tools import is_valid_colour, colrows_to_xy, recolour, fix_coord, points_to_nparray
+from PIL import Image, ImageDraw, ImageOps
+import numpy as np
 import copy
 
 
@@ -272,6 +273,18 @@ class Command:
         return self.nimbus.cursor_position
 
 
+    def ask_points_style(self):
+        """Gets the current points style
+
+        Returns:
+            int
+
+        """
+
+        # Return points style
+        return self.nimbus.points_style
+
+
     def cls(self):
         """Clear the screen of all text and graphics and reset cursor position
 
@@ -485,7 +498,11 @@ class Command:
     def gets(self):
         """Get the oldest char in the keyboard buffer
 
-        Equivalent to GET$ in RM Basic
+        Equivalent to GET$ in RM Basic except it will also return the following
+        values if a control key is pressed: '__F1__', '__F2__', ..., '__F10__',
+        '__CTRL_L__', '__CTRL_R__', '__ENTER__', '__BACKSPACE__', '__ESC__',
+        '__DELETE__', '__HOME__', '__PAGE_UP__', '__END__', '__PAGE_DOWN__',
+        '__INSERT__', '__UP__', '__DOWN__', '__LEFT__', '__RIGHT__', '__TAB__'
 
         Returns:
             str
@@ -495,7 +512,19 @@ class Command:
         # If the buffer isn't empty pop the last char
         # and return it, otherwise return empty str
         if len(self.nimbus.keyboard_buffer) > 0:
-            return self.nimbus.keyboard_buffer.pop(0)
+            popped_value = self.nimbus.keyboard_buffer.pop(0)
+            # Handle control key or char
+            # An integer with -1 indicates control char, so get
+            # it from the control char variable, otherwise just
+            # a char so return that
+            if isinstance(popped_value, int):
+                # Is probably a control char
+                if popped_value == -1:
+                    # It *is* a control char - return it
+                    return self.nimbus.control_char
+            else:
+                # It's just a char
+                return popped_value
         else:
             return ''        
 
@@ -534,8 +563,10 @@ class Command:
         # Collect and echo chars from buffer until enter was pressed
         while not self.nimbus.enter_was_pressed and self.nimbus.running:
             new_char = self.gets()
-            response += new_char
-            self.put(new_char)
+            # don't add control key hits:
+            if new_char not in self.nimbus.SUPPORTED_CONTROL_KEYS.values():
+                response += new_char
+                self.put(new_char)
             # Handle delete
             if self.nimbus.backspace_was_pressed and len(response) == 0:
                 self.nimbus.backspace_was_pressed = False
@@ -568,6 +599,7 @@ class Command:
         col, row = self.ask_curpos()
         self.nimbus.cursor_position = (255, row)
         self.put('X')
+
         # Return string
         return response
 
@@ -619,7 +651,7 @@ class Command:
         plot_img = Image.new(
             'RGBA',
             (plot_img_width, 10), 
-            (0, 0, 0, 1)
+            (0, 0, 0, 0)   # 1
         )
 
         # Plot chars on plot_img
@@ -659,13 +691,13 @@ class Command:
         self.nimbus.plonk_image_on_paper(plot_img, coord, transparent=True)
 
 
-    def area(self, coord_list, brush=None):
+    def area(self, coord_list, brush=None, scale=1):
         """Draw a filled polygon
 
         Args:
             coord_list (list): A list of (x, y) tuples
             brush (int), optional: Colour value (High-resolution: 0-3, low-resolution: 0-15)
-
+            scale (int), optional: Scale factor. To elongate pass a tuple (x_size, y_size)
         """
 
         # return if shutdown detected
@@ -675,21 +707,47 @@ class Command:
         # validate params
         assert isinstance(coord_list, list), "coord_list should contain a list, not {}".format(type(coord_list))
         assert isinstance(brush, (type(None), int)), "The value of brush must be None or an integer, not {}".format(type(brush))
-        assert is_valid_colour(self.nimbus, brush), "Brush colour {} is out-of-range for this screen mode".format(brush)
+        if brush is not None:
+            assert is_valid_colour(self.nimbus, brush), "Brush colour {} is out-of-range for this screen mode".format(brush)
         for coord in coord_list:
             assert len(coord) == 2, "The coord tuple must have 2 values, not {}".format(len(coord))
             for i in range(0, 2):
                 assert isinstance(coord[i], int), "The values in coord {} must be integer, not {}".format(coord, type(coord[i]))
+        assert isinstance(scale, (int, tuple, float)), "The value of scale must be an integer, float or tuple, not {}".format(type(scale))
+        if isinstance(scale, tuple):
+            for i in range(0, 2):
+                assert isinstance(scale[i], (int, float)), "The values in scale {} must be integer or float, not {}".format(scale, type(scale[i]))
+                assert scale[i] > 0, "The value {} in scale must be greater than zero".format(scale[i])
+        if isinstance(scale, (int, float)):
+            assert scale > 0, "The value {} in scale must be greater than zero".format(scale)
 
         # if default brush value then get current brush colour
         if brush is None:
             brush = self.nimbus.brush_colour
 
-        # correct coords
-        for i in range(0, len(coord_list)):
-            coord_list[i] = fix_coord(self.nimbus.SCREEN_MODES[self.nimbus.screen_mode], coord_list[i])
+        if isinstance(scale, tuple):
+            # tuple: extract x_size, y_size
+            x_size, y_size = scale
+        else:
+            x_size = scale
+            y_size = scale
 
-        # draw area
+        # coordinate as the origin.
+        origin = coord_list[0]
+        x_org, y_org = origin
+
+        for i in range(0, len(coord_list)):
+            if coord_list[i] == origin:
+                # don't scale origin
+                x, y = coord_list[i]
+                coord_list[i] = fix_coord(self.nimbus.SCREEN_MODES[self.nimbus.screen_mode], (x, y))
+            else:
+                x, y = coord_list[i]
+                x += ((x - x_org) * (x_size - 1))
+                y += ((y - y_org) * (y_size - 1))
+                coord_list[i] =  fix_coord(self.nimbus.SCREEN_MODES[self.nimbus.screen_mode], (x, y))
+
+        # draw area on temp image
         draw = ImageDraw.Draw(self.nimbus.paper_image)
         rgb = self.nimbus.COLOUR_TABLE[self.nimbus.runtime_colours[self.nimbus.screen_mode][brush]]
         draw.polygon(coord_list, outline=rgb, fill=rgb)
@@ -750,7 +808,8 @@ class Command:
         assert radius > 0, "radius must be greater than zero, not {}".format(radius)
         assert isinstance(coord_list, list), "coord_list should contain a list, not {}".format(type(coord_list))
         assert isinstance(brush, (type(None), int)), "The value of brush must be None or an integer, not {}".format(type(brush))
-        assert is_valid_colour(self.nimbus, brush), "Brush colour {} is out-of-range for this screen mode".format(brush)
+        if brush is not None:
+            assert is_valid_colour(self.nimbus, brush), "Brush colour {} is out-of-range for this screen mode".format(brush)
         for coord in coord_list:
             assert len(coord) == 2, "The coord tuple must have 2 values, not {}".format(len(coord))
             for i in range(0, 2):
@@ -776,13 +835,14 @@ class Command:
             draw.ellipse(box, outline=rgb, fill=rgb)
 
 
-    def slice(self, radius, from_angle, to_angle, coord_list, brush=None):
+    def slice_(self, radius, from_angle, to_angle, coord_list, brush=None):
         """Draw one or more pie slices
 
         Args:
             radius (int): The radius of the slice
             from_angle (int): The starting angle (degrees)
             to_angle (int): The finishing angle (degrees)
+            coord_list (list): A list of (x, y) tuples
         
         """
         
@@ -799,7 +859,8 @@ class Command:
         assert to_angle >=0 and to_angle <= 360, "to_angle must be between 0 and 360 degrees, not {}".format(to_angle)
         assert isinstance(coord_list, list), "coord_list should contain a list, not {}".format(type(coord_list))
         assert isinstance(brush, (type(None), int)), "The value of brush must be None or an integer, not {}".format(type(brush))
-        assert is_valid_colour(self.nimbus, brush), "Brush colour {} is out-of-range for this screen mode".format(brush)
+        if brush is not None:
+            assert is_valid_colour(self.nimbus, brush), "Brush colour {} is out-of-range for this screen mode".format(brush)
         for coord in coord_list:
             assert len(coord) == 2, "The coord tuple must have 2 values, not {}".format(len(coord))
             for i in range(0, 2):
@@ -822,4 +883,81 @@ class Command:
             r = radius
             x, y = coord
             box = [(x-r, y-r), (x+r, y+r)]
-            draw.pieslice(box, from_angle, to_angle, outline=rgb, fill=rgb)      
+            draw.pieslice(box, from_angle, to_angle, outline=rgb, fill=rgb)
+
+
+    def set_points_style(self, points_style, points_list):
+        """Set a points style to that define in a points list
+
+        You can define up to 256 points styles (0 - 255).  The points
+        list is similar to the way patterns are define in RM Basic.
+        Each row in the points style is define by a string, with full-stop
+        chars (.) indicating a filled pixel, and spaces ( ) indicating a
+        filled pixel.  The size of a points style is 8x8 pixels.
+
+        Args:
+            points_style (int): The points style number (0 255)
+            points_list (list): The points list as defined above
+        
+        """
+
+        # validate params
+        assert isinstance(points_style, int), "points_style must be an integer, not {}".format(type(points_style))
+        assert points_style >= 0 and points_style <= 255, "points_style must be in range 0-255, not {}".format(points_style)
+        assert isinstance(points_list, list), "points_list must be a list, not {}".format(type(points_list))
+        assert len(points_list) == 8, "there must be 8 items in points_list, not {}".format(len(points_list))
+        for points in points_list:
+            assert isinstance(points, str), "the item {} in points_list must be a string, not {}".format(points, type(points))
+            assert len(points) == 8, "the length of this item must be 8, not {}".format(len(points))
+
+        # create and assign the points style
+        self.nimbus.points_styles[points_style] = points_to_nparray(points_list)
+
+    
+    def points(self, coord_list, brush=None, size=None, style=None):
+        """Draw points on the screen
+
+        Args:
+            coord_list (list): 
+            style (int): The points style number (0 255)
+            coord_list (list): A list of (x, y) tuples
+            brush (int), optional: Colour value (High-resolution: 0-3, low-resolution: 0-15)
+            size (int), optional: Font size. To elongate pass a tuple (x_size, y_size)
+
+        """
+
+        assert isinstance(style, (type(None), int)), "The value of brush must be None or an integer, not {}".format(type(style))
+        if style is not None:
+            assert style >= 0 and style <= 255, "style must be in range 0-255, not {}".format(style)
+        assert isinstance(size, (type(None), int)), "The value of size must be None or an integer, not {}".format(type(size))
+        assert isinstance(brush, (type(None), int)), "The value of brush must be None or an integer, not {}".format(type(brush))
+        if brush is not None:
+            assert is_valid_colour(self.nimbus, brush), "Brush colour {} is out-of-range for this screen mode".format(brush)
+        assert isinstance(size, (int, tuple)), "The value of size must be an integer or tuple, not {}".format(type(size))
+        if isinstance(size, tuple):
+            for i in range(0, 2):
+                assert isinstance(size[i], int), "The values in size {} must be integer, not {}".format(size, type(size[i]))  
+
+        # if default brush value then get current brush colour, same for the other optional params
+        if brush is None:
+            brush = self.nimbus.brush_colour
+        if size is None:
+            size = 1
+        if style is None:
+            style = self.nimbus.points_style
+
+        # draw the points
+        for coord in coord_list:
+            # make a temp image
+            temp_img = Image.fromarray(self.nimbus.points_styles[10], mode='RGBA')  
+            # scale image
+            if isinstance(size, tuple):
+                # tuple: extract x_size, y_size
+                x_size, y_size = size
+            else:
+                x_size = size
+                y_size = size
+            new_size = (temp_img.size[0] * x_size, temp_img.size[1] * y_size)
+            temp_img = temp_img.resize(new_size, resample=Image.NEAREST)
+            # draw it
+            self.nimbus.plonk_image_on_paper(recolour(self.nimbus, temp_img, (0, 0, 0), self.nimbus.COLOUR_TABLE[self.nimbus.runtime_colours[self.nimbus.screen_mode][brush]], has_alpha=True), coord, transparent=True)

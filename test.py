@@ -19,7 +19,7 @@ def test_slice(nim, cmd):
             from_angle = random.randint(1, 359)
             to_angle = 360 - random.randint(0, from_angle)
             brush = random.randint(0, colour_max)
-            cmd.slice(radius, from_angle, to_angle, [(x, y)], brush=brush)
+            cmd.slice_(radius, from_angle, to_angle, [(x, y)], brush=brush)
         nim.sleep(1)
 
 def test_circle(nim, cmd):
@@ -161,6 +161,12 @@ def test_plot(nim, cmd):
 
 def test_area(nim, cmd):
     cmd.set_mode(40)
+    brush = 14
+    for scale in [2.0, 1.5, 1, 0.5, 0.25]:
+        cmd.area([(10, 10), (100, 10), (50, 100), (10, 10)], brush=brush, scale=scale)
+        brush -= 1
+    nim.sleep(1)
+    cmd.set_mode(40)
     for i in range(0, 2000):
         x1 = 0 + random.randint(-10, 10)
         y1 = 0 + random.randint(-10, 10)
@@ -169,7 +175,8 @@ def test_area(nim, cmd):
         x3 = 300 + random.randint(-10, 10)
         y3 = 0 + random.randint(-10, 10)
         brush = random.randint(0, 15)
-        cmd.area([(x1, y1), (x2, y2), (x3, y3), (x1, y1)], brush=brush)
+        for scale in [1.5, 1, 0.5]:
+            cmd.area([(x1, y1), (x2, y2), (x3, y3), (x1, y1)], brush=brush, scale=scale)
     nim.sleep(1)
     cmd.set_mode(80)
     for i in range(0, 2000):
@@ -180,7 +187,8 @@ def test_area(nim, cmd):
         x3 = 650 + random.randint(-10, 10)
         y3 = 0 + random.randint(-10, 10)
         brush = random.randint(0, 3)
-        cmd.area([(x1, y1), (x2, y2), (x3, y3), (x1, y1)], brush=brush)
+        for scale in [1.5, 1, 0.5]:
+            cmd.area([(x1, y1), (x2, y2), (x3, y3), (x1, y1)], brush=brush, scale=scale)
     nim.sleep(1)
 
 def test_line(nim, cmd):
@@ -207,10 +215,35 @@ def test_line(nim, cmd):
         cmd.line([(x1, y1), (x2, y2), (x3, y3), (x1, y1), (125, 125)], brush=brush)
     nim.sleep(1)
 
+def test_points(nim, cmd):
+    sprite = [  ' ...... ',
+                '. .  . .',
+                '. .... .',
+                '.      .',
+                '. ..   .',
+                '.  ..  .',
+                ' .    . ',
+                '  ....  ']
+    cmd.set_points_style(10, sprite)
+    cmd.set_mode(80)
+    for i in range(0, 1000): 
+        x = random.randint(0, 650)
+        y = random.randint(0, 250)
+        cmd.points([(x, y)], brush=random.randint(0, 3), size=random.randint(1, 10))
+    nim.sleep(1)
+    cmd.set_mode(40)
+    for i in range(0, 1000): 
+        x = random.randint(0, 350)
+        y = random.randint(0, 250)
+        cmd.points([(x, y)], brush=random.randint(0, 15), size=random.randint(1, 10))
+    nim.sleep(1)
+    
+
 if __name__ == '__main__':
-    nim = Nimbus(full_screen=True)
+    nim = Nimbus(full_screen=False)
     cmd = Command(nim)
     nim.boot(skip_welcome_screen=False)
+    test_points(nim, cmd)
     test_slice(nim, cmd)
     test_circle(nim, cmd)
     test_line(nim, cmd)
