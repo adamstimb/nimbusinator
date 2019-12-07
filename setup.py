@@ -5,7 +5,7 @@ with open('readme.md', 'r') as f:
 
 setuptools.setup(
     name="nimbusinator",
-    version="0.1.0",
+    version="0.2.1",
     author="Tim Adams",
     author_email="adamstimb@gmail.com",
     description="RM Nimbus GUI for Python",

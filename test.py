@@ -229,20 +229,20 @@ def test_points(nim, cmd):
     for i in range(0, 1000): 
         x = random.randint(0, 650)
         y = random.randint(0, 250)
-        cmd.points([(x, y)], brush=random.randint(0, 3), size=random.randint(1, 10))
+        cmd.points([(x, y)], brush=random.randint(0, 3), size=random.randint(1, 10), style=10)
     nim.sleep(1)
     cmd.set_mode(40)
     for i in range(0, 1000): 
         x = random.randint(0, 350)
         y = random.randint(0, 250)
-        cmd.points([(x, y)], brush=random.randint(0, 15), size=random.randint(1, 10))
+        cmd.points([(x, y)], brush=random.randint(0, 15), size=random.randint(1, 10), style=10)
     nim.sleep(1)
     
 
 if __name__ == '__main__':
     nim = Nimbus(full_screen=False)
     cmd = Command(nim)
-    nim.boot(skip_welcome_screen=False)
+    nim.boot(skip_welcome_screen=True)
     test_points(nim, cmd)
     test_slice(nim, cmd)
     test_circle(nim, cmd)

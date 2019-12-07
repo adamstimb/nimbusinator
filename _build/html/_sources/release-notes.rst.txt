@@ -1,7 +1,7 @@
 Release Notes
 =============
 
-0.2.0
+0.2.1
 -----
 
 More graphics stuff including import and down-conversion of full-colour images, plus control key detection in gets().
