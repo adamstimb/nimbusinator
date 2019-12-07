@@ -113,7 +113,7 @@ def colrows_to_xy(screen_size, cursor_position):
     """
 
     x = (8 * (cursor_position[0] - 1))
-    y = (screen_size[1] - 1) - (cursor_position[1] * 10)
+    y = (screen_size[1] - 2) - (cursor_position[1] * 10)
     return (x, y)
 
 

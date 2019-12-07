@@ -167,13 +167,14 @@ to get a deeper understanding of how these commands originally worked.</p>
 </dl>
 <dl class="method">
 <dt id="nimbusinator.command.Command.area">
-<code class="sig-name descname">area</code><span class="sig-paren">(</span><em class="sig-param">coord_list</em>, <em class="sig-param">brush=None</em><span class="sig-paren">)</span><a class="headerlink" href="#nimbusinator.command.Command.area" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">area</code><span class="sig-paren">(</span><em class="sig-param">coord_list</em>, <em class="sig-param">brush=None</em>, <em class="sig-param">scale=1</em><span class="sig-paren">)</span><a class="headerlink" href="#nimbusinator.command.Command.area" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw a filled polygon</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>coord_list</strong> (<em>list</em>) – A list of (x, y) tuples</p></li>
 <li><p><strong>brush</strong> (<em>int</em>) – Colour value (High-resolution: 0-3, low-resolution: 0-15)</p></li>
+<li><p><strong>scale</strong> (<em>int</em>) – Scale factor. To elongate pass a tuple (x_size, y_size)</p></li>
 </ul>
 </dd>
 </dl>
@@ -248,6 +249,17 @@ to get a deeper understanding of how these commands originally worked.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="nimbusinator.command.Command.ask_points_style">
+<code class="sig-name descname">ask_points_style</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nimbusinator.command.Command.ask_points_style" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the current points style</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="nimbusinator.command.Command.circle">
 <code class="sig-name descname">circle</code><span class="sig-paren">(</span><em class="sig-param">radius</em>, <em class="sig-param">coord_list</em>, <em class="sig-param">brush=None</em><span class="sig-paren">)</span><a class="headerlink" href="#nimbusinator.command.Command.circle" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw one or more circles</p>
@@ -269,6 +281,23 @@ to get a deeper understanding of how these commands originally worked.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="nimbusinator.command.Command.fetch">
+<code class="sig-name descname">fetch</code><span class="sig-paren">(</span><em class="sig-param">block_number</em>, <em class="sig-param">filename</em><span class="sig-paren">)</span><a class="headerlink" href="#nimbusinator.command.Command.fetch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetch an image from disk and allocate it to an image block</p>
+<p>Equivalent to FETCH in the ANIMATE extension.  This is an experimental
+feature.  All major image formats are supported but in this loading
+images with alpha layers may break.  It is also very slow!</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>block_number</strong> (<em>int</em>) – The block number to store the image in</p></li>
+<li><p><strong>filename</strong> (<em>str</em>) – The filename of the image to fetch</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="nimbusinator.command.Command.flush">
 <code class="sig-name descname">flush</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nimbusinator.command.Command.flush" title="Permalink to this definition">¶</a></dt>
 <dd><p>Clears the keyboard buffer</p>
@@ -278,7 +307,11 @@ to get a deeper understanding of how these commands originally worked.</p>
 <dt id="nimbusinator.command.Command.gets">
 <code class="sig-name descname">gets</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nimbusinator.command.Command.gets" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the oldest char in the keyboard buffer</p>
-<p>Equivalent to GET$ in RM Basic</p>
+<p>Equivalent to GET$ in RM Basic except it will also return the following
+values if a control key is pressed: ‘__F1__’, ‘__F2__’, … , ‘__F10__’,
+‘__CTRL_L__’, ‘__CTRL_R__’, ‘__ENTER__’, ‘__BACKSPACE__’, ‘__ESC__’,
+‘__DELETE__’, ‘__HOME__’, ‘__PAGE_UP__’, ‘__END__’, ‘__PAGE_DOWN__’,
+‘__INSERT__’, ‘__UP__’, ‘__DOWN__’, ‘__LEFT__’, ‘__RIGHT__’, ‘__TAB__’</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>str</p>
@@ -338,6 +371,23 @@ to get a deeper understanding of how these commands originally worked.</p>
 <li><p><strong>brush</strong> (<em>int</em>) – Brush colour</p></li>
 <li><p><strong>direction</strong> (<em>int</em>) – 0=normal, 1=-90deg, 2=180deg, 3=-270deg</p></li>
 <li><p><strong>font</strong> (<em>int</em>) – 0 is the standard font, 1 is the other font</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nimbusinator.command.Command.points">
+<code class="sig-name descname">points</code><span class="sig-paren">(</span><em class="sig-param">coord_list</em>, <em class="sig-param">brush=None</em>, <em class="sig-param">size=1</em>, <em class="sig-param">style=None</em><span class="sig-paren">)</span><a class="headerlink" href="#nimbusinator.command.Command.points" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw points on the screen</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>coord_list</strong> (<em>list</em>) – </p></li>
+<li><p><strong>style</strong> (<em>int</em>) – The points style number (0 255)</p></li>
+<li><p><strong>coord_list</strong> – A list of (x, y) tuples</p></li>
+<li><p><strong>brush</strong> (<em>int</em>) – Colour value (High-resolution: 0-3, low-resolution: 0-15)</p></li>
+<li><p><strong>size</strong> (<em>int</em>) – Font size. To elongate pass a tuple (x_size, y_size)</p></li>
 </ul>
 </dd>
 </dl>
@@ -488,8 +538,27 @@ resolutions worked on the Nimbus.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="nimbusinator.command.Command.slice">
-<code class="sig-name descname">slice</code><span class="sig-paren">(</span><em class="sig-param">radius</em>, <em class="sig-param">from_angle</em>, <em class="sig-param">to_angle</em>, <em class="sig-param">coord_list</em>, <em class="sig-param">brush=None</em><span class="sig-paren">)</span><a class="headerlink" href="#nimbusinator.command.Command.slice" title="Permalink to this definition">¶</a></dt>
+<dt id="nimbusinator.command.Command.set_points_style">
+<code class="sig-name descname">set_points_style</code><span class="sig-paren">(</span><em class="sig-param">points_style</em>, <em class="sig-param">points_list</em><span class="sig-paren">)</span><a class="headerlink" href="#nimbusinator.command.Command.set_points_style" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set a points style to that define in a points list</p>
+<p>You can define up to 256 points styles (0 - 255).  The points
+list is similar to the way patterns are define in RM Basic.
+Each row in the points style is define by a string, with full-stop
+chars (.) indicating a filled pixel, and spaces ( ) indicating a
+filled pixel.  The size of a points style is 8x8 pixels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>points_style</strong> (<em>int</em>) – The points style number (0 255)</p></li>
+<li><p><strong>points_list</strong> (<em>list</em>) – The points list as defined above</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nimbusinator.command.Command.slice_">
+<code class="sig-name descname">slice_</code><span class="sig-paren">(</span><em class="sig-param">radius</em>, <em class="sig-param">from_angle</em>, <em class="sig-param">to_angle</em>, <em class="sig-param">coord_list</em>, <em class="sig-param">brush=None</em><span class="sig-paren">)</span><a class="headerlink" href="#nimbusinator.command.Command.slice_" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw one or more pie slices</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -497,6 +566,23 @@ resolutions worked on the Nimbus.</p>
 <li><p><strong>radius</strong> (<em>int</em>) – The radius of the slice</p></li>
 <li><p><strong>from_angle</strong> (<em>int</em>) – The starting angle (degrees)</p></li>
 <li><p><strong>to_angle</strong> (<em>int</em>) – The finishing angle (degrees)</p></li>
+<li><p><strong>coord_list</strong> (<em>list</em>) – A list of (x, y) tuples</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nimbusinator.command.Command.writeblock">
+<code class="sig-name descname">writeblock</code><span class="sig-paren">(</span><em class="sig-param">block_number</em>, <em class="sig-param">coord</em><span class="sig-paren">)</span><a class="headerlink" href="#nimbusinator.command.Command.writeblock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write an image block to the screen</p>
+<p>Equivalent to WRITEBLOCK in the ANIMATE extension.  Alpha layers are not
+yet supported - see documentation for fetch command.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>block_number</strong> (<em>int</em>) – The block number of the image block</p></li>
+<li><p><strong>coord</strong> (<em>tuple</em>) – The (x, y) position of the image</p></li>
 </ul>
 </dd>
 </dl>

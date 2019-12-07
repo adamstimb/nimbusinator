@@ -1,6 +1,30 @@
 Release Notes
 =============
 
+0.2.0
+-----
+
+More graphics stuff including import and down-conversion of full-colour images, plus control key detection in gets().
+
+Commands updated:
+
+* slice has been renamed to slice_ to avoid stomping on Python keyword
+* area now has a scale optional parameter
+* gets now detects control key presses
+
+Commands added:
+
+* set_points_style(points_style, points_list)
+* ask_points_style()
+* points(coord_list, brush=None, size=None, style=None)
+* fetch(block_number, filename)
+* writeblock(block_number, coord)
+
+Bug fixes:
+
+* y-axis still had a bug but now fixed
+* some input validation on optional parameters would break for default values
+
 0.1.0
 -----
 

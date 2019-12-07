@@ -110,6 +110,7 @@ class Nimbus:
         self.points_styles = self.__init_points_styles()
         self.points_style = 0
         self.control_char = ''
+        self.image_blocks = [None] * 255
 
         # Initialize with empty paper
         self.paper_image = self.empty_paper()

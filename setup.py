@@ -19,7 +19,7 @@ setuptools.setup(
         "Pillow",
         "numpy",
         "simpleaudio",
-        "pynput",
+        "pynput==1.4.5",
         "psutil",
         "pygame>=1.9.3,<2.0;python_version!='3.3'",
     ],

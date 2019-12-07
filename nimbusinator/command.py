@@ -2,6 +2,9 @@ from .tools import is_valid_colour, colrows_to_xy, recolour, fix_coord, points_t
 from PIL import Image, ImageDraw, ImageOps
 import numpy as np
 import copy
+import math
+import os
+
 
 
 class Command:
@@ -414,7 +417,11 @@ class Command:
             curpos_xy = colrows_to_xy(self.nimbus.SCREEN_MODES[self.nimbus.screen_mode], self.nimbus.cursor_position)
             # Plot char and apply paper colour underneath char
             empty_char_image = recolour(self.nimbus, self.nimbus.EMPTY_CHAR_IMAGE, (0, 0, 0), self.nimbus.COLOUR_TABLE[self.nimbus.runtime_colours[self.nimbus.screen_mode][self.nimbus.paper_colour]], has_alpha=True)
-            self.nimbus.plonk_image_on_paper(empty_char_image, curpos_xy, transparent=True)
+            # Tweak position of paper background
+            xp, yp = curpos_xy
+            yp += 1
+            paperpos_xy = (xp, yp)
+            self.nimbus.plonk_image_on_paper(empty_char_image, paperpos_xy, transparent=True)
             # Overlay char, colourise and preserve paper colour
             char_img = recolour(self.nimbus, char_img, (0, 0, 0), self.nimbus.COLOUR_TABLE[self.nimbus.runtime_colours[self.nimbus.screen_mode][self.nimbus.pen_colour]], has_alpha=True)
             self.nimbus.plonk_image_on_paper(char_img, curpos_xy, transparent=True)
@@ -499,7 +506,7 @@ class Command:
         """Get the oldest char in the keyboard buffer
 
         Equivalent to GET$ in RM Basic except it will also return the following
-        values if a control key is pressed: '__F1__', '__F2__', ..., '__F10__',
+        values if a control key is pressed: '__F1__', '__F2__', ... , '__F10__',
         '__CTRL_L__', '__CTRL_R__', '__ENTER__', '__BACKSPACE__', '__ESC__',
         '__DELETE__', '__HOME__', '__PAGE_UP__', '__END__', '__PAGE_DOWN__',
         '__INSERT__', '__UP__', '__DOWN__', '__LEFT__', '__RIGHT__', '__TAB__'
@@ -627,7 +634,8 @@ class Command:
         assert len(coord) == 2, "The coord tuple must have 2 values, not {}".format(len(coord))
         for i in range(0, 2):
             assert isinstance(coord[i], int), "The values in coord {} must be integer, not {}".format(coord, type(coords[i]))      
-        assert isinstance(size, (int, tuple)), "The value of size must be an integer or tuple, not {}".format(type(size))
+        if size is not None:
+            assert isinstance(size, (int, tuple)), "The value of size must be an integer or tuple, not {}".format(type(size))
         if isinstance(size, tuple):
             for i in range(0, 2):
                 assert isinstance(size[i], int), "The values in size {} must be integer, not {}".format(size, type(size[i]))  
@@ -769,7 +777,8 @@ class Command:
         # validate params
         assert isinstance(coord_list, list), "coord_list should contain a list, not {}".format(type(coord_list))
         assert isinstance(brush, (type(None), int)), "The value of brush must be None or an integer, not {}".format(type(brush))
-        assert is_valid_colour(self.nimbus, brush), "Brush colour {} is out-of-range for this screen mode".format(brush)
+        if brush is not None:
+            assert is_valid_colour(self.nimbus, brush), "Brush colour {} is out-of-range for this screen mode".format(brush)
         for coord in coord_list:
             assert len(coord) == 2, "The coord tuple must have 2 values, not {}".format(len(coord))
             for i in range(0, 2):
@@ -914,7 +923,7 @@ class Command:
         self.nimbus.points_styles[points_style] = points_to_nparray(points_list)
 
     
-    def points(self, coord_list, brush=None, size=None, style=None):
+    def points(self, coord_list, brush=None, size=1, style=None):
         """Draw points on the screen
 
         Args:
@@ -949,7 +958,7 @@ class Command:
         # draw the points
         for coord in coord_list:
             # make a temp image
-            temp_img = Image.fromarray(self.nimbus.points_styles[10], mode='RGBA')  
+            temp_img = Image.fromarray(self.nimbus.points_styles[style], mode='RGBA')  
             # scale image
             if isinstance(size, tuple):
                 # tuple: extract x_size, y_size
@@ -961,3 +970,80 @@ class Command:
             temp_img = temp_img.resize(new_size, resample=Image.NEAREST)
             # draw it
             self.nimbus.plonk_image_on_paper(recolour(self.nimbus, temp_img, (0, 0, 0), self.nimbus.COLOUR_TABLE[self.nimbus.runtime_colours[self.nimbus.screen_mode][brush]], has_alpha=True), coord, transparent=True)
+
+
+    def fetch(self, block_number, filename):
+        """Fetch an image from disk and allocate it to an image block
+
+        Equivalent to FETCH in the ANIMATE extension.  This is an experimental
+        feature.  All major image formats are supported but in this loading 
+        images with alpha layers may break.  It is also very slow!
+
+        Args:
+            block_number (int): The block number to store the image in
+            filename (str): The filename of the image to fetch
+        """          
+
+        assert isinstance(block_number, int), "block_number must be an integer, not {}".format(type(block_number))
+        assert block_number >=0 and block_number <= 255, "block_number must be in the range 0-255, not {}".format(block_number)
+        assert isinstance(filename, str), "filename must be a string, not {}".format(type(filename))
+        assert os.path.isfile(filename), "Image file {} not found".format(filename)
+
+
+        def get_closest_nimbus_colour(possible_rgbs, rgb):
+            """Find the closest Nimbus colour in the current runtime palette"""
+
+            def distance(c1, c2):
+                """Calculate the distance between two RGB colours"""
+                (r1,g1,b1) = c1
+                (r2,g2,b2) = c2
+                return math.sqrt((r1 - r2)**2 + (g1 - g2) ** 2 + (b1 - b2) **2)
+
+
+            nearest_match = {'rgb': (0, 0, 0), 'score': 1000}
+            for i in range(0, len(possible_rgbs)):
+                score = distance(rgb, possible_rgbs[i])
+                if score < nearest_match['score']:
+                    nearest_match = {'rgb': possible_rgbs[i], 'score': score}
+            return nearest_match['rgb']
+
+        # Open the image and convert to numpy array
+        img = Image.open(filename)
+        img = np.array(img)
+
+        # get possible runtime rgbs
+        possible_colours = self.nimbus.runtime_colours[self.nimbus.screen_mode]
+        possible_rgbs = []
+        for col in possible_colours:
+            possible_rgbs.append(self.nimbus.COLOUR_TABLE[self.nimbus.runtime_colours[self.nimbus.screen_mode][col]])
+
+        # Reassign all RGBs to nearest in runtime palette
+        for y in range(0, img.shape[0]):
+            for x in range(0, img.shape[1]):
+                rgb_array = img[y][x]
+                rgb_tuple = (rgb_array[0], rgb_array[1], rgb_array[2])
+                nearest_nimbus_rgb_tuple = get_closest_nimbus_colour(possible_rgbs, rgb_tuple)
+                img[y][x] = [ nearest_nimbus_rgb_tuple[0], nearest_nimbus_rgb_tuple[1], nearest_nimbus_rgb_tuple[2] ]
+
+        # All done, assign the image to the required image block
+        self.nimbus.image_blocks[block_number] = Image.fromarray(img, mode='RGB')
+        
+
+    def writeblock(self, block_number, coord):
+        """Write an image block to the screen
+
+        Equivalent to WRITEBLOCK in the ANIMATE extension.  Alpha layers are not
+        yet supported - see documentation for fetch command.
+
+        Args:
+            block_number (int): The block number of the image block
+            coord (tuple): The (x, y) position of the image
+        
+        """
+
+        assert isinstance(block_number, int), "block_number must be an integer, not {}".format(type(block_number))
+        assert block_number >=0 and block_number <= 255, "block_number must be in the range 0-255, not {}".format(block_number)
+        assert self.nimbus.image_blocks[block_number] is not None, "block_number {} is empty".format(block_number)
+
+        # Draw the memory block
+        self.nimbus.plonk_image_on_paper(self.nimbus.image_blocks[block_number], coord, transparent=False)

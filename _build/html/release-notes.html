@@ -84,9 +84,10 @@
 <li class="toctree-l1"><a class="reference internal" href="nimbus.html">nimbusinator.nimbus.Nimbus</a></li>
 <li class="toctree-l1"><a class="reference internal" href="command.html">nimbusinator.command.Command</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Release Notes</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#id1">0.1.0</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id2">0.0.2</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id3">0.0.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id1">0.2.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">0.1.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id3">0.0.2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id4">0.0.1</a></li>
 </ul>
 </li>
 </ul>
@@ -156,7 +157,30 @@
   <div class="section" id="release-notes">
 <h1>Release Notes<a class="headerlink" href="#release-notes" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="id1">
-<h2>0.1.0<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<h2>0.2.0<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>More graphics stuff including import and down-conversion of full-colour images, plus control key detection in gets().</p>
+<p>Commands updated:</p>
+<ul class="simple">
+<li><p>slice has been renamed to <a href="#id5"><span class="problematic" id="id6">slice_</span></a> to avoid stomping on Python keyword</p></li>
+<li><p>area now has a scale optional parameter</p></li>
+<li><p>gets now detects control key presses</p></li>
+</ul>
+<p>Commands added:</p>
+<ul class="simple">
+<li><p>set_points_style(points_style, points_list)</p></li>
+<li><p>ask_points_style()</p></li>
+<li><p>points(coord_list, brush=None, size=None, style=None)</p></li>
+<li><p>fetch(block_number, filename)</p></li>
+<li><p>writeblock(block_number, coord)</p></li>
+</ul>
+<p>Bug fixes:</p>
+<ul class="simple">
+<li><p>y-axis still had a bug but now fixed</p></li>
+<li><p>some input validation on optional parameters would break for default values</p></li>
+</ul>
+</div>
+<div class="section" id="id2">
+<h2>0.1.0<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
 <p>Removed dependency on OpenCV, fixed bugs, crisper rendering and added 8 new commands.</p>
 <p>Commands added:</p>
 <ul class="simple">
@@ -180,8 +204,8 @@
 <li><p>Shutdown by CTRL-C interrupt doesn’t get delayed</p></li>
 </ul>
 </div>
-<div class="section" id="id2">
-<h2>0.0.2<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id3">
+<h2>0.0.2<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
 <p>Revised package structure to solve module import errors with Sphinx.</p>
 <p>Nimbus and Command classes are now imported like this:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">nimbusinator.nimbus</span> <span class="kn">import</span> <span class="n">Nimbus</span>
@@ -189,8 +213,8 @@
 </pre></div>
 </div>
 </div>
-<div class="section" id="id3">
-<h2>0.0.1<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id4">
+<h2>0.0.1<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
 <p>First public release!</p>
 <p>Key features:</p>
 <ul class="simple">
