@@ -3,7 +3,7 @@ from nimbusinator.command import Command
 
 if __name__ == '__main__': 
     # Create and bind nimbusinator objects:
-    nim = Nimbus()
+    nim = Nimbus(full_screen=True)
     cmd = Command(nim)
     nim.boot()          # Boot the Nimbus
     cmd.set_mode(40)    # Low resolution mode
@@ -17,3 +17,4 @@ if __name__ == '__main__':
     # Wait 5 seconds then shutdown
     nim.sleep(5)
     nim.shutdown()
+

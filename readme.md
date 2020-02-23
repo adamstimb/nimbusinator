@@ -74,6 +74,7 @@ pip install nimbusinator
 
 ## Quick-start
 
+
 ```python
 from nimbusinator.nimbus import Nimbus
 from nimbusinator.command import Command
@@ -95,6 +96,9 @@ if __name__ == '__main__':
     nim.sleep(5)
     nim.shutdown()
 ```
+
+![Quick Start Animation](quickstart_animation.gif)
+
 
 ## Links
 

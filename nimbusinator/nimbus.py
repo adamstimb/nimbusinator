@@ -1,8 +1,9 @@
 import os
 import sys
 import time
-os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
-import pygame
+import contextlib
+with contextlib.redirect_stdout(None):
+    import pygame
 import copy
 import numpy as np
 from .tools import logo, message, pil_to_pygame_image, fix_coord, char_image_selecta, colrows_to_xy, recolour, points_to_nparray
