@@ -411,8 +411,13 @@ class Command:
             if ord(ascii) > 255:
                 # It's out of range
                 ascii = ' '
-            # Get char img
-            char_img = self.nimbus.FONT_IMAGES[self.nimbus.charset][ord(ascii)]
+            # If a resolveable special character, translate it and get char img
+            if ascii in self.nimbus.RESOLVABLE_UNICODE_CHARS:
+                ascii = self.nimbus.RESOLVABLE_UNICODE_CHARS[ascii]
+                char_img = self.nimbus.FONT_IMAGES[self.nimbus.charset][ascii]
+            else:
+                # Otherwise just use ordinal
+                char_img = self.nimbus.FONT_IMAGES[self.nimbus.charset][ord(ascii)]
             # Get screen position in pixels from cursor position
             curpos_xy = colrows_to_xy(self.nimbus.SCREEN_MODES[self.nimbus.screen_mode], self.nimbus.cursor_position)
             # Plot char and apply paper colour underneath char
@@ -617,10 +622,10 @@ class Command:
         Args:
             text (str): The text to be plotted
             coord (tuple): The (x, y) position of the text
-            size (int), optional: Font size. To elongate pass a tuple (x_size, y_size)
-            brush (int), optional: Brush colour
-            direction (int), optional: 0=normal, 1=-90deg, 2=180deg, 3=-270deg
-            font (int), optional: 0 is the standard font, 1 is the other font
+            size (int, optional): Font size. To elongate pass a tuple (x_size, y_size)
+            brush (int, optional): Brush colour
+            direction (int, optional): 0=normal, 1=-90deg, 2=180deg, 3=-270deg
+            font (int, optional): 0 is the standard font, 1 is the other font
 
         """
 
@@ -704,8 +709,8 @@ class Command:
 
         Args:
             coord_list (list): A list of (x, y) tuples
-            brush (int), optional: Colour value (High-resolution: 0-3, low-resolution: 0-15)
-            scale (int), optional: Scale factor. To elongate pass a tuple (x_size, y_size)
+            brush (int, optional): Colour value (High-resolution: 0-3, low-resolution: 0-15)
+            scale (int, optional): Scale factor. To elongate pass a tuple (x_size, y_size)
         """
 
         # return if shutdown detected
@@ -766,7 +771,7 @@ class Command:
 
         Args:
             coord_list (list): A list of (x, y) tuples
-            brush (int), optional: Colour value (High-resolution: 0-3, low-resolution: 0-15)
+            brush (int, optional): Colour value (High-resolution: 0-3, low-resolution: 0-15)
 
         """
 
@@ -804,7 +809,7 @@ class Command:
         Args:
             radius (int): The radius of the circle
             coord_list (list): A list of (x, y) tuples
-            brush (int), optional: Colour value (High-resolution: 0-3, low-resolution: 0-15)
+            brush (int, optional): Colour value (High-resolution: 0-3, low-resolution: 0-15)
         
         """
 
@@ -852,7 +857,7 @@ class Command:
             from_angle (int): The starting angle (degrees)
             to_angle (int): The finishing angle (degrees)
             coord_list (list): A list of (x, y) tuples
-        
+            brush (int, optional): Colour value (High-resolution: 0-3, low-resolution: 0-15)
         """
         
         # return if shutdown detected
@@ -928,11 +933,10 @@ class Command:
 
         Args:
             coord_list (list): 
-            style (int): The points style number (0 255)
             coord_list (list): A list of (x, y) tuples
-            brush (int), optional: Colour value (High-resolution: 0-3, low-resolution: 0-15)
-            size (int), optional: Font size. To elongate pass a tuple (x_size, y_size)
-
+            brush (int, optional): Colour value (High-resolution: 0-3, low-resolution: 0-15)
+            size (int, optional): Font size. To elongate pass a tuple (x_size, y_size)
+            style (int, optional): The points style number (0 255)
         """
 
         assert isinstance(style, (type(None), int)), "The value of brush must be None or an integer, not {}".format(type(style))
@@ -975,9 +979,10 @@ class Command:
     def fetch(self, block_number, filename):
         """Fetch an image from disk and allocate it to an image block
 
-        Equivalent to FETCH in the ANIMATE extension.  This is an experimental
-        feature.  All major image formats are supported but in this loading 
-        images with alpha layers may break.  It is also very slow!
+        Equivalent to FETCH in the ANIMATE extension.  All major image formats 
+        are supported but in this loading images with alpha layers may break.  It
+        is also advisable to resize your image to fit the Nimbus screen mode using
+        an image editor beforehand.
 
         Args:
             block_number (int): The block number to store the image in
@@ -1007,8 +1012,10 @@ class Command:
                     nearest_match = {'rgb': possible_rgbs[i], 'score': score}
             return nearest_match['rgb']
 
-        # Open the image and convert to numpy array
+        # Open the image, get all rgb colors, and convert to numpy array
         img = Image.open(filename)
+        img_rgbs = list(set(img.getdata()))
+        #print(img_rgbs)
         img = np.array(img)
 
         # get possible runtime rgbs
@@ -1017,12 +1024,17 @@ class Command:
         for col in possible_colours:
             possible_rgbs.append(self.nimbus.COLOUR_TABLE[self.nimbus.runtime_colours[self.nimbus.screen_mode][col]])
 
+        # Make a dictionary of image rgbs and their nearest runtime colour
+        img_rgb_to_runtime_rgb = {}
+        for rgb_tuple in img_rgbs:
+            img_rgb_to_runtime_rgb[rgb_tuple] = get_closest_nimbus_colour(possible_rgbs, rgb_tuple)
+
         # Reassign all RGBs to nearest in runtime palette
         for y in range(0, img.shape[0]):
             for x in range(0, img.shape[1]):
                 rgb_array = img[y][x]
                 rgb_tuple = (rgb_array[0], rgb_array[1], rgb_array[2])
-                nearest_nimbus_rgb_tuple = get_closest_nimbus_colour(possible_rgbs, rgb_tuple)
+                nearest_nimbus_rgb_tuple = img_rgb_to_runtime_rgb[rgb_tuple]
                 img[y][x] = [ nearest_nimbus_rgb_tuple[0], nearest_nimbus_rgb_tuple[1], nearest_nimbus_rgb_tuple[2] ]
 
         # All done, assign the image to the required image block

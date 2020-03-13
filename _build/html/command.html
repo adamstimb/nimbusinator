@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>nimbusinator.command.Command &mdash; nimbusinator 0.1.0 documentation</title>
+  <title>nimbusinator.command.Command &mdash; nimbusinator 0.2.2 documentation</title>
   
 
   
@@ -173,8 +173,8 @@ to get a deeper understanding of how these commands originally worked.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>coord_list</strong> (<em>list</em>) – A list of (x, y) tuples</p></li>
-<li><p><strong>brush</strong> (<em>int</em>) – Colour value (High-resolution: 0-3, low-resolution: 0-15)</p></li>
-<li><p><strong>scale</strong> (<em>int</em>) – Scale factor. To elongate pass a tuple (x_size, y_size)</p></li>
+<li><p><strong>brush</strong> (<em>int</em><em>, </em><em>optional</em>) – Colour value (High-resolution: 0-3, low-resolution: 0-15)</p></li>
+<li><p><strong>scale</strong> (<em>int</em><em>, </em><em>optional</em>) – Scale factor. To elongate pass a tuple (x_size, y_size)</p></li>
 </ul>
 </dd>
 </dl>
@@ -268,7 +268,7 @@ to get a deeper understanding of how these commands originally worked.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>radius</strong> (<em>int</em>) – The radius of the circle</p></li>
 <li><p><strong>coord_list</strong> (<em>list</em>) – A list of (x, y) tuples</p></li>
-<li><p><strong>brush</strong> (<em>int</em>) – Colour value (High-resolution: 0-3, low-resolution: 0-15)</p></li>
+<li><p><strong>brush</strong> (<em>int</em><em>, </em><em>optional</em>) – Colour value (High-resolution: 0-3, low-resolution: 0-15)</p></li>
 </ul>
 </dd>
 </dl>
@@ -284,9 +284,10 @@ to get a deeper understanding of how these commands originally worked.</p>
 <dt id="nimbusinator.command.Command.fetch">
 <code class="sig-name descname">fetch</code><span class="sig-paren">(</span><em class="sig-param">block_number</em>, <em class="sig-param">filename</em><span class="sig-paren">)</span><a class="headerlink" href="#nimbusinator.command.Command.fetch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fetch an image from disk and allocate it to an image block</p>
-<p>Equivalent to FETCH in the ANIMATE extension.  This is an experimental
-feature.  All major image formats are supported but in this loading
-images with alpha layers may break.  It is also very slow!</p>
+<p>Equivalent to FETCH in the ANIMATE extension.  All major image formats
+are supported but in this loading images with alpha layers may break.  It
+is also advisable to resize your image to fit the Nimbus screen mode using
+an image editor beforehand.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -341,7 +342,7 @@ values if a control key is pressed: ‘__F1__’, ‘__F2__’, … , ‘__F10__
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>coord_list</strong> (<em>list</em>) – A list of (x, y) tuples</p></li>
-<li><p><strong>brush</strong> (<em>int</em>) – Colour value (High-resolution: 0-3, low-resolution: 0-15)</p></li>
+<li><p><strong>brush</strong> (<em>int</em><em>, </em><em>optional</em>) – Colour value (High-resolution: 0-3, low-resolution: 0-15)</p></li>
 </ul>
 </dd>
 </dl>
@@ -367,10 +368,10 @@ values if a control key is pressed: ‘__F1__’, ‘__F2__’, … , ‘__F10__
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>text</strong> (<em>str</em>) – The text to be plotted</p></li>
 <li><p><strong>coord</strong> (<em>tuple</em>) – The (x, y) position of the text</p></li>
-<li><p><strong>size</strong> (<em>int</em>) – Font size. To elongate pass a tuple (x_size, y_size)</p></li>
-<li><p><strong>brush</strong> (<em>int</em>) – Brush colour</p></li>
-<li><p><strong>direction</strong> (<em>int</em>) – 0=normal, 1=-90deg, 2=180deg, 3=-270deg</p></li>
-<li><p><strong>font</strong> (<em>int</em>) – 0 is the standard font, 1 is the other font</p></li>
+<li><p><strong>size</strong> (<em>int</em><em>, </em><em>optional</em>) – Font size. To elongate pass a tuple (x_size, y_size)</p></li>
+<li><p><strong>brush</strong> (<em>int</em><em>, </em><em>optional</em>) – Brush colour</p></li>
+<li><p><strong>direction</strong> (<em>int</em><em>, </em><em>optional</em>) – 0=normal, 1=-90deg, 2=180deg, 3=-270deg</p></li>
+<li><p><strong>font</strong> (<em>int</em><em>, </em><em>optional</em>) – 0 is the standard font, 1 is the other font</p></li>
 </ul>
 </dd>
 </dl>
@@ -384,10 +385,10 @@ values if a control key is pressed: ‘__F1__’, ‘__F2__’, … , ‘__F10__
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>coord_list</strong> (<em>list</em>) – </p></li>
-<li><p><strong>style</strong> (<em>int</em>) – The points style number (0 255)</p></li>
 <li><p><strong>coord_list</strong> – A list of (x, y) tuples</p></li>
-<li><p><strong>brush</strong> (<em>int</em>) – Colour value (High-resolution: 0-3, low-resolution: 0-15)</p></li>
-<li><p><strong>size</strong> (<em>int</em>) – Font size. To elongate pass a tuple (x_size, y_size)</p></li>
+<li><p><strong>brush</strong> (<em>int</em><em>, </em><em>optional</em>) – Colour value (High-resolution: 0-3, low-resolution: 0-15)</p></li>
+<li><p><strong>size</strong> (<em>int</em><em>, </em><em>optional</em>) – Font size. To elongate pass a tuple (x_size, y_size)</p></li>
+<li><p><strong>style</strong> (<em>int</em><em>, </em><em>optional</em>) – The points style number (0 255)</p></li>
 </ul>
 </dd>
 </dl>
@@ -567,6 +568,7 @@ filled pixel.  The size of a points style is 8x8 pixels.</p>
 <li><p><strong>from_angle</strong> (<em>int</em>) – The starting angle (degrees)</p></li>
 <li><p><strong>to_angle</strong> (<em>int</em>) – The finishing angle (degrees)</p></li>
 <li><p><strong>coord_list</strong> (<em>list</em>) – A list of (x, y) tuples</p></li>
+<li><p><strong>brush</strong> (<em>int</em><em>, </em><em>optional</em>) – Colour value (High-resolution: 0-3, low-resolution: 0-15)</p></li>
 </ul>
 </dd>
 </dl>
@@ -612,7 +614,7 @@ yet supported - see documentation for fetch command.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Tim Adams
+        &copy; Copyright 2020, Tim Adams
 
     </p>
   </div>

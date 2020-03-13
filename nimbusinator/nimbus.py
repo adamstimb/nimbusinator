@@ -30,44 +30,59 @@ class Nimbus:
     will not be visible until the boot() method has been called.
 
     Args:
-        full_screen (bool), optional: Full screen mode
-        title (str), optional: The title of the display window
+        full_screen (bool, optional): Full screen mode
+        title (str, optional): The title of the display window
+        border_size (int, optional): The thickness of the border in pixels (default is 40)
+        silent (bool, optional): Run Nimbusinator in silent mode (default is False)
 
     """
 
-    def __init__(self, full_screen=False, title='Nimbusinator', border_size=40):
+    def __init__(self, full_screen=False, title='Nimbusinator', border_size=40, silent=False):
         """Create a new Nimbus object
 
-        When created, the new Nimbus object  will
-        not be visible until the boot() method has been called.
-
         Args:
-            full_screen (bool), optional: Full screen mode
-            title (str), optional: The title of the display window
-
+            full_screen (:obj:`bool`, optional): Full screen mode
+            title (str, optional): The title of the display window
+            border_size (int, optional): The thickness of the border in pixels (default is 40)
+            silent (bool, optional): Run Nimbusinator in silent mode (default is False)
         """
 
-        print(logo)
+        if not silent:
+            print(logo)
 
         # Constants
         self.SCREEN_MODES = {                           # The absolute screen resolution for
             'hi': (640, 250),                           # high (80 column) and low-res (40
             'lo': (320, 250)                            # column) modes
             }
-        self.FONT_IMAGES = self.__load_fonts()              # Font images
-        
-        test = np.array(self.FONT_IMAGES[0][70])
-        for row in test:
-            out = ''
-            for col in row:
-                colstr = str(col)
-                if colstr == '[  0   0   0 255]':
-                    char = 'X'
-                else:
-                    char = '_'
-                out += '{}'.format(char)
-
-
+        self.FONT_IMAGES = self.__load_fonts()          # Font images
+        self.RESOLVABLE_UNICODE_CHARS = {               # These unicode chars have an equivalent
+            'ç': 128, 'ü': 129, 'é': 130,               # char in Nimbus' Extended ASCII. 
+            'â': 131, 'ä': 132, 'à': 133,               
+            'å': 134, 'ç': 135, 'ê': 136,
+            'ë': 137, 'è': 138, 'ï': 139,
+            'î': 140, 'ì': 141, 'Ä': 142,
+            'Å': 143, 'É': 144, 'æ': 145,
+            'Æ': 146, 'ô': 147, 'ö': 148, 
+            'ò': 149, 'û': 150, 'ù': 151, 
+            'ÿ': 152, 'Ö': 153, 'Ü': 154, 
+            '¢': 155, '£': 156, '¥': 157, #    158,
+            'ƒ': 159, 'á': 160, 'í': 161,
+            'ó': 162, 'ú': 163, 'ñ': 164,
+            'Ñ': 165, #    166,      167,
+            '¿': 168, '½': 169, '¼': 170,
+            '¦': 171, '«': 173, '»': 174,
+            'α': 223, 'β': 224, 'Γ': 225,
+            'π': 226, 'Σ': 227, 'σ': 228,
+            'μ': 229, 'ϒ': 230, #    231,
+            'ϴ': 232, 'Ω': 233, 'δ': 234,
+            '∞': 235, #    236,
+            '∈': 237, '∩': 238, '≡': 239,
+            '±': 240, '≥': 241, '≤': 242,
+            '⌠': 243, '⌡': 244, '÷': 245,
+            '≈': 246, '°': 247, '·': 248, # 249,
+            '√': 250, 'ⁿ': 251, '²': 252,
+        }
         self.SUPPORTED_CONTROL_KEYS = supported_control_keys
         self.COLOUR_TABLE = colour_table                # This is the RGB colour table from the Nimbus
         self.DEFAULT_COLOURS = default_colours          # The default colours which cannot be changed during runtime
@@ -94,6 +109,7 @@ class Nimbus:
         self.full_screen = full_screen
         self.title = title
         self.border_size = border_size
+        self.silent = silent
 
         # Variables
         self.screen_mode = 'hi'
@@ -192,7 +208,7 @@ class Nimbus:
         Args:
             img (PIL image): The image to be plonked
             coord (tuple): The coordinate tuple (x, y)
-            transparent (bool): True if image contains an alpha layer for transparency
+            transparent (bool, optional): True if image contains an alpha layer for transparency
 
         """
 
@@ -285,7 +301,7 @@ class Nimbus:
             self.keyboard_buffer.append(key.char)
             # BUT - if CTRL-C situation then shutdown!
             if self.ctrl_pressed and key.char.lower() == 'c':
-                message('CTRL-C detected')
+                message(self.silent, 'CTRL-C detected')
                 self.shutdown()
         except AttributeError:
             # Handle CTRL released
@@ -387,16 +403,16 @@ class Nimbus:
         the user pressing CTRL-C. 
 
         Args:
-            skip_welcome_screen (bool), optional: Bypass the Welcome Screen and boot sequence
+            skip_welcome_screen (bool, optional): Bypass the Welcome Screen and boot sequence
             
         """
 
         # Don't boot if already running
         if self.running:
-            message('The Nimbus is already running')
+            message(self.silent, 'The Nimbus is already running')
             return
 
-        message('Booting up')
+        message(self.silent, 'Booting up')
 
         # Initialize pygame and handle full screen
         pygame.init()
@@ -433,14 +449,15 @@ class Nimbus:
         if skip_welcome_screen:
             # don't bother with welcome screen
             Command(self).set_mode(80)
-            message('Done')
+            message(self.silent, 'Done')
             return
         else:
             # roll the welcome screen
             welcome(Command(self), self)
             Command(self).set_mode(80)
-            message('Done')
+            message(self.silent, 'Done')
     
+
     def shutdown(self):
         """Shut down the Nimbus
         
@@ -453,7 +470,7 @@ class Nimbus:
         if not self.running:
             return
 
-        message('Shutting down')
+        message(self.silent, 'Shutting down')
 
         # Set flags
         self.running = False

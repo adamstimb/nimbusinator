@@ -1,6 +1,12 @@
 Release Notes
 =============
 
+0.2.2
+-----
+
+Better handling of non-Roman characters, much faster fetch(), and you can now run Nimbusinator in silent mode by passing
+silent=True when instantiating a Nimbus object.
+
 0.2.1
 -----
 

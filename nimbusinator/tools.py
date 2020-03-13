@@ -17,17 +17,22 @@ RM Nimbus GUI for Python
 """
 
 
-def message(text):
+def message(silent, text):
     """Debug message
 
     Prints a message in the console including the name of the function
     that sent the message.
 
     Args:
+        silent (bool): Pass if in silent mode
         text (str): The text of the message
 
     """
 
+    # Pass if in silent model
+    if silent:
+        return
+        
     # Get name of function that sent the message
     caller = inspect.stack()[1][3]
     # Print the debug message
