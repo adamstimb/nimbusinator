@@ -249,15 +249,7 @@ def test_fetch(nim, cmd):
 if __name__ == '__main__':
     nim = Nimbus(full_screen=False)
     cmd = Command(nim)
-    nim.boot(skip_welcome_screen=True)
-    """
-    cmd.set_mode(80)
-    
-    cmd.print('»αβΓπΣσμϒϴΩδ∞∈∩≡±≥≤⌠⌡÷≈°·√ⁿ²')
-    cmd.set_charset(1)
-    cmd.print('çüéâäàåçêëèïîìÄÅÉæÆôöòûùÿÖÜ¢£¥ƒáíóúñÑ¿½¼¦«»αβΓπΣσμϒϴΩδ∞∈∩≡±≥≤⌠⌡÷≈°·√ⁿ²')
-    nim.sleep(1200)
-    """
+    nim.boot(skip_welcome_screen=False)
     test_plonk_logo(nim, cmd)
     test_fetch(nim, cmd)
     test_points(nim, cmd)
