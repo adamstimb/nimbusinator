@@ -54,20 +54,34 @@ class Nimbus:
             'hi': (640, 250),                           # high (80 column) and low-res (40
             'lo': (320, 250)                            # column) modes
             }
-        self.FONT_IMAGES = self.__load_fonts()              # Font images
-        
-        test = np.array(self.FONT_IMAGES[0][70])
-        for row in test:
-            out = ''
-            for col in row:
-                colstr = str(col)
-                if colstr == '[  0   0   0 255]':
-                    char = 'X'
-                else:
-                    char = '_'
-                out += '{}'.format(char)
-
-
+        self.FONT_IMAGES = self.__load_fonts()          # Font images
+        self.RESOLVABLE_UNICODE_CHARS = {               # These unicode chars have an equivalent
+            'ç': 128, 'ü': 129, 'é': 130,               # char in Nimbus' Extended ASCII. 
+            'â': 131, 'ä': 132, 'à': 133,               
+            'å': 134, 'ç': 135, 'ê': 136,
+            'ë': 137, 'è': 138, 'ï': 139,
+            'î': 140, 'ì': 141, 'Ä': 142,
+            'Å': 143, 'É': 144, 'æ': 145,
+            'Æ': 146, 'ô': 147, 'ö': 148, 
+            'ò': 149, 'û': 150, 'ù': 151, 
+            'ÿ': 152, 'Ö': 153, 'Ü': 154, 
+            '¢': 155, '£': 156, '¥': 157, #    158,
+            'ƒ': 159, 'á': 160, 'í': 161,
+            'ó': 162, 'ú': 163, 'ñ': 164,
+            'Ñ': 165, #    166,      167,
+            '¿': 168, '½': 169, '¼': 170,
+            '¦': 171, '«': 173, '»': 174,
+            'α': 223, 'β': 224, 'Γ': 225,
+            'π': 226, 'Σ': 227, 'σ': 228,
+            'μ': 229, 'ϒ': 230, #    231,
+            'ϴ': 232, 'Ω': 233, 'δ': 234,
+            '∞': 235, #    236,
+            '∈': 237, '∩': 238, '≡': 239,
+            '±': 240, '≥': 241, '≤': 242,
+            '⌠': 243, '⌡': 244, '÷': 245,
+            '≈': 246, '°': 247, '·': 248, # 249,
+            '√': 250, 'ⁿ': 251, '²': 252,
+        }
         self.SUPPORTED_CONTROL_KEYS = supported_control_keys
         self.COLOUR_TABLE = colour_table                # This is the RGB colour table from the Nimbus
         self.DEFAULT_COLOURS = default_colours          # The default colours which cannot be changed during runtime
@@ -441,6 +455,7 @@ class Nimbus:
             Command(self).set_mode(80)
             message('Done')
     
+
     def shutdown(self):
         """Shut down the Nimbus
         
