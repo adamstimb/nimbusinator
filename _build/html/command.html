@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>nimbusinator.command.Command &mdash; nimbusinator 0.1.0 documentation</title>
+  <title>nimbusinator.command.Command &mdash; nimbusinator 0.2.2 documentation</title>
   
 
   
@@ -284,9 +284,10 @@ to get a deeper understanding of how these commands originally worked.</p>
 <dt id="nimbusinator.command.Command.fetch">
 <code class="sig-name descname">fetch</code><span class="sig-paren">(</span><em class="sig-param">block_number</em>, <em class="sig-param">filename</em><span class="sig-paren">)</span><a class="headerlink" href="#nimbusinator.command.Command.fetch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fetch an image from disk and allocate it to an image block</p>
-<p>Equivalent to FETCH in the ANIMATE extension.  This is an experimental
-feature.  All major image formats are supported but in this loading
-images with alpha layers may break.  It is also very slow!</p>
+<p>Equivalent to FETCH in the ANIMATE extension.  All major image formats
+are supported but in this loading images with alpha layers may break.  It
+is also advisable to resize your image to fit the Nimbus screen mode using
+an image editor beforehand.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
