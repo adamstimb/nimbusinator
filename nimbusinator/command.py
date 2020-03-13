@@ -411,6 +411,9 @@ class Command:
             if ord(ascii) > 255:
                 # It's out of range
                 ascii = ' '
+            # If a resolveable special character, translate it
+            if ascii in self.nimbus.RESOLVABLE_UNICODE_CHARS:
+                ascii = self.nimbus.RESOLVABLE_UNICODE_CHARS[ascii]
             # Get char img
             char_img = self.nimbus.FONT_IMAGES[self.nimbus.charset][ord(ascii)]
             # Get screen position in pixels from cursor position
