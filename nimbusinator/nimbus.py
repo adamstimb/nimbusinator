@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import os
 import sys
 import time
@@ -35,7 +37,7 @@ class Nimbus:
 
     """
 
-    def __init__(self, full_screen=False, title='Nimbusinator', border_size=40):
+    def __init__(self, full_screen=False, title='Nimbusinator', border_size=40, silent=False):
         """Create a new Nimbus object
 
         When created, the new Nimbus object  will
@@ -44,10 +46,12 @@ class Nimbus:
         Args:
             full_screen (bool), optional: Full screen mode
             title (str), optional: The title of the display window
-
+            border_sizer (int), optional: The thickness of the border in pixels (default is 40)
+            silent (bool), optional: Run Nimbusinator in silent mode (default is False)
         """
 
-        print(logo)
+        if not silent:
+            print(logo)
 
         # Constants
         self.SCREEN_MODES = {                           # The absolute screen resolution for
@@ -108,6 +112,7 @@ class Nimbus:
         self.full_screen = full_screen
         self.title = title
         self.border_size = border_size
+        self.silent = silent
 
         # Variables
         self.screen_mode = 'hi'
@@ -299,7 +304,7 @@ class Nimbus:
             self.keyboard_buffer.append(key.char)
             # BUT - if CTRL-C situation then shutdown!
             if self.ctrl_pressed and key.char.lower() == 'c':
-                message('CTRL-C detected')
+                message(self.silent, 'CTRL-C detected')
                 self.shutdown()
         except AttributeError:
             # Handle CTRL released
@@ -407,10 +412,10 @@ class Nimbus:
 
         # Don't boot if already running
         if self.running:
-            message('The Nimbus is already running')
+            message(self.silent, 'The Nimbus is already running')
             return
 
-        message('Booting up')
+        message(self.silent, 'Booting up')
 
         # Initialize pygame and handle full screen
         pygame.init()
@@ -447,13 +452,13 @@ class Nimbus:
         if skip_welcome_screen:
             # don't bother with welcome screen
             Command(self).set_mode(80)
-            message('Done')
+            message(self.silent, 'Done')
             return
         else:
             # roll the welcome screen
             welcome(Command(self), self)
             Command(self).set_mode(80)
-            message('Done')
+            message(self.silent, 'Done')
     
 
     def shutdown(self):
@@ -468,7 +473,7 @@ class Nimbus:
         if not self.running:
             return
 
-        message('Shutting down')
+        message(self.silent, 'Shutting down')
 
         # Set flags
         self.running = False

@@ -411,11 +411,13 @@ class Command:
             if ord(ascii) > 255:
                 # It's out of range
                 ascii = ' '
-            # If a resolveable special character, translate it
+            # If a resolveable special character, translate it and get char img
             if ascii in self.nimbus.RESOLVABLE_UNICODE_CHARS:
                 ascii = self.nimbus.RESOLVABLE_UNICODE_CHARS[ascii]
-            # Get char img
-            char_img = self.nimbus.FONT_IMAGES[self.nimbus.charset][ord(ascii)]
+                char_img = self.nimbus.FONT_IMAGES[self.nimbus.charset][ascii]
+            else:
+                # Otherwise just use ordinal
+                char_img = self.nimbus.FONT_IMAGES[self.nimbus.charset][ord(ascii)]
             # Get screen position in pixels from cursor position
             curpos_xy = colrows_to_xy(self.nimbus.SCREEN_MODES[self.nimbus.screen_mode], self.nimbus.cursor_position)
             # Plot char and apply paper colour underneath char
@@ -978,9 +980,10 @@ class Command:
     def fetch(self, block_number, filename):
         """Fetch an image from disk and allocate it to an image block
 
-        Equivalent to FETCH in the ANIMATE extension.  This is an experimental
-        feature.  All major image formats are supported but in this loading 
-        images with alpha layers may break.  It is also very slow!
+        Equivalent to FETCH in the ANIMATE extension.  All major image formats 
+        are supported but in this loading images with alpha layers may break.  It
+        is also advisable to resize your image to fit the Nimbus screen mode using
+        an image editor beforehand.
 
         Args:
             block_number (int): The block number to store the image in

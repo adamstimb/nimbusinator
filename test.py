@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import random
 from nimbusinator.nimbus import Nimbus
 from nimbusinator.command import Command
@@ -82,7 +84,7 @@ def test_print(nim, cmd):
                     cmd.set_pen(i)
                     cmd.set_paper(max_pen_colour - i)
                     cmd.print('What is your favourite colour?')
-                    cmd.print('Blue -- no, red!')
+                    cmd.print('çüéâäàåçêëèïîìÄÅÉæÆôöòûùÿÖÜ¢£¥ƒáíóúñÑ¿½¼¦«»αβΓπΣσμϒϴΩδ∞∈∩≡±≥≤⌠⌡÷≈°·√ⁿ²')
             nim.sleep(1)
     cmd.set_cursor(False)
 
@@ -247,9 +249,17 @@ def test_fetch(nim, cmd):
 
 
 if __name__ == '__main__':
-    nim = Nimbus(full_screen=False)
+    nim = Nimbus(full_screen=False, silent=True)
     cmd = Command(nim)
-    nim.boot(skip_welcome_screen=False)
+    nim.boot(skip_welcome_screen=True)
+    """
+    cmd.set_mode(80)
+    
+    cmd.print('»αβΓπΣσμϒϴΩδ∞∈∩≡±≥≤⌠⌡÷≈°·√ⁿ²')
+    cmd.set_charset(1)
+    cmd.print('çüéâäàåçêëèïîìÄÅÉæÆôöòûùÿÖÜ¢£¥ƒáíóúñÑ¿½¼¦«»αβΓπΣσμϒϴΩδ∞∈∩≡±≥≤⌠⌡÷≈°·√ⁿ²')
+    nim.sleep(1200)
+    """
     test_plonk_logo(nim, cmd)
     test_fetch(nim, cmd)
     test_points(nim, cmd)
