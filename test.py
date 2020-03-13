@@ -239,10 +239,19 @@ def test_points(nim, cmd):
     nim.sleep(1)
     
 
+def test_fetch(nim, cmd):
+    cmd.set_mode(40)
+    cmd.fetch(1, 'iss.bmp')
+    cmd.writeblock(1, (0, 0))
+    nim.sleep(2)
+
+
 if __name__ == '__main__':
     nim = Nimbus(full_screen=False)
     cmd = Command(nim)
-    nim.boot(skip_welcome_screen=True)
+    nim.boot(skip_welcome_screen=False)
+    test_plonk_logo(nim, cmd)
+    test_fetch(nim, cmd)
     test_points(nim, cmd)
     test_slice(nim, cmd)
     test_circle(nim, cmd)
@@ -256,5 +265,4 @@ if __name__ == '__main__':
     test_set_border_low_res(nim, cmd)
     test_set_paper_high_res(nim, cmd)
     test_set_paper_low_res(nim, cmd)
-    test_plonk_logo(nim, cmd)
     nim.shutdown()

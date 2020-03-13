@@ -1007,8 +1007,10 @@ class Command:
                     nearest_match = {'rgb': possible_rgbs[i], 'score': score}
             return nearest_match['rgb']
 
-        # Open the image and convert to numpy array
+        # Open the image, get all rgb colors, and convert to numpy array
         img = Image.open(filename)
+        img_rgbs = list(set(img.getdata()))
+        #print(img_rgbs)
         img = np.array(img)
 
         # get possible runtime rgbs
@@ -1017,12 +1019,17 @@ class Command:
         for col in possible_colours:
             possible_rgbs.append(self.nimbus.COLOUR_TABLE[self.nimbus.runtime_colours[self.nimbus.screen_mode][col]])
 
+        # Make a dictionary of image rgbs and their nearest runtime colour
+        img_rgb_to_runtime_rgb = {}
+        for rgb_tuple in img_rgbs:
+            img_rgb_to_runtime_rgb[rgb_tuple] = get_closest_nimbus_colour(possible_rgbs, rgb_tuple)
+
         # Reassign all RGBs to nearest in runtime palette
         for y in range(0, img.shape[0]):
             for x in range(0, img.shape[1]):
                 rgb_array = img[y][x]
                 rgb_tuple = (rgb_array[0], rgb_array[1], rgb_array[2])
-                nearest_nimbus_rgb_tuple = get_closest_nimbus_colour(possible_rgbs, rgb_tuple)
+                nearest_nimbus_rgb_tuple = img_rgb_to_runtime_rgb[rgb_tuple]
                 img[y][x] = [ nearest_nimbus_rgb_tuple[0], nearest_nimbus_rgb_tuple[1], nearest_nimbus_rgb_tuple[2] ]
 
         # All done, assign the image to the required image block
