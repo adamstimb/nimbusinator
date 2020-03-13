@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import random
 from nimbusinator.nimbus import Nimbus
 from nimbusinator.command import Command
@@ -249,7 +247,7 @@ def test_fetch(nim, cmd):
 
 
 if __name__ == '__main__':
-    nim = Nimbus(full_screen=False, silent=True)
+    nim = Nimbus(full_screen=False)
     cmd = Command(nim)
     nim.boot(skip_welcome_screen=True)
     """
