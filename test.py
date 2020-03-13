@@ -247,7 +247,7 @@ def test_fetch(nim, cmd):
 
 
 if __name__ == '__main__':
-    nim = Nimbus(full_screen=False)
+    nim = Nimbus(full_screen=True)
     cmd = Command(nim)
     nim.boot(skip_welcome_screen=False)
     test_plonk_logo(nim, cmd)

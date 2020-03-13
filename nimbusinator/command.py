@@ -622,10 +622,10 @@ class Command:
         Args:
             text (str): The text to be plotted
             coord (tuple): The (x, y) position of the text
-            size (int), optional: Font size. To elongate pass a tuple (x_size, y_size)
-            brush (int), optional: Brush colour
-            direction (int), optional: 0=normal, 1=-90deg, 2=180deg, 3=-270deg
-            font (int), optional: 0 is the standard font, 1 is the other font
+            size (int, optional): Font size. To elongate pass a tuple (x_size, y_size)
+            brush (int, optional): Brush colour
+            direction (int, optional): 0=normal, 1=-90deg, 2=180deg, 3=-270deg
+            font (int, optional): 0 is the standard font, 1 is the other font
 
         """
 
@@ -709,8 +709,8 @@ class Command:
 
         Args:
             coord_list (list): A list of (x, y) tuples
-            brush (int), optional: Colour value (High-resolution: 0-3, low-resolution: 0-15)
-            scale (int), optional: Scale factor. To elongate pass a tuple (x_size, y_size)
+            brush (int, optional): Colour value (High-resolution: 0-3, low-resolution: 0-15)
+            scale (int, optional): Scale factor. To elongate pass a tuple (x_size, y_size)
         """
 
         # return if shutdown detected
@@ -771,7 +771,7 @@ class Command:
 
         Args:
             coord_list (list): A list of (x, y) tuples
-            brush (int), optional: Colour value (High-resolution: 0-3, low-resolution: 0-15)
+            brush (int, optional): Colour value (High-resolution: 0-3, low-resolution: 0-15)
 
         """
 
@@ -809,7 +809,7 @@ class Command:
         Args:
             radius (int): The radius of the circle
             coord_list (list): A list of (x, y) tuples
-            brush (int), optional: Colour value (High-resolution: 0-3, low-resolution: 0-15)
+            brush (int, optional): Colour value (High-resolution: 0-3, low-resolution: 0-15)
         
         """
 
@@ -857,7 +857,7 @@ class Command:
             from_angle (int): The starting angle (degrees)
             to_angle (int): The finishing angle (degrees)
             coord_list (list): A list of (x, y) tuples
-        
+            brush (int, optional): Colour value (High-resolution: 0-3, low-resolution: 0-15)
         """
         
         # return if shutdown detected
@@ -933,11 +933,10 @@ class Command:
 
         Args:
             coord_list (list): 
-            style (int): The points style number (0 255)
             coord_list (list): A list of (x, y) tuples
-            brush (int), optional: Colour value (High-resolution: 0-3, low-resolution: 0-15)
-            size (int), optional: Font size. To elongate pass a tuple (x_size, y_size)
-
+            brush (int, optional): Colour value (High-resolution: 0-3, low-resolution: 0-15)
+            size (int, optional): Font size. To elongate pass a tuple (x_size, y_size)
+            style (int, optional): The points style number (0 255)
         """
 
         assert isinstance(style, (type(None), int)), "The value of brush must be None or an integer, not {}".format(type(style))

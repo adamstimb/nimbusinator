@@ -107,6 +107,7 @@ Links
 -----
 
 * `Github <https://github.com/adamstimb/nimbusinator>`_ - Nimbusinator github repository
+* `facebook <https://www.facebook.com/RMNimbus/>`_ - RM Nimbus facebook group
 * `Center for Computing History <http://www.computinghistory.org.uk/>`_ - original RM Nimbus manuals and technical data
 * `Center for Computing History - RM Nimbus PC (Later Beige Model) <http://www.computinghistory.org.uk/det/41537/RM-Nimbus-PC-(Later-Beige-Model)/>`_ - online exhibit
 * `The Nimbus Museum <https://thenimbus.co.uk/>`_ - online museum that looks like the Welcome Disk!

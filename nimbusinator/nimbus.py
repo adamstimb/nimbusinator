@@ -30,22 +30,21 @@ class Nimbus:
     will not be visible until the boot() method has been called.
 
     Args:
-        full_screen (bool), optional: Full screen mode
-        title (str), optional: The title of the display window
+        full_screen (bool, optional): Full screen mode
+        title (str, optional): The title of the display window
+        border_size (int, optional): The thickness of the border in pixels (default is 40)
+        silent (bool, optional): Run Nimbusinator in silent mode (default is False)
 
     """
 
     def __init__(self, full_screen=False, title='Nimbusinator', border_size=40, silent=False):
         """Create a new Nimbus object
 
-        When created, the new Nimbus object  will
-        not be visible until the boot() method has been called.
-
         Args:
-            full_screen (bool), optional: Full screen mode
-            title (str), optional: The title of the display window
-            border_sizer (int), optional: The thickness of the border in pixels (default is 40)
-            silent (bool), optional: Run Nimbusinator in silent mode (default is False)
+            full_screen (:obj:`bool`, optional): Full screen mode
+            title (str, optional): The title of the display window
+            border_size (int, optional): The thickness of the border in pixels (default is 40)
+            silent (bool, optional): Run Nimbusinator in silent mode (default is False)
         """
 
         if not silent:
@@ -209,7 +208,7 @@ class Nimbus:
         Args:
             img (PIL image): The image to be plonked
             coord (tuple): The coordinate tuple (x, y)
-            transparent (bool): True if image contains an alpha layer for transparency
+            transparent (bool, optional): True if image contains an alpha layer for transparency
 
         """
 
@@ -404,7 +403,7 @@ class Nimbus:
         the user pressing CTRL-C. 
 
         Args:
-            skip_welcome_screen (bool), optional: Bypass the Welcome Screen and boot sequence
+            skip_welcome_screen (bool, optional): Bypass the Welcome Screen and boot sequence
             
         """
 

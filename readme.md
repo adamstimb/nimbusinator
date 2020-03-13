@@ -102,6 +102,7 @@ if __name__ == '__main__':
 ## Links
 
 - [Read the Docs](https://nimbusinator.readthedocs.io/) - Full documentation
+- [Facebook](https://www.facebook.com/RMNimbus/) - RM Nimbus facebook group
 - [Center for Computing History](http://www.computinghistory.org.uk/) - original RM Nimbus manuals and technical data
 - [Center for Computing History - RM Nimbus PC (Later Beige Model)](http://www.computinghistory.org.uk/det/41537/RM-Nimbus-PC-(Later-Beige-Model)/) - online exhibit
 - [The Nimbus Museum](https://thenimbus.co.uk/) - online museum that looks like the Welcome Disk!

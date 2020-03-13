@@ -161,8 +161,10 @@ will not be visible until the boot() method has been called.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>full_screen</strong> (<em>bool</em>) – Full screen mode</p></li>
-<li><p><strong>title</strong> (<em>str</em>) – The title of the display window</p></li>
+<li><p><strong>full_screen</strong> (<em>bool</em><em>, </em><em>optional</em>) – Full screen mode</p></li>
+<li><p><strong>title</strong> (<em>str</em><em>, </em><em>optional</em>) – The title of the display window</p></li>
+<li><p><strong>border_size</strong> (<em>int</em><em>, </em><em>optional</em>) – The thickness of the border in pixels (default is 40)</p></li>
+<li><p><strong>silent</strong> (<em>bool</em><em>, </em><em>optional</em>) – Run Nimbusinator in silent mode (default is False)</p></li>
 </ul>
 </dd>
 </dl>
@@ -178,7 +180,7 @@ and stopped programmatically by calling the shutdown() method, or during runtime
 the user pressing CTRL-C.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>skip_welcome_screen</strong> (<em>bool</em>) – Bypass the Welcome Screen and boot sequence</p>
+<dd class="field-odd"><p><strong>skip_welcome_screen</strong> (<em>bool</em><em>, </em><em>optional</em>) – Bypass the Welcome Screen and boot sequence</p>
 </dd>
 </dl>
 </dd></dl>
@@ -201,7 +203,7 @@ their bottom-left corner</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>img</strong> (<em>PIL image</em>) – The image to be plonked</p></li>
 <li><p><strong>coord</strong> (<em>tuple</em>) – The coordinate tuple (x, y)</p></li>
-<li><p><strong>transparent</strong> (<em>bool</em>) – True if image contains an alpha layer for transparency</p></li>
+<li><p><strong>transparent</strong> (<em>bool</em><em>, </em><em>optional</em>) – True if image contains an alpha layer for transparency</p></li>
 </ul>
 </dd>
 </dl>
@@ -260,7 +262,7 @@ if the user hits CTRL-C.  Sleep time measured in seconds.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Tim Adams
+        &copy; Copyright 2020, Tim Adams
 
     </p>
   </div>

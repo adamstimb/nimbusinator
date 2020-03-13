@@ -18,7 +18,7 @@ sys.path.insert(0, os.path.abspath('./'))
 # -- Project information -----------------------------------------------------
 
 project = 'nimbusinator'
-copyright = '2019, Tim Adams'
+copyright = '2020, Tim Adams'
 author = 'Tim Adams'
 
 # The full version, including alpha/beta/rc tags
